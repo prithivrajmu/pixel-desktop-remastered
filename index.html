@@ -1,23 +1,42 @@
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Windows 95 Portfolio</title>
-    <meta name="description" content="Interactive Windows 95 Portfolio Experience" />
-    <meta name="author" content="Portfolio Owner" />
-
-    <meta property="og:title" content="Windows 95 Portfolio" />
-    <meta property="og:description" content="Interactive Windows 95 Portfolio Experience" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <title>John Developer - Windows 95 Portfolio</title>
+    
+    <!-- Windows 95 Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+      /* MS Sans Serif approximation */
+      @font-face {
+        font-family: 'MS Sans Serif';
+        src: local('Tahoma'), local('Geneva'), local('Verdana'), local('sans-serif');
+        font-weight: normal;
+        font-style: normal;
+      }
+      
+      /* Default system font stack */
+      * {
+        font-family: 'MS Sans Serif', 'Tahoma', 'Geneva', 'Verdana', sans-serif;
+      }
+      
+      /* Monospace for code/notepad */
+      .font-mono, pre, code {
+        font-family: 'IBM Plex Mono', 'Courier New', monospace !important;
+      }
+      
+      /* Serif for IE/blog content */
+      .font-serif {
+        font-family: 'Times New Roman', 'Times', serif !important;
+      }
+    </style>
   </head>
-
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
