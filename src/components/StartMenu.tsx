@@ -8,8 +8,8 @@ interface StartMenuProps {
 }
 
 interface MenuItem {
-  label: string;
-  icon: string;
+  label?: string;
+  icon?: string;
   hasSubmenu?: boolean;
   type?: 'separator';
   submenu?: MenuItem[];
@@ -108,7 +108,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onClose, onShutdown }) => 
             <div
               key={index}
               className="flex items-center px-4 py-2 hover:bg-blue-600 hover:text-white cursor-pointer group relative"
-              onMouseEnter={() => handleItemHover(item.label, item.hasSubmenu)}
+              onMouseEnter={() => handleItemHover(item.label || '', item.hasSubmenu)}
               onClick={() => handleItemClick(item)}
             >
               <span className="w-6 text-center mr-3">{item.icon}</span>
