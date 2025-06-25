@@ -1,9 +1,12 @@
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Taskbar } from './Taskbar';
 import { Window } from './Window';
 import { DesktopIcon } from './DesktopIcon';
 import { StartMenu } from './StartMenu';
+import { WindowSwitcher } from './WindowSwitcher';
+import { ShutdownDialog } from './ShutdownDialog';
+import { ShutdownScreen } from './ShutdownScreen';
 
 export interface WindowData {
   id: string;
@@ -20,6 +23,71 @@ export const Desktop: React.FC = () => {
   const [activeWindowId, setActiveWindowId] = useState<string | null>(null);
   const [isStartMenuOpen, setIsStartMenuOpen] = useState(false);
   const [nextZIndex, setNextZIndex] = useState(10);
+  
+  // Alt+Tab functionality
+  const [isAltTabOpen, setIsAltTabOpen] = useState(false);
+  const [altTabIndex, setAltTabIndex] = useState(0);
+  const [keysPressed, setKeysPressed] = useState<Set<string>>(new Set());
+  
+  // Shutdown functionality
+  const [isShutdownDialogOpen, setIsShutdownDialogOpen] = useState(false);
+  const [isShutdownScreenVisible, setIsShutdownScreenVisible] = useState(false);
+
+  // Keyboard event handlers
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const newKeysPressed = new Set(keysPressed);
+      newKeysPressed.add(e.key);
+      setKeysPressed(newKeysPressed);
+
+      if (e.altKey && e.key === 'Tab') {
+        e.preventDefault();
+        if (!isAltTabOpen && windows.length > 0) {
+          setIsAltTabOpen(true);
+          setAltTabIndex(0);
+        } else if (isAltTabOpen) {
+          setAltTabIndex(prev => (prev + 1) % windows.length);
+        }
+      }
+
+      if (isAltTabOpen && e.key === 'Enter') {
+        handleAltTabSelect();
+      }
+
+      if (isAltTabOpen && e.key === 'Escape') {
+        setIsAltTabOpen(false);
+      }
+    };
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      const newKeysPressed = new Set(keysPressed);
+      newKeysPressed.delete(e.key);
+      setKeysPressed(newKeysPressed);
+
+      if (e.key === 'Alt' && isAltTabOpen) {
+        handleAltTabSelect();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [keysPressed, isAltTabOpen, windows, altTabIndex]);
+
+  const handleAltTabSelect = () => {
+    if (windows.length > 0) {
+      const selectedWindow = windows[altTabIndex];
+      if (selectedWindow) {
+        focusWindow(selectedWindow.id);
+      }
+    }
+    setIsAltTabOpen(false);
+    setAltTabIndex(0);
+  };
 
   const openWindow = useCallback((windowData: Omit<WindowData, 'id' | 'zIndex'>) => {
     const id = `window-${Date.now()}`;
@@ -56,6 +124,20 @@ export const Desktop: React.FC = () => {
       prev.map(w => w.id === id ? { ...w, ...updates } : w)
     );
   }, []);
+
+  const handleShutdown = () => {
+    setIsShutdownDialogOpen(true);
+    setIsStartMenuOpen(false);
+  };
+
+  const confirmShutdown = () => {
+    setIsShutdownDialogOpen(false);
+    setIsShutdownScreenVisible(true);
+  };
+
+  const handleRestart = () => {
+    window.location.reload();
+  };
 
   const desktopIcons = [
     { 
@@ -152,8 +234,33 @@ export const Desktop: React.FC = () => {
 
       {/* Start Menu */}
       {isStartMenuOpen && (
-        <StartMenu onClose={() => setIsStartMenuOpen(false)} />
+        <StartMenu 
+          onClose={() => setIsStartMenuOpen(false)} 
+          onShutdown={handleShutdown}
+        />
       )}
+
+      {/* Alt+Tab Window Switcher */}
+      <WindowSwitcher
+        isVisible={isAltTabOpen}
+        windows={windows}
+        selectedIndex={altTabIndex}
+        onSelect={focusWindow}
+        onClose={() => setIsAltTabOpen(false)}
+      />
+
+      {/* Shutdown Dialog */}
+      <ShutdownDialog
+        isOpen={isShutdownDialogOpen}
+        onConfirm={confirmShutdown}
+        onCancel={() => setIsShutdownDialogOpen(false)}
+      />
+
+      {/* Shutdown Screen */}
+      <ShutdownScreen
+        isVisible={isShutdownScreenVisible}
+        onRestart={handleRestart}
+      />
 
       {/* Taskbar */}
       <Taskbar

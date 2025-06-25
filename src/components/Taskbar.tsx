@@ -1,6 +1,8 @@
 
 import React from 'react';
 import { WindowData } from './Desktop';
+import { VolumeControl } from './VolumeControl';
+import { Clock } from './Clock';
 
 interface TaskbarProps {
   windows: WindowData[];
@@ -17,11 +19,6 @@ export const Taskbar: React.FC<TaskbarProps> = ({
   onStartClick,
   isStartMenuOpen,
 }) => {
-  const currentTime = new Date().toLocaleTimeString([], { 
-    hour: '2-digit', 
-    minute: '2-digit' 
-  });
-
   return (
     <div className="absolute bottom-0 left-0 right-0 h-10 bg-gray-300 border-t-2 border-gray-400 flex items-center px-1 z-50">
       {/* Start Button */}
@@ -58,12 +55,8 @@ export const Taskbar: React.FC<TaskbarProps> = ({
 
       {/* System Tray */}
       <div className="flex items-center space-x-2 px-2">
-        <button className="w-6 h-6 bg-gray-300 border border-gray-400 flex items-center justify-center hover:bg-gray-200">
-          🔊
-        </button>
-        <div className="bg-gray-200 border border-gray-400 px-2 py-1 text-sm" style={{ borderStyle: 'inset' }}>
-          {currentTime}
-        </div>
+        <VolumeControl />
+        <Clock />
       </div>
     </div>
   );

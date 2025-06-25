@@ -30,7 +30,9 @@ export const Window: React.FC<WindowProps> = ({
   onUpdateSize,
 }) => {
   const [isDragging, setIsDragging] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [resizeStart, setResizeStart] = useState({ x: 0, y: 0, width: 0, height: 0 });
   const windowRef = useRef<HTMLDivElement>(null);
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
@@ -44,21 +46,41 @@ export const Window: React.FC<WindowProps> = ({
     }
   }, [position, onFocus]);
 
+  const handleResizeMouseDown = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsResizing(true);
+    setResizeStart({
+      x: e.clientX,
+      y: e.clientY,
+      width: size.width,
+      height: size.height,
+    });
+    onFocus();
+  }, [size, onFocus]);
+
   const handleMouseMove = useCallback((e: MouseEvent) => {
     if (isDragging) {
       const newX = Math.max(0, Math.min(window.innerWidth - size.width, e.clientX - dragStart.x));
       const newY = Math.max(0, Math.min(window.innerHeight - size.height - 40, e.clientY - dragStart.y));
       
       onUpdatePosition({ x: newX, y: newY });
+    } else if (isResizing) {
+      const deltaX = e.clientX - resizeStart.x;
+      const deltaY = e.clientY - resizeStart.y;
+      const newWidth = Math.max(300, Math.min(window.innerWidth - position.x, resizeStart.width + deltaX));
+      const newHeight = Math.max(200, Math.min(window.innerHeight - position.y - 40, resizeStart.height + deltaY));
+      
+      onUpdateSize({ width: newWidth, height: newHeight });
     }
-  }, [isDragging, dragStart, size, onUpdatePosition]);
+  }, [isDragging, isResizing, dragStart, resizeStart, size, position, onUpdatePosition, onUpdateSize]);
 
   const handleMouseUp = useCallback(() => {
     setIsDragging(false);
+    setIsResizing(false);
   }, []);
 
   React.useEffect(() => {
-    if (isDragging) {
+    if (isDragging || isResizing) {
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
       return () => {
@@ -66,7 +88,7 @@ export const Window: React.FC<WindowProps> = ({
         document.removeEventListener('mouseup', handleMouseUp);
       };
     }
-  }, [isDragging, handleMouseMove, handleMouseUp]);
+  }, [isDragging, isResizing, handleMouseMove, handleMouseUp]);
 
   if (isMinimized) return null;
 
@@ -121,9 +143,24 @@ export const Window: React.FC<WindowProps> = ({
       </div>
 
       {/* Window Content */}
-      <div className="h-full bg-white overflow-auto" style={{ height: 'calc(100% - 32px)' }}>
+      <div className="bg-white overflow-auto" style={{ height: 'calc(100% - 32px)' }}>
         {children}
       </div>
+
+      {/* Resize Handle */}
+      <div
+        className="absolute bottom-0 right-0 w-4 h-4 cursor-nw-resize"
+        onMouseDown={handleResizeMouseDown}
+        style={{
+          background: `repeating-linear-gradient(
+            -45deg,
+            #c0c0c0,
+            #c0c0c0 2px,
+            #808080 2px,
+            #808080 4px
+          )`
+        }}
+      />
     </div>
   );
 };
