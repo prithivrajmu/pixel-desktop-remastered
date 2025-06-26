@@ -65,6 +65,7 @@ export const useKeyboardEvents = (windows: WindowData[], focusWindow: (id: strin
   return {
     isAltTabOpen,
     altTabIndex,
-    handleAltTabSelect
+    handleAltTabSelect,
+    setIsAltTabOpen
   };
 };

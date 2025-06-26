@@ -8,6 +8,7 @@ import { WindowSwitcher } from './WindowSwitcher';
 import { ShutdownDialog } from './ShutdownDialog';
 import { ShutdownScreen } from './ShutdownScreen';
 import { ContextMenu } from './ContextMenu';
+import { DisplayProperties } from './DisplayProperties';
 import { SoundManager, useSounds } from './SoundManager';
 import { IconManager } from './IconManager';
 import { BackgroundManager } from './BackgroundManager';
@@ -56,7 +57,8 @@ export const Desktop: React.FC = () => {
   const {
     isAltTabOpen,
     altTabIndex,
-    handleAltTabSelect
+    handleAltTabSelect,
+    setIsAltTabOpen
   } = useKeyboardEvents(windows, focusWindow);
 
   const sounds = useSounds();
@@ -78,34 +80,51 @@ export const Desktop: React.FC = () => {
     window.location.reload();
   };
 
+  const handleDisplayProperties = () => {
+    openWindow({
+      title: 'Display Properties',
+      component: () => (
+        <DisplayProperties 
+          selectedBackground={selectedBackground}
+          onBackgroundChange={setSelectedBackground}
+        />
+      ),
+      isMinimized: false,
+      position: { x: 100, y: 100 },
+      size: { width: 400, height: 500 }
+    });
+    closeContextMenu();
+  };
+
   const desktopContextItems = [
-    { label: 'Arrange Icons', icon: '🔧', disabled: true },
-    { label: 'Line up Icons', icon: '📐', disabled: true },
+    { label: 'Arrange Icons', disabled: true },
+    { label: 'Line up Icons', disabled: true },
     { separator: true },
-    { label: 'Paste', icon: '📋', disabled: true },
-    { label: 'Paste Shortcut', icon: '🔗', disabled: true },
+    { label: 'Paste', disabled: true },
+    { label: 'Paste Shortcut', disabled: true },
     { separator: true },
-    { label: 'New', icon: '📄', disabled: true },
+    { label: 'New', hasSubmenu: true, submenu: [
+      { label: 'Folder', disabled: true },
+      { label: 'Shortcut', disabled: true }
+    ]},
     { separator: true },
-    { label: 'Properties', icon: '⚙️', onClick: () => {
-      console.log('Display Properties');
-    }}
+    { label: 'Properties', onClick: handleDisplayProperties }
   ];
 
   const iconContextItems = [
-    { label: 'Open', icon: '📂', onClick: () => {
+    { label: 'Open', onClick: () => {
       const icon = desktopIcons.find(i => i.id === contextMenu.targetId);
-      if (icon) icon.onDoubleClick();
+      if (icon) openWindow(icon.windowConfig);
     }},
     { separator: true },
-    { label: 'Cut', icon: '✂️', disabled: true },
-    { label: 'Copy', icon: '📋', disabled: true },
+    { label: 'Cut', disabled: true },
+    { label: 'Copy', disabled: true },
     { separator: true },
-    { label: 'Create Shortcut', icon: '🔗', disabled: true },
-    { label: 'Delete', icon: '🗑️', disabled: true },
-    { label: 'Rename', icon: '✏️', disabled: true },
+    { label: 'Create Shortcut', disabled: true },
+    { label: 'Delete', disabled: true },
+    { label: 'Rename', disabled: true },
     { separator: true },
-    { label: 'Properties', icon: '⚙️', disabled: true }
+    { label: 'Properties', disabled: true }
   ];
 
   return (
