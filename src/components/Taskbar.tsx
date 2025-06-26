@@ -57,24 +57,26 @@ export const Taskbar: React.FC<TaskbarProps> = ({
         style={{ borderLeft: '1px solid #808080', borderRight: '1px solid #ffffff' }}
       />
 
-      {/* Window Buttons */}
+      {/* Window Buttons - Show ALL windows including minimized */}
       <div className="flex-1 flex space-x-px px-1 overflow-hidden min-w-0">
-        {windows.filter(w => !w.isMinimized).map(window => (
+        {windows.map(window => (
           <button
             key={window.id}
             className={`h-5 px-2 bg-gray-300 border border-gray-400 text-xs truncate flex-shrink-0 transition-all duration-150 ${
-              activeWindowId === window.id 
+              activeWindowId === window.id && !window.isMinimized
                 ? 'bg-gray-400 border-gray-500 shadow-inner' 
                 : 'hover:bg-gray-200 shadow-sm'
             }`}
             style={{ 
-              borderStyle: activeWindowId === window.id ? 'inset' : 'outset',
-              fontWeight: activeWindowId === window.id ? 'bold' : 'normal',
+              borderStyle: (activeWindowId === window.id && !window.isMinimized) ? 'inset' : 'outset',
+              fontWeight: (activeWindowId === window.id && !window.isMinimized) ? 'bold' : 'normal',
               maxWidth: '150px',
               minWidth: '80px',
-              fontSize: '10px'
+              fontSize: '10px',
+              opacity: window.isMinimized ? 0.7 : 1
             }}
             onClick={() => onWindowClick(window.id)}
+            title={window.title}
           >
             {window.title}
           </button>

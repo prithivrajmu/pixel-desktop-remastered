@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { Minus, X, Square } from 'lucide-react';
 
@@ -12,6 +11,8 @@ interface WindowProps {
   zIndex: number;
   onClose: () => void;
   onFocus: () => void;
+  onMinimize: () => void;
+  onMaximize: () => void;
   onUpdatePosition: (position: { x: number; y: number }) => void;
   onUpdateSize: (size: { width: number; height: number }) => void;
 }
@@ -26,6 +27,8 @@ export const Window: React.FC<WindowProps> = ({
   zIndex,
   onClose,
   onFocus,
+  onMinimize,
+  onMaximize,
   onUpdatePosition,
   onUpdateSize,
 }) => {
@@ -192,12 +195,20 @@ export const Window: React.FC<WindowProps> = ({
           <button
             className="w-5 h-4 bg-gray-300 border border-gray-400 flex items-center justify-center hover:bg-gray-200 text-xs"
             style={{ borderStyle: 'outset' }}
+            onClick={(e) => {
+              e.stopPropagation();
+              onMinimize();
+            }}
           >
             <Minus size={8} />
           </button>
           <button
             className="w-5 h-4 bg-gray-300 border border-gray-400 flex items-center justify-center hover:bg-gray-200 text-xs"
             style={{ borderStyle: 'outset' }}
+            onClick={(e) => {
+              e.stopPropagation();
+              onMaximize();
+            }}
           >
             <Square size={6} />
           </button>

@@ -1,5 +1,4 @@
-
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Taskbar } from './Taskbar';
 import { Window } from './Window';
 import { DesktopIcon } from './DesktopIcon';
@@ -15,7 +14,7 @@ import { BackgroundManager } from './BackgroundManager';
 import { useDesktopState } from '../hooks/useDesktopState';
 import { useKeyboardEvents } from '../hooks/useKeyboardEvents';
 import { useContextMenu } from '../hooks/useContextMenu';
-import { desktopIcons } from '../config/desktopIcons';
+import { desktopIcons, welcomeWindow } from '../config/desktopIcons';
 
 export interface WindowData {
   id: string;
@@ -31,7 +30,6 @@ export const Desktop: React.FC = () => {
   const {
     windows,
     activeWindowId,
-    nextZIndex,
     selectedBackground,
     openWindow,
     closeWindow,
@@ -57,11 +55,33 @@ export const Desktop: React.FC = () => {
   const {
     isAltTabOpen,
     altTabIndex,
-    handleAltTabSelect,
     setIsAltTabOpen
   } = useKeyboardEvents(windows, focusWindow);
 
   const sounds = useSounds();
+
+  // Show welcome screen on startup
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      openWindow(welcomeWindow);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [openWindow]);
+
+  // Center window function
+  const centerWindow = (size: { width: number; height: number }) => {
+    const x = Math.max(0, (window.innerWidth - size.width) / 2);
+    const y = Math.max(0, (window.innerHeight - size.height - 40) / 2); // Account for taskbar
+    return { x, y };
+  };
+
+  const handleOpenWindow = (windowConfig: any) => {
+    const centeredPosition = centerWindow(windowConfig.size);
+    openWindow({
+      ...windowConfig,
+      position: centeredPosition
+    });
+  };
 
   const handleShutdown = () => {
     setIsShutdownDialogOpen(true);
@@ -81,6 +101,7 @@ export const Desktop: React.FC = () => {
   };
 
   const handleDisplayProperties = () => {
+    const centeredPosition = centerWindow({ width: 400, height: 500 });
     openWindow({
       title: 'Display Properties',
       component: () => (
@@ -90,7 +111,7 @@ export const Desktop: React.FC = () => {
         />
       ),
       isMinimized: false,
-      position: { x: 100, y: 100 },
+      position: centeredPosition,
       size: { width: 400, height: 500 }
     });
     closeContextMenu();
@@ -114,7 +135,7 @@ export const Desktop: React.FC = () => {
   const iconContextItems = [
     { label: 'Open', onClick: () => {
       const icon = desktopIcons.find(i => i.id === contextMenu.targetId);
-      if (icon) openWindow(icon.windowConfig);
+      if (icon) handleOpenWindow(icon.windowConfig);
     }},
     { separator: true },
     { label: 'Cut', disabled: true },
@@ -157,7 +178,7 @@ export const Desktop: React.FC = () => {
             position={icon.position}
             isSelected={selectedIcons.has(icon.id)}
             tooltip={icon.tooltip}
-            onDoubleClick={() => openWindow(icon.windowConfig)}
+            onDoubleClick={() => handleOpenWindow(icon.windowConfig)}
             onClick={() => handleIconClick(icon.id)}
             onRightClick={(e) => handleIconRightClick(e, icon.id)}
           />
@@ -174,6 +195,23 @@ export const Desktop: React.FC = () => {
             zIndex={window.zIndex}
             onClose={() => closeWindow(window.id)}
             onFocus={() => focusWindow(window.id)}
+            onMinimize={() => updateWindow(window.id, { isMinimized: true })}
+            onMaximize={() => {
+              const isMaximized = window.size.width === window.innerWidth && window.size.height === window.innerHeight - 40;
+              if (isMaximized) {
+                // Restore to original size
+                updateWindow(window.id, { 
+                  size: { width: 500, height: 400 },
+                  position: centerWindow({ width: 500, height: 400 })
+                });
+              } else {
+                // Maximize
+                updateWindow(window.id, { 
+                  size: { width: window.innerWidth, height: window.innerHeight - 40 },
+                  position: { x: 0, y: 0 }
+                });
+              }
+            }}
             onUpdatePosition={(position) => updateWindow(window.id, { position })}
             onUpdateSize={(size) => updateWindow(window.id, { size })}
           >
@@ -217,7 +255,13 @@ export const Desktop: React.FC = () => {
         <Taskbar
           windows={windows}
           activeWindowId={activeWindowId}
-          onWindowClick={focusWindow}
+          onWindowClick={(id: string) => {
+            const window = windows.find(w => w.id === id);
+            if (window?.isMinimized) {
+              updateWindow(id, { isMinimized: false });
+            }
+            focusWindow(id);
+          }}
           onStartClick={() => {
             setIsStartMenuOpen(!isStartMenuOpen);
             sounds.playClick();

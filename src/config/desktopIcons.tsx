@@ -5,6 +5,7 @@ import { MyDocuments } from '../components/applications/MyDocuments';
 import { InternetExplorer } from '../components/applications/InternetExplorer';
 import { Notepad } from '../components/applications/Notepad';
 import { RecycleBin } from '../components/applications/RecycleBin';
+import { Welcome } from '../components/applications/Welcome';
 
 export const desktopIcons = [
   { 
@@ -17,79 +18,87 @@ export const desktopIcons = [
       title: 'My Computer',
       component: MyComputer,
       isMinimized: false,
-      position: { x: 100, y: 100 },
+      position: { x: 0, y: 0 }, // Will be centered
       size: { width: 500, height: 400 }
-    },
-    onDoubleClick: function() {
-      // This will be handled by the parent component
     }
   },
   { 
-    id: 'my-documents', 
-    name: 'My Documents', 
-    icon: '📁', 
-    position: { x: 20, y: 120 },
-    tooltip: 'My Projects',
+    id: 'inbox', 
+    name: 'Inbox', 
+    icon: '📥', 
+    position: { x: 20, y: 100 },
+    tooltip: 'Messages and Communications',
     windowConfig: {
-      title: 'My Documents',
+      title: 'Inbox',
       component: MyDocuments,
       isMinimized: false,
-      position: { x: 150, y: 150 },
+      position: { x: 0, y: 0 },
       size: { width: 600, height: 500 }
-    },
-    onDoubleClick: function() {
-      // This will be handled by the parent component
-    }
-  },
-  { 
-    id: 'internet-explorer', 
-    name: 'Internet Explorer', 
-    icon: '🌐', 
-    position: { x: 20, y: 220 },
-    tooltip: 'My Writings',
-    windowConfig: {
-      title: 'Internet Explorer',
-      component: InternetExplorer,
-      isMinimized: false,
-      position: { x: 200, y: 100 },
-      size: { width: 700, height: 500 }
-    },
-    onDoubleClick: function() {
-      // This will be handled by the parent component
-    }
-  },
-  { 
-    id: 'notepad', 
-    name: 'Notepad', 
-    icon: '📝', 
-    position: { x: 20, y: 320 },
-    tooltip: 'Contact Me',
-    windowConfig: {
-      title: 'Contact - Notepad',
-      component: Notepad,
-      isMinimized: false,
-      position: { x: 200, y: 200 },
-      size: { width: 500, height: 400 }
-    },
-    onDoubleClick: function() {
-      // This will be handled by the parent component
     }
   },
   { 
     id: 'recycle-bin', 
     name: 'Recycle Bin', 
     icon: '🗑️', 
-    position: { x: 20, y: 420 },
+    position: { x: 20, y: 180 },
     tooltip: 'Archived Projects and Ideas',
     windowConfig: {
       title: 'Recycle Bin',
       component: RecycleBin,
       isMinimized: false,
-      position: { x: 250, y: 250 },
+      position: { x: 0, y: 0 },
       size: { width: 450, height: 400 }
-    },
-    onDoubleClick: function() {
-      // This will be handled by the parent component
+    }
+  },
+  { 
+    id: 'the-internet', 
+    name: 'The Internet', 
+    icon: '🌐', 
+    position: { x: 20, y: 260 },
+    tooltip: 'My Writings and Blog',
+    windowConfig: {
+      title: 'The Internet',
+      component: InternetExplorer,
+      isMinimized: false,
+      position: { x: 0, y: 0 },
+      size: { width: 700, height: 500 }
+    }
+  },
+  { 
+    id: 'online-services', 
+    name: 'Online Services', 
+    icon: '📁', 
+    position: { x: 20, y: 340 },
+    tooltip: 'My Projects and Portfolio',
+    windowConfig: {
+      title: 'Online Services',
+      component: MyDocuments,
+      isMinimized: false,
+      position: { x: 0, y: 0 },
+      size: { width: 600, height: 500 }
+    }
+  },
+  { 
+    id: 'set-up-the-microsoft-network', 
+    name: 'Set Up The Microsoft Network', 
+    icon: '🔧', 
+    position: { x: 20, y: 420 },
+    tooltip: 'Contact and Network',
+    windowConfig: {
+      title: 'Network Setup',
+      component: Notepad,
+      isMinimized: false,
+      position: { x: 0, y: 0 },
+      size: { width: 500, height: 400 }
     }
   }
 ];
+
+// Welcome window that shows on startup
+export const welcomeWindow = {
+  title: 'Welcome',
+  component: Welcome,
+  isMinimized: false,
+  position: { x: 0, y: 0 }, // Will be centered
+  size: { width: 500, height: 350 }
+};
