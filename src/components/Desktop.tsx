@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback, useEffect } from 'react';
 import { Taskbar } from './Taskbar';
 import { Window } from './Window';
@@ -195,6 +196,12 @@ export const Desktop: React.FC = () => {
     setContextMenu({ ...contextMenu, isVisible: false });
   };
 
+  const handleDesktopClick = () => {
+    setSelectedIcons(new Set());
+    setContextMenu({ ...contextMenu, isVisible: false });
+    setIsStartMenuOpen(false);
+  };
+
   const closeContextMenu = () => {
     setContextMenu({ ...contextMenu, isVisible: false });
   };
@@ -233,6 +240,7 @@ export const Desktop: React.FC = () => {
       name: 'My Computer', 
       icon: '💻', 
       position: { x: 20, y: 20 },
+      tooltip: 'About Me, Skills, and Bio',
       onDoubleClick: () => openWindow({
         title: 'My Computer',
         component: MyComputer,
@@ -246,6 +254,7 @@ export const Desktop: React.FC = () => {
       name: 'My Documents', 
       icon: '📁', 
       position: { x: 20, y: 120 },
+      tooltip: 'My Projects',
       onDoubleClick: () => openWindow({
         title: 'My Documents',
         component: MyDocuments,
@@ -259,6 +268,7 @@ export const Desktop: React.FC = () => {
       name: 'Internet Explorer', 
       icon: '🌐', 
       position: { x: 20, y: 220 },
+      tooltip: 'My Writings',
       onDoubleClick: () => openWindow({
         title: 'Internet Explorer',
         component: InternetExplorer,
@@ -272,6 +282,7 @@ export const Desktop: React.FC = () => {
       name: 'Notepad', 
       icon: '📝', 
       position: { x: 20, y: 320 },
+      tooltip: 'Contact Me',
       onDoubleClick: () => openWindow({
         title: 'Contact - Notepad',
         component: Notepad,
@@ -285,6 +296,7 @@ export const Desktop: React.FC = () => {
       name: 'Recycle Bin', 
       icon: '🗑️', 
       position: { x: 20, y: 420 },
+      tooltip: 'Archived Projects and Ideas',
       onDoubleClick: () => openWindow({
         title: 'Recycle Bin',
         component: RecycleBin,
@@ -304,11 +316,7 @@ export const Desktop: React.FC = () => {
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3Ccircle cx='10' cy='10' r='2'/%3E%3Ccircle cx='50' cy='50' r='2'/%3E%3Ccircle cx='50' cy='10' r='1'/%3E%3Ccircle cx='10' cy='50' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
           fontFamily: '"MS Sans Serif", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
         }}
-        onClick={(e) => {
-          setIsStartMenuOpen(false);
-          closeContextMenu();
-          setSelectedIcons(new Set());
-        }}
+        onClick={handleDesktopClick}
         onContextMenu={handleDesktopRightClick}
       >
         {/* Desktop Icons */}
@@ -319,6 +327,7 @@ export const Desktop: React.FC = () => {
             icon={icon.icon}
             position={icon.position}
             isSelected={selectedIcons.has(icon.id)}
+            tooltip={icon.tooltip}
             onDoubleClick={icon.onDoubleClick}
             onClick={() => handleIconClick(icon.id)}
             onRightClick={(e) => handleIconRightClick(e, icon.id)}

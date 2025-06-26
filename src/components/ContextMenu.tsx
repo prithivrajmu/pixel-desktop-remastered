@@ -6,7 +6,7 @@ interface ContextMenuProps {
   position: { x: number; y: number };
   onClose: () => void;
   items: {
-    label: string;
+    label?: string;
     icon?: string;
     onClick?: () => void;
     disabled?: boolean;

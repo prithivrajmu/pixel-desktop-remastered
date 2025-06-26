@@ -9,6 +9,7 @@ interface DesktopIconProps {
   onDoubleClick: () => void;
   onClick?: () => void;
   onRightClick?: (e: React.MouseEvent) => void;
+  tooltip?: string;
 }
 
 export const DesktopIcon: React.FC<DesktopIconProps> = ({
@@ -18,7 +19,8 @@ export const DesktopIcon: React.FC<DesktopIconProps> = ({
   isSelected = false,
   onDoubleClick,
   onClick,
-  onRightClick
+  onRightClick,
+  tooltip
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
@@ -33,6 +35,7 @@ export const DesktopIcon: React.FC<DesktopIconProps> = ({
   };
 
   const handleRightClick = (e: React.MouseEvent) => {
+    e.preventDefault();
     e.stopPropagation();
     if (onRightClick) onRightClick(e);
   };
@@ -74,13 +77,13 @@ export const DesktopIcon: React.FC<DesktopIconProps> = ({
         <div 
           className="absolute bg-yellow-100 border border-black px-2 py-1 text-xs whitespace-nowrap z-50"
           style={{ 
-            top: '-30px',
+            top: '-35px',
             left: '50%',
             transform: 'translateX(-50%)',
             fontFamily: '"MS Sans Serif", sans-serif'
           }}
         >
-          {name}
+          {tooltip || name}
         </div>
       )}
     </div>

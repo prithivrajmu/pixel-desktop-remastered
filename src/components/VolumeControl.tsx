@@ -49,15 +49,22 @@ export const VolumeControl: React.FC<VolumeControlProps> = ({ className }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const getVolumeIcon = () => {
+    if (isMuted || volume === 0) return '🔇';
+    if (volume < 33) return '🔈';
+    if (volume < 66) return '🔉';
+    return '🔊';
+  };
+
   return (
     <div ref={volumeRef} className={`relative ${className}`}>
       <button
-        className="w-6 h-6 bg-gray-300 border border-gray-400 flex items-center justify-center hover:bg-gray-200"
+        className="w-6 h-6 bg-gray-300 border border-gray-400 flex items-center justify-center hover:bg-gray-200 text-xs"
         style={{ borderStyle: 'outset' }}
         onClick={handleSingleClick}
         onDoubleClick={handleDoubleClick}
       >
-        {isMuted || volume === 0 ? '🔇' : volume < 50 ? '🔉' : '🔊'}
+        {getVolumeIcon()}
       </button>
 
       {isOpen && (
@@ -69,10 +76,12 @@ export const VolumeControl: React.FC<VolumeControlProps> = ({ className }) => {
             className="relative h-full cursor-pointer"
             onClick={handleVolumeChange}
           >
+            {/* Volume fill */}
             <div
               className="absolute bottom-0 left-1 right-1 bg-blue-600"
               style={{ height: `${volume}%` }}
             />
+            {/* Volume slider thumb */}
             <div
               className="absolute w-6 h-2 bg-gray-200 border border-gray-400 left-1/2 transform -translate-x-1/2"
               style={{
