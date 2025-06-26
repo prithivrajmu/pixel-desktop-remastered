@@ -1,5 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
+import { useSounds } from './SoundManager';
 
 interface VolumeControlProps {
   className?: string;
@@ -11,6 +12,7 @@ export const VolumeControl: React.FC<VolumeControlProps> = ({ className }) => {
   const [isMuted, setIsMuted] = useState(true);
   const [lastVolume, setLastVolume] = useState(50);
   const volumeRef = useRef<HTMLDivElement>(null);
+  const sounds = useSounds();
 
   const handleSingleClick = () => {
     setIsOpen(!isOpen);
@@ -20,10 +22,13 @@ export const VolumeControl: React.FC<VolumeControlProps> = ({ className }) => {
     if (isMuted) {
       setVolume(lastVolume);
       setIsMuted(false);
+      sounds.setMuted(false);
+      sounds.setVolume(lastVolume);
     } else {
       setLastVolume(volume);
       setVolume(0);
       setIsMuted(true);
+      sounds.setMuted(true);
     }
   };
 
@@ -31,8 +36,15 @@ export const VolumeControl: React.FC<VolumeControlProps> = ({ className }) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const y = rect.bottom - e.clientY;
     const newVolume = Math.max(0, Math.min(100, (y / rect.height) * 100));
+    
     setVolume(newVolume);
-    setIsMuted(newVolume === 0);
+    const shouldBeMuted = newVolume === 0;
+    setIsMuted(shouldBeMuted);
+    
+    // Update sound system
+    sounds.setVolume(newVolume);
+    sounds.setMuted(shouldBeMuted);
+    
     if (newVolume > 0) {
       setLastVolume(newVolume);
     }

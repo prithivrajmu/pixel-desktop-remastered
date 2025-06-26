@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback, useEffect } from 'react';
 import { Taskbar } from './Taskbar';
 import { Window } from './Window';
@@ -9,6 +8,8 @@ import { ShutdownDialog } from './ShutdownDialog';
 import { ShutdownScreen } from './ShutdownScreen';
 import { ContextMenu } from './ContextMenu';
 import { SoundManager, useSounds } from './SoundManager';
+import { IconManager } from './IconManager';
+import { BackgroundManager } from './BackgroundManager';
 
 // Application imports
 import { MyComputer } from './applications/MyComputer';
@@ -32,6 +33,7 @@ export const Desktop: React.FC = () => {
   const [activeWindowId, setActiveWindowId] = useState<string | null>(null);
   const [isStartMenuOpen, setIsStartMenuOpen] = useState(false);
   const [nextZIndex, setNextZIndex] = useState(10);
+  const [selectedBackground, setSelectedBackground] = useState('default');
   
   // Alt+Tab functionality
   const [isAltTabOpen, setIsAltTabOpen] = useState(false);
@@ -215,7 +217,10 @@ export const Desktop: React.FC = () => {
     { separator: true },
     { label: 'New', icon: '📄', disabled: true },
     { separator: true },
-    { label: 'Properties', icon: '⚙️', disabled: true }
+    { label: 'Properties', icon: '⚙️', onClick: () => {
+      // Could open display properties here
+      console.log('Display Properties');
+    }}
   ];
 
   const iconContextItems = [
@@ -313,18 +318,29 @@ export const Desktop: React.FC = () => {
       <div 
         className="w-full h-screen bg-teal-600 relative overflow-hidden select-none"
         style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3Ccircle cx='10' cy='10' r='2'/%3E%3Ccircle cx='50' cy='50' r='2'/%3E%3Ccircle cx='50' cy='10' r='1'/%3E%3Ccircle cx='10' cy='50' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
           fontFamily: '"MS Sans Serif", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif'
         }}
         onClick={handleDesktopClick}
         onContextMenu={handleDesktopRightClick}
       >
+        {/* Background */}
+        <BackgroundManager 
+          selectedBackground={selectedBackground}
+          className="z-0" 
+        />
+
         {/* Desktop Icons */}
         {desktopIcons.map(icon => (
           <DesktopIcon
             key={icon.id}
             name={icon.name}
-            icon={icon.icon}
+            icon={
+              <IconManager 
+                iconId={icon.id} 
+                fallback={icon.icon} 
+                size={32}
+              />
+            }
             position={icon.position}
             isSelected={selectedIcons.has(icon.id)}
             tooltip={icon.tooltip}

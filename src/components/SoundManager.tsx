@@ -5,6 +5,8 @@ import * as Tone from 'tone';
 class WindowsSounds {
   private static instance: WindowsSounds;
   private isInitialized = false;
+  private masterVolume = 0.5; // Default 50%
+  private isMuted = true; // Default muted
 
   public static getInstance(): WindowsSounds {
     if (!WindowsSounds.instance) {
@@ -25,10 +27,29 @@ class WindowsSounds {
     }
   }
 
-  async playStartup() {
+  setVolume(volume: number) {
+    this.masterVolume = Math.max(0, Math.min(1, volume / 100));
+    this.updateToneVolume();
+  }
+
+  setMuted(muted: boolean) {
+    this.isMuted = muted;
+    this.updateToneVolume();
+  }
+
+  private updateToneVolume() {
+    const effectiveVolume = this.isMuted ? 0 : this.masterVolume;
+    Tone.Destination.volume.value = Tone.gainToDb(effectiveVolume);
+  }
+
+  private async createSynth(options: any) {
     await this.init();
-    
-    const synth = new Tone.Synth({
+    const synth = new Tone.Synth(options).toDestination();
+    return synth;
+  }
+
+  async playStartup() {
+    const synth = await this.createSynth({
       oscillator: {
         type: 'sine'
       },
@@ -38,7 +59,7 @@ class WindowsSounds {
         sustain: 0.3,
         release: 1
       }
-    }).toDestination();
+    });
 
     // Windows 95 startup sound approximation
     const melody = [
@@ -58,9 +79,7 @@ class WindowsSounds {
   }
 
   async playShutdown() {
-    await this.init();
-    
-    const synth = new Tone.Synth({
+    const synth = await this.createSynth({
       oscillator: {
         type: 'sine'
       },
@@ -70,7 +89,7 @@ class WindowsSounds {
         sustain: 0.2,
         release: 1.5
       }
-    }).toDestination();
+    });
 
     // Windows 95 shutdown sound approximation
     const melody = [
@@ -90,9 +109,7 @@ class WindowsSounds {
   }
 
   async playClick() {
-    await this.init();
-    
-    const synth = new Tone.Synth({
+    const synth = await this.createSynth({
       oscillator: {
         type: 'square'
       },
@@ -102,16 +119,14 @@ class WindowsSounds {
         sustain: 0,
         release: 0.05
       }
-    }).toDestination();
+    });
 
     synth.triggerAttackRelease('C5', '32n');
     setTimeout(() => synth.dispose(), 200);
   }
 
   async playError() {
-    await this.init();
-    
-    const synth = new Tone.Synth({
+    const synth = await this.createSynth({
       oscillator: {
         type: 'sawtooth'
       },
@@ -121,7 +136,7 @@ class WindowsSounds {
         sustain: 0,
         release: 0.1
       }
-    }).toDestination();
+    });
 
     synth.triggerAttackRelease('F3', '8n');
     setTimeout(() => synth.dispose(), 500);

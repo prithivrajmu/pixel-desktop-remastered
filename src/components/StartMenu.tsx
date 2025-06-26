@@ -14,10 +14,16 @@ interface MenuItem {
   type?: 'separator';
   submenu?: MenuItem[];
   action?: () => void;
+  url?: string;
 }
 
 export const StartMenu: React.FC<StartMenuProps> = ({ onClose, onShutdown }) => {
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
+
+  const handleExternalLink = (url: string) => {
+    window.open(url, '_blank');
+    onClose();
+  };
 
   const menuItems: MenuItem[] = [
     { 
@@ -25,10 +31,41 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onClose, onShutdown }) => 
       icon: '📁', 
       hasSubmenu: true,
       submenu: [
-        { label: 'Accessories', icon: '📁', hasSubmenu: true },
-        { label: 'Games', icon: '🎮', hasSubmenu: true },
-        { label: 'Internet Tools', icon: '🌐', hasSubmenu: false },
-        { label: 'Microsoft Office', icon: '📊', hasSubmenu: true },
+        { 
+          label: 'Accessories', 
+          icon: '📁', 
+          hasSubmenu: true,
+          submenu: [
+            { label: 'Calculator', icon: '🧮', hasSubmenu: false },
+            { label: 'Paint', icon: '🎨', hasSubmenu: false },
+            { label: 'WordPad', icon: '📝', hasSubmenu: false },
+          ]
+        },
+        { 
+          label: 'Internet Tools', 
+          icon: '🌐', 
+          hasSubmenu: true,
+          submenu: [
+            { label: 'Internet Explorer', icon: '🌐', hasSubmenu: false },
+            { label: 'Outlook Express', icon: '📧', hasSubmenu: false },
+          ]
+        },
+        { 
+          label: 'Games', 
+          icon: '🎮', 
+          hasSubmenu: true,
+          submenu: [
+            { label: 'Solitaire', icon: '🃏', hasSubmenu: false },
+            { label: 'Minesweeper', icon: '💣', hasSubmenu: false },
+          ]
+        },
+        { type: 'separator' },
+        { 
+          label: 'Portfolio Source Code', 
+          icon: '💻', 
+          hasSubmenu: false,
+          action: () => handleExternalLink('https://github.com/yourusername/portfolio')
+        },
       ]
     },
     { 
@@ -37,10 +74,34 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onClose, onShutdown }) => 
       hasSubmenu: true,
       submenu: [
         { label: 'My Documents', icon: '📁', hasSubmenu: false },
-        { label: 'Recent Documents', icon: '📄', hasSubmenu: false },
+        { 
+          label: 'Resume', 
+          icon: '📄', 
+          hasSubmenu: false,
+          action: () => handleExternalLink('/resume.pdf')
+        },
+        { type: 'separator' },
+        { 
+          label: 'Recent Documents', 
+          icon: '📄', 
+          hasSubmenu: true,
+          submenu: [
+            { label: 'Project Proposal.doc', icon: '📄', hasSubmenu: false },
+            { label: 'Meeting Notes.txt', icon: '📝', hasSubmenu: false },
+          ]
+        },
       ]
     },
-    { label: 'Settings', icon: '⚙️', hasSubmenu: false },
+    { 
+      label: 'Settings', 
+      icon: '⚙️', 
+      hasSubmenu: true,
+      submenu: [
+        { label: 'Control Panel', icon: '⚙️', hasSubmenu: false },
+        { label: 'Printers', icon: '🖨️', hasSubmenu: false },
+        { label: 'Taskbar...', icon: '📊', hasSubmenu: false },
+      ]
+    },
     { 
       label: 'Find', 
       icon: '🔍', 
@@ -48,6 +109,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onClose, onShutdown }) => 
       submenu: [
         { label: 'Files or Folders...', icon: '📁', hasSubmenu: false },
         { label: 'Computer...', icon: '💻', hasSubmenu: false },
+        { label: 'On the Internet...', icon: '🌐', hasSubmenu: false },
       ]
     },
     { label: 'Help', icon: '❓', hasSubmenu: false },
@@ -72,11 +134,48 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onClose, onShutdown }) => 
   const handleItemClick = (item: MenuItem) => {
     if (item.action) {
       item.action();
+    } else if (item.url) {
+      handleExternalLink(item.url);
     }
     if (!item.hasSubmenu) {
       onClose();
     }
   };
+
+  const renderSubmenu = (items: MenuItem[], level: number = 0) => (
+    <div 
+      className="absolute left-full top-0 w-48 bg-gray-300 border-2 border-gray-400 shadow-lg z-50"
+      style={{ borderStyle: 'outset' }}
+    >
+      {items.map((item, index) => {
+        if (item.type === 'separator') {
+          return <div key={index} className="h-px bg-gray-400 mx-2 my-1" />;
+        }
+
+        return (
+          <div
+            key={index}
+            className="flex items-center px-4 py-2 hover:bg-blue-600 hover:text-white cursor-pointer text-sm relative group"
+            onMouseEnter={() => handleItemHover(item.label || '', item.hasSubmenu)}
+            onClick={() => handleItemClick(item)}
+          >
+            <span className="w-6 text-center mr-3">{item.icon}</span>
+            <span className="flex-1">{item.label}</span>
+            {item.hasSubmenu && (
+              <>
+                <ChevronRight size={10} className="ml-2" />
+                {activeSubmenu === item.label && item.submenu && (
+                  <div className="group-hover:block">
+                    {renderSubmenu(item.submenu, level + 1)}
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
 
   return (
     <div 
@@ -114,29 +213,14 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onClose, onShutdown }) => 
               <span className="w-6 text-center mr-3">{item.icon}</span>
               <span className="flex-1 text-sm">{item.label}</span>
               {item.hasSubmenu && (
-                <ChevronRight size={12} className="ml-2" />
-              )}
-
-              {/* Submenu */}
-              {item.hasSubmenu && activeSubmenu === item.label && item.submenu && (
-                <div 
-                  className="absolute left-full top-0 w-48 bg-gray-300 border-2 border-gray-400 shadow-lg"
-                  style={{ borderStyle: 'outset' }}
-                >
-                  {item.submenu.map((subItem, subIndex) => (
-                    <div
-                      key={subIndex}
-                      className="flex items-center px-4 py-2 hover:bg-blue-600 hover:text-white cursor-pointer text-sm"
-                      onClick={() => handleItemClick(subItem)}
-                    >
-                      <span className="w-6 text-center mr-3">{subItem.icon}</span>
-                      <span className="flex-1">{subItem.label}</span>
-                      {subItem.hasSubmenu && (
-                        <ChevronRight size={10} className="ml-2" />
-                      )}
+                <>
+                  <ChevronRight size={12} className="ml-2" />
+                  {activeSubmenu === item.label && item.submenu && (
+                    <div className="group-hover:block">
+                      {renderSubmenu(item.submenu)}
                     </div>
-                  ))}
-                </div>
+                  )}
+                </>
               )}
             </div>
           );
