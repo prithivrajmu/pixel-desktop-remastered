@@ -36,34 +36,28 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onClose, onShutdown }) => 
           icon: '📁', 
           hasSubmenu: true,
           submenu: [
-            { label: 'Calculator', icon: '🧮', hasSubmenu: false },
-            { label: 'Paint', icon: '🎨', hasSubmenu: false },
-            { label: 'WordPad', icon: '📝', hasSubmenu: false },
+            { label: 'Calculator', icon: '🧮' },
+            { label: 'Paint', icon: '🎨' },
+            { label: 'Notepad', icon: '📝' },
+            { label: 'WordPad', icon: '📄' },
           ]
         },
         { 
-          label: 'Internet Tools', 
-          icon: '🌐', 
-          hasSubmenu: true,
-          submenu: [
-            { label: 'Internet Explorer', icon: '🌐', hasSubmenu: false },
-            { label: 'Outlook Express', icon: '📧', hasSubmenu: false },
-          ]
+          label: 'StartUp', 
+          icon: '▶️', 
         },
         { 
-          label: 'Games', 
-          icon: '🎮', 
-          hasSubmenu: true,
-          submenu: [
-            { label: 'Solitaire', icon: '🃏', hasSubmenu: false },
-            { label: 'Minesweeper', icon: '💣', hasSubmenu: false },
-          ]
+          label: 'MS-DOS Prompt', 
+          icon: '💻', 
+        },
+        { 
+          label: 'Windows Explorer', 
+          icon: '📁', 
         },
         { type: 'separator' },
         { 
           label: 'Portfolio Source Code', 
           icon: '💻', 
-          hasSubmenu: false,
           action: () => handleExternalLink('https://github.com/yourusername/portfolio')
         },
       ]
@@ -73,22 +67,11 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onClose, onShutdown }) => 
       icon: '📄', 
       hasSubmenu: true,
       submenu: [
-        { label: 'My Documents', icon: '📁', hasSubmenu: false },
+        { label: 'My Documents', icon: '📁' },
         { 
-          label: 'Resume', 
+          label: 'Resume.pdf', 
           icon: '📄', 
-          hasSubmenu: false,
           action: () => handleExternalLink('/resume.pdf')
-        },
-        { type: 'separator' },
-        { 
-          label: 'Recent Documents', 
-          icon: '📄', 
-          hasSubmenu: true,
-          submenu: [
-            { label: 'Project Proposal.doc', icon: '📄', hasSubmenu: false },
-            { label: 'Meeting Notes.txt', icon: '📝', hasSubmenu: false },
-          ]
         },
       ]
     },
@@ -97,9 +80,9 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onClose, onShutdown }) => 
       icon: '⚙️', 
       hasSubmenu: true,
       submenu: [
-        { label: 'Control Panel', icon: '⚙️', hasSubmenu: false },
-        { label: 'Printers', icon: '🖨️', hasSubmenu: false },
-        { label: 'Taskbar...', icon: '📊', hasSubmenu: false },
+        { label: 'Control Panel', icon: '⚙️' },
+        { label: 'Printers', icon: '🖨️' },
+        { label: 'Taskbar...', icon: '📊' },
       ]
     },
     { 
@@ -107,18 +90,16 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onClose, onShutdown }) => 
       icon: '🔍', 
       hasSubmenu: true,
       submenu: [
-        { label: 'Files or Folders...', icon: '📁', hasSubmenu: false },
-        { label: 'Computer...', icon: '💻', hasSubmenu: false },
-        { label: 'On the Internet...', icon: '🌐', hasSubmenu: false },
+        { label: 'Files or Folders...', icon: '🔍' },
+        { label: 'Computer...', icon: '💻' },
       ]
     },
-    { label: 'Help', icon: '❓', hasSubmenu: false },
-    { label: 'Run...', icon: '▶️', hasSubmenu: false },
+    { label: 'Help', icon: '❓' },
+    { label: 'Run...', icon: '▶️' },
     { type: 'separator' },
     { 
       label: 'Shut Down...', 
       icon: '⏻', 
-      hasSubmenu: false,
       action: onShutdown
     },
   ];
@@ -144,18 +125,18 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onClose, onShutdown }) => 
 
   const renderSubmenu = (items: MenuItem[], level: number = 0) => (
     <div 
-      className="absolute left-full top-0 w-48 bg-gray-300 border-2 border-gray-400 shadow-lg z-50"
+      className="absolute left-full top-0 w-48 bg-gray-300 border-2 border-gray-500 shadow-lg z-50"
       style={{ borderStyle: 'outset' }}
     >
       {items.map((item, index) => {
         if (item.type === 'separator') {
-          return <div key={index} className="h-px bg-gray-400 mx-2 my-1" />;
+          return <div key={index} className="h-px bg-gray-500 mx-2 my-1" />;
         }
 
         return (
           <div
             key={index}
-            className="flex items-center px-4 py-2 hover:bg-blue-600 hover:text-white cursor-pointer text-sm relative group"
+            className="flex items-center px-3 py-1 hover:bg-blue-600 hover:text-white cursor-pointer text-sm relative group"
             onMouseEnter={() => handleItemHover(item.label || '', item.hasSubmenu)}
             onClick={() => handleItemClick(item)}
           >
@@ -179,42 +160,47 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onClose, onShutdown }) => 
 
   return (
     <div 
-      className="absolute bottom-10 left-0 w-64 bg-gray-300 border-2 border-gray-400 shadow-lg z-40"
+      className="absolute bottom-10 left-0 w-64 bg-gray-300 border-2 border-gray-500 shadow-xl z-40"
       style={{ borderStyle: 'outset' }}
       onClick={(e) => e.stopPropagation()}
     >
       {/* Start Menu Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white px-4 py-3 flex items-center space-x-3">
-        <div className="w-8 h-8 bg-white rounded flex items-center justify-center">
-          <span className="text-blue-600 font-bold">👤</span>
-        </div>
-        <div>
-          <div className="font-bold text-sm">Windows 95</div>
-          <div className="text-xs opacity-90">Portfolio Edition</div>
+      <div 
+        className="bg-gradient-to-r from-gray-400 to-gray-500 text-black px-4 py-2 border-b border-gray-500"
+        style={{
+          background: 'linear-gradient(90deg, #c0c0c0 0%, #808080 100%)',
+          fontSize: '11px',
+          fontWeight: 'bold'
+        }}
+      >
+        <div className="flex items-center space-x-2">
+          <span>Windows</span>
+          <span style={{ fontSize: '10px', fontWeight: 'normal' }}>95</span>
         </div>
       </div>
 
       {/* Menu Items */}
-      <div className="py-2 relative">
+      <div className="py-1 relative">
         {menuItems.map((item, index) => {
           if (item.type === 'separator') {
             return (
-              <div key={index} className="h-px bg-gray-400 mx-2 my-1" />
+              <div key={index} className="h-px bg-gray-500 mx-2 my-1" />
             );
           }
 
           return (
             <div
               key={index}
-              className="flex items-center px-4 py-2 hover:bg-blue-600 hover:text-white cursor-pointer group relative"
+              className="flex items-center px-3 py-1 hover:bg-blue-600 hover:text-white cursor-pointer group relative"
               onMouseEnter={() => handleItemHover(item.label || '', item.hasSubmenu)}
               onClick={() => handleItemClick(item)}
+              style={{ fontSize: '11px' }}
             >
               <span className="w-6 text-center mr-3">{item.icon}</span>
-              <span className="flex-1 text-sm">{item.label}</span>
+              <span className="flex-1">{item.label}</span>
               {item.hasSubmenu && (
                 <>
-                  <ChevronRight size={12} className="ml-2" />
+                  <ChevronRight size={8} className="ml-2" />
                   {activeSubmenu === item.label && item.submenu && (
                     <div className="group-hover:block">
                       {renderSubmenu(item.submenu)}

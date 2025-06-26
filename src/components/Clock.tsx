@@ -21,22 +21,24 @@ export const Clock: React.FC = () => {
 
   const formatDate = (date: Date) => {
     return date.toLocaleDateString([], {
-      weekday: 'short',
       month: 'numeric',
       day: 'numeric',
-      year: 'numeric'
+      year: '2-digit'
     });
   };
 
   return (
     <div 
-      className="bg-gray-200 border border-gray-400 px-2 py-1 text-xs leading-tight cursor-default"
-      style={{ borderStyle: 'inset' }}
-      title={formatDate(time)}
+      className="bg-gray-200 border border-gray-400 px-1 py-1 text-xs leading-tight cursor-default text-center min-w-0"
+      style={{ 
+        borderStyle: 'inset',
+        fontSize: '10px',
+        width: '50px'
+      }}
+      title={`${formatTime(time)} ${formatDate(time)}`}
     >
-      <div>{formatTime(time)}</div>
-      <div className="text-xs opacity-75">{formatDate(time).split(',')[0]}</div>
-      <div className="text-xs opacity-75">{formatDate(time).split(',')[1]?.trim()}</div>
+      <div className="truncate">{formatTime(time)}</div>
+      <div className="truncate">{formatDate(time)}</div>
     </div>
   );
 };

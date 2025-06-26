@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 interface DesktopIconProps {
   name: string;
-  icon: string;
+  icon: React.ReactNode;
   position: { x: number; y: number };
   isSelected?: boolean;
   onDoubleClick: () => void;
@@ -23,6 +23,7 @@ export const DesktopIcon: React.FC<DesktopIconProps> = ({
   tooltip
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -40,6 +41,10 @@ export const DesktopIcon: React.FC<DesktopIconProps> = ({
     if (onRightClick) onRightClick(e);
   };
 
+  const handleMouseMove = (e: React.MouseEvent) => {
+    setMousePosition({ x: e.clientX, y: e.clientY });
+  };
+
   return (
     <div
       className="absolute flex flex-col items-center cursor-pointer group"
@@ -49,6 +54,7 @@ export const DesktopIcon: React.FC<DesktopIconProps> = ({
       onContextMenu={handleRightClick}
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
+      onMouseMove={handleMouseMove}
     >
       <div 
         className={`w-8 h-8 flex items-center justify-center text-2xl mb-1 ${
@@ -72,14 +78,12 @@ export const DesktopIcon: React.FC<DesktopIconProps> = ({
         {name}
       </div>
 
-      {/* Tooltip */}
       {showTooltip && !isSelected && (
         <div 
-          className="absolute bg-yellow-100 border border-black px-2 py-1 text-xs whitespace-nowrap z-50"
+          className="fixed bg-yellow-100 border border-black px-2 py-1 text-xs whitespace-nowrap z-50 pointer-events-none"
           style={{ 
-            top: '-35px',
-            left: '50%',
-            transform: 'translateX(-50%)',
+            left: mousePosition.x + 10,
+            top: mousePosition.y - 30,
             fontFamily: '"MS Sans Serif", sans-serif'
           }}
         >

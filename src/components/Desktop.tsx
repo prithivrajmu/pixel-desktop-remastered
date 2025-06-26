@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback, useEffect } from 'react';
 import { Taskbar } from './Taskbar';
 import { Window } from './Window';
@@ -10,13 +11,10 @@ import { ContextMenu } from './ContextMenu';
 import { SoundManager, useSounds } from './SoundManager';
 import { IconManager } from './IconManager';
 import { BackgroundManager } from './BackgroundManager';
-
-// Application imports
-import { MyComputer } from './applications/MyComputer';
-import { MyDocuments } from './applications/MyDocuments';
-import { InternetExplorer } from './applications/InternetExplorer';
-import { Notepad } from './applications/Notepad';
-import { RecycleBin } from './applications/RecycleBin';
+import { useDesktopState } from '../hooks/useDesktopState';
+import { useKeyboardEvents } from '../hooks/useKeyboardEvents';
+import { useContextMenu } from '../hooks/useContextMenu';
+import { desktopIcons } from '../config/desktopIcons';
 
 export interface WindowData {
   id: string;
@@ -29,129 +27,39 @@ export interface WindowData {
 }
 
 export const Desktop: React.FC = () => {
-  const [windows, setWindows] = useState<WindowData[]>([]);
-  const [activeWindowId, setActiveWindowId] = useState<string | null>(null);
+  const {
+    windows,
+    activeWindowId,
+    nextZIndex,
+    selectedBackground,
+    openWindow,
+    closeWindow,
+    focusWindow,
+    updateWindow,
+    setSelectedBackground
+  } = useDesktopState();
+
   const [isStartMenuOpen, setIsStartMenuOpen] = useState(false);
-  const [nextZIndex, setNextZIndex] = useState(10);
-  const [selectedBackground, setSelectedBackground] = useState('default');
-  
-  // Alt+Tab functionality
-  const [isAltTabOpen, setIsAltTabOpen] = useState(false);
-  const [altTabIndex, setAltTabIndex] = useState(0);
-  const [keysPressed, setKeysPressed] = useState<Set<string>>(new Set());
-  
-  // Shutdown functionality
   const [isShutdownDialogOpen, setIsShutdownDialogOpen] = useState(false);
   const [isShutdownScreenVisible, setIsShutdownScreenVisible] = useState(false);
 
-  // Context menu state
-  const [contextMenu, setContextMenu] = useState<{
-    isVisible: boolean;
-    position: { x: number; y: number };
-    type: 'desktop' | 'icon';
-    targetId?: string;
-  }>({
-    isVisible: false,
-    position: { x: 0, y: 0 },
-    type: 'desktop'
-  });
+  const {
+    contextMenu,
+    selectedIcons,
+    handleDesktopRightClick,
+    handleIconRightClick,
+    handleIconClick,
+    handleDesktopClick,
+    closeContextMenu
+  } = useContextMenu();
 
-  // Selected icons state
-  const [selectedIcons, setSelectedIcons] = useState<Set<string>>(new Set());
+  const {
+    isAltTabOpen,
+    altTabIndex,
+    handleAltTabSelect
+  } = useKeyboardEvents(windows, focusWindow);
 
   const sounds = useSounds();
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      const newKeysPressed = new Set(keysPressed);
-      newKeysPressed.add(e.key);
-      setKeysPressed(newKeysPressed);
-
-      if (e.altKey && e.key === 'Tab') {
-        e.preventDefault();
-        if (!isAltTabOpen && windows.length > 0) {
-          setIsAltTabOpen(true);
-          setAltTabIndex(0);
-        } else if (isAltTabOpen) {
-          setAltTabIndex(prev => (prev + 1) % windows.length);
-        }
-      }
-
-      if (isAltTabOpen && e.key === 'Enter') {
-        handleAltTabSelect();
-      }
-
-      if (isAltTabOpen && e.key === 'Escape') {
-        setIsAltTabOpen(false);
-      }
-    };
-
-    const handleKeyUp = (e: KeyboardEvent) => {
-      const newKeysPressed = new Set(keysPressed);
-      newKeysPressed.delete(e.key);
-      setKeysPressed(newKeysPressed);
-
-      if (e.key === 'Alt' && isAltTabOpen) {
-        handleAltTabSelect();
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    document.addEventListener('keyup', handleKeyUp);
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.removeEventListener('keyup', handleKeyUp);
-    };
-  }, [keysPressed, isAltTabOpen, windows, altTabIndex]);
-
-  const handleAltTabSelect = () => {
-    if (windows.length > 0) {
-      const selectedWindow = windows[altTabIndex];
-      if (selectedWindow) {
-        focusWindow(selectedWindow.id);
-      }
-    }
-    setIsAltTabOpen(false);
-    setAltTabIndex(0);
-  };
-
-  const openWindow = useCallback((windowData: Omit<WindowData, 'id' | 'zIndex'>) => {
-    const id = `window-${Date.now()}`;
-    const newWindow: WindowData = {
-      ...windowData,
-      id,
-      zIndex: nextZIndex,
-    };
-    
-    setWindows(prev => [...prev, newWindow]);
-    setActiveWindowId(id);
-    setNextZIndex(prev => prev + 1);
-    sounds.playClick();
-  }, [nextZIndex, sounds]);
-
-  const closeWindow = useCallback((id: string) => {
-    setWindows(prev => prev.filter(w => w.id !== id));
-    setActiveWindowId(prev => prev === id ? null : prev);
-  }, []);
-
-  const focusWindow = useCallback((id: string) => {
-    setActiveWindowId(id);
-    setWindows(prev => 
-      prev.map(w => 
-        w.id === id 
-          ? { ...w, zIndex: nextZIndex, isMinimized: false }
-          : w
-      )
-    );
-    setNextZIndex(prev => prev + 1);
-  }, [nextZIndex]);
-
-  const updateWindow = useCallback((id: string, updates: Partial<WindowData>) => {
-    setWindows(prev => 
-      prev.map(w => w.id === id ? { ...w, ...updates } : w)
-    );
-  }, []);
 
   const handleShutdown = () => {
     setIsShutdownDialogOpen(true);
@@ -170,44 +78,6 @@ export const Desktop: React.FC = () => {
     window.location.reload();
   };
 
-  // Context menu handlers
-  const handleDesktopRightClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setContextMenu({
-      isVisible: true,
-      position: { x: e.clientX, y: e.clientY },
-      type: 'desktop'
-    });
-    setSelectedIcons(new Set());
-  };
-
-  const handleIconRightClick = (e: React.MouseEvent, iconId: string) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setContextMenu({
-      isVisible: true,
-      position: { x: e.clientX, y: e.clientY },
-      type: 'icon',
-      targetId: iconId
-    });
-    setSelectedIcons(new Set([iconId]));
-  };
-
-  const handleIconClick = (iconId: string) => {
-    setSelectedIcons(new Set([iconId]));
-    setContextMenu({ ...contextMenu, isVisible: false });
-  };
-
-  const handleDesktopClick = () => {
-    setSelectedIcons(new Set());
-    setContextMenu({ ...contextMenu, isVisible: false });
-    setIsStartMenuOpen(false);
-  };
-
-  const closeContextMenu = () => {
-    setContextMenu({ ...contextMenu, isVisible: false });
-  };
-
   const desktopContextItems = [
     { label: 'Arrange Icons', icon: '🔧', disabled: true },
     { label: 'Line up Icons', icon: '📐', disabled: true },
@@ -218,7 +88,6 @@ export const Desktop: React.FC = () => {
     { label: 'New', icon: '📄', disabled: true },
     { separator: true },
     { label: 'Properties', icon: '⚙️', onClick: () => {
-      // Could open display properties here
       console.log('Display Properties');
     }}
   ];
@@ -239,79 +108,6 @@ export const Desktop: React.FC = () => {
     { label: 'Properties', icon: '⚙️', disabled: true }
   ];
 
-  const desktopIcons = [
-    { 
-      id: 'my-computer', 
-      name: 'My Computer', 
-      icon: '💻', 
-      position: { x: 20, y: 20 },
-      tooltip: 'About Me, Skills, and Bio',
-      onDoubleClick: () => openWindow({
-        title: 'My Computer',
-        component: MyComputer,
-        isMinimized: false,
-        position: { x: 100, y: 100 },
-        size: { width: 500, height: 400 }
-      })
-    },
-    { 
-      id: 'my-documents', 
-      name: 'My Documents', 
-      icon: '📁', 
-      position: { x: 20, y: 120 },
-      tooltip: 'My Projects',
-      onDoubleClick: () => openWindow({
-        title: 'My Documents',
-        component: MyDocuments,
-        isMinimized: false,
-        position: { x: 150, y: 150 },
-        size: { width: 600, height: 500 }
-      })
-    },
-    { 
-      id: 'internet-explorer', 
-      name: 'Internet Explorer', 
-      icon: '🌐', 
-      position: { x: 20, y: 220 },
-      tooltip: 'My Writings',
-      onDoubleClick: () => openWindow({
-        title: 'Internet Explorer',
-        component: InternetExplorer,
-        isMinimized: false,
-        position: { x: 200, y: 100 },
-        size: { width: 700, height: 500 }
-      })
-    },
-    { 
-      id: 'notepad', 
-      name: 'Notepad', 
-      icon: '📝', 
-      position: { x: 20, y: 320 },
-      tooltip: 'Contact Me',
-      onDoubleClick: () => openWindow({
-        title: 'Contact - Notepad',
-        component: Notepad,
-        isMinimized: false,
-        position: { x: 200, y: 200 },
-        size: { width: 500, height: 400 }
-      })
-    },
-    { 
-      id: 'recycle-bin', 
-      name: 'Recycle Bin', 
-      icon: '🗑️', 
-      position: { x: 20, y: 420 },
-      tooltip: 'Archived Projects and Ideas',
-      onDoubleClick: () => openWindow({
-        title: 'Recycle Bin',
-        component: RecycleBin,
-        isMinimized: false,
-        position: { x: 250, y: 250 },
-        size: { width: 450, height: 400 }
-      })
-    }
-  ];
-
   return (
     <>
       <SoundManager />
@@ -323,13 +119,11 @@ export const Desktop: React.FC = () => {
         onClick={handleDesktopClick}
         onContextMenu={handleDesktopRightClick}
       >
-        {/* Background */}
         <BackgroundManager 
           selectedBackground={selectedBackground}
           className="z-0" 
         />
 
-        {/* Desktop Icons */}
         {desktopIcons.map(icon => (
           <DesktopIcon
             key={icon.id}
@@ -344,13 +138,12 @@ export const Desktop: React.FC = () => {
             position={icon.position}
             isSelected={selectedIcons.has(icon.id)}
             tooltip={icon.tooltip}
-            onDoubleClick={icon.onDoubleClick}
+            onDoubleClick={() => openWindow(icon.windowConfig)}
             onClick={() => handleIconClick(icon.id)}
             onRightClick={(e) => handleIconRightClick(e, icon.id)}
           />
         ))}
 
-        {/* Windows */}
         {windows.map(window => (
           <Window
             key={window.id}
@@ -369,7 +162,6 @@ export const Desktop: React.FC = () => {
           </Window>
         ))}
 
-        {/* Context Menu */}
         <ContextMenu
           isVisible={contextMenu.isVisible}
           position={contextMenu.position}
@@ -377,7 +169,6 @@ export const Desktop: React.FC = () => {
           items={contextMenu.type === 'desktop' ? desktopContextItems : iconContextItems}
         />
 
-        {/* Start Menu */}
         {isStartMenuOpen && (
           <StartMenu 
             onClose={() => setIsStartMenuOpen(false)} 
@@ -385,7 +176,6 @@ export const Desktop: React.FC = () => {
           />
         )}
 
-        {/* Alt+Tab Window Switcher */}
         <WindowSwitcher
           isVisible={isAltTabOpen}
           windows={windows}
@@ -394,20 +184,17 @@ export const Desktop: React.FC = () => {
           onClose={() => setIsAltTabOpen(false)}
         />
 
-        {/* Shutdown Dialog */}
         <ShutdownDialog
           isOpen={isShutdownDialogOpen}
           onConfirm={confirmShutdown}
           onCancel={() => setIsShutdownDialogOpen(false)}
         />
 
-        {/* Shutdown Screen */}
         <ShutdownScreen
           isVisible={isShutdownScreenVisible}
           onRestart={handleRestart}
         />
 
-        {/* Taskbar */}
         <Taskbar
           windows={windows}
           activeWindowId={activeWindowId}

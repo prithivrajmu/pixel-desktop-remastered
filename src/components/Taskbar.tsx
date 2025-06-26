@@ -23,7 +23,7 @@ export const Taskbar: React.FC<TaskbarProps> = ({
     <div className="absolute bottom-0 left-0 right-0 h-10 bg-gray-300 border-t-2 border-gray-400 flex items-center px-1 z-50">
       {/* Start Button */}
       <button
-        className={`h-8 px-4 bg-gray-300 border-2 border-gray-400 flex items-center space-x-2 font-bold text-sm hover:bg-gray-200 ${
+        className={`h-8 px-4 bg-gray-300 border-2 border-gray-400 flex items-center space-x-2 font-bold text-sm hover:bg-gray-200 flex-shrink-0 ${
           isStartMenuOpen ? 'pressed' : ''
         }`}
         style={{ 
@@ -37,11 +37,11 @@ export const Taskbar: React.FC<TaskbarProps> = ({
       </button>
 
       {/* Window Buttons */}
-      <div className="flex-1 flex space-x-1 px-2">
+      <div className="flex-1 flex space-x-1 px-2 overflow-hidden min-w-0">
         {windows.filter(w => !w.isMinimized).map(window => (
           <button
             key={window.id}
-            className={`h-7 px-3 bg-gray-300 border border-gray-400 text-sm truncate max-w-48 transition-all duration-150 ${
+            className={`h-7 px-3 bg-gray-300 border border-gray-400 text-sm truncate flex-shrink-0 transition-all duration-150 ${
               activeWindowId === window.id 
                 ? 'bg-gray-400 border-gray-500 shadow-inner' 
                 : 'hover:bg-gray-200 shadow-sm'
@@ -49,7 +49,9 @@ export const Taskbar: React.FC<TaskbarProps> = ({
             style={{ 
               borderStyle: activeWindowId === window.id ? 'inset' : 'outset',
               fontFamily: '"MS Sans Serif", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
-              fontWeight: activeWindowId === window.id ? 'bold' : 'normal'
+              fontWeight: activeWindowId === window.id ? 'bold' : 'normal',
+              maxWidth: '180px',
+              minWidth: '120px'
             }}
             onClick={() => onWindowClick(window.id)}
           >
@@ -60,7 +62,7 @@ export const Taskbar: React.FC<TaskbarProps> = ({
 
       {/* System Tray */}
       <div 
-        className="flex items-center space-x-2 px-2 border border-gray-400 bg-gray-300"
+        className="flex items-center space-x-2 px-2 border border-gray-400 bg-gray-300 flex-shrink-0 h-8"
         style={{ borderStyle: 'inset' }}
       >
         <VolumeControl />
