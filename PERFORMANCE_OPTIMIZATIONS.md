@@ -168,10 +168,37 @@ npm run build && npm run preview
 - **Lighthouse**: Core Web Vitals scoring
 
 ### Console Logs (Development)
+Performance logging is disabled by default to reduce console noise. 
+
+**Easy Debug Commands** (available in browser console):
+```javascript
+debug.help()            // Show all available commands
+debug.enableAll()       // Enable all debugging
+debug.enablePerformance() // Enable performance monitoring only
+debug.enableSounds()    // Enable sound debugging only
+debug.status()          // Check current debug status
+debug.disableAll()      // Disable all debugging
+```
+
+**Manual Setup** (alternative method):
+```javascript
+// Enable performance debugging
+localStorage.setItem('debug.performance', 'true');
+
+// Enable sound debugging  
+localStorage.setItem('debug.sounds', 'true');
+
+// Disable debugging
+localStorage.removeItem('debug.performance');
+localStorage.removeItem('debug.sounds');
+```
+
+When enabled, you'll see:
 - Component mount/unmount timing
-- Memory usage reports
-- Web Vitals measurements
-- Preloading status updates
+- Memory usage reports (every 10 seconds)
+- Web Vitals measurements (LCP, FID, CLS)
+- Component preloading status
+- Sound system initialization
 
 ---
 

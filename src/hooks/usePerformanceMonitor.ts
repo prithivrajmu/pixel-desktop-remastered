@@ -13,7 +13,8 @@ export const usePerformanceMonitor = (componentName?: string) => {
     fn();
     const endTime = performance.now();
     
-    if (process.env.NODE_ENV === 'development') {
+    // Only log performance in development and if explicitly enabled
+    if (process.env.NODE_ENV === 'development' && localStorage.getItem('debug.performance') === 'true') {
       console.log(`${metricName}: ${endTime - startTime}ms`);
     }
     
@@ -31,7 +32,7 @@ export const usePerformanceMonitor = (componentName?: string) => {
       const lcpObserver = new PerformanceObserver((list) => {
         const entries = list.getEntries();
         const lastEntry = entries[entries.length - 1];
-        if (process.env.NODE_ENV === 'development') {
+        if (process.env.NODE_ENV === 'development' && localStorage.getItem('debug.performance') === 'true') {
           console.log('LCP:', lastEntry.startTime);
         }
       });
@@ -41,7 +42,7 @@ export const usePerformanceMonitor = (componentName?: string) => {
       const fidObserver = new PerformanceObserver((list) => {
         const entries = list.getEntries();
         entries.forEach((entry: any) => {
-          if (process.env.NODE_ENV === 'development' && entry.processingStart) {
+          if (process.env.NODE_ENV === 'development' && localStorage.getItem('debug.performance') === 'true' && entry.processingStart) {
             console.log('FID:', entry.processingStart - entry.startTime);
           }
         });
@@ -57,7 +58,7 @@ export const usePerformanceMonitor = (componentName?: string) => {
             clsValue += entry.value;
           }
         });
-        if (process.env.NODE_ENV === 'development') {
+        if (process.env.NODE_ENV === 'development' && localStorage.getItem('debug.performance') === 'true') {
           console.log('CLS:', clsValue);
         }
       });
@@ -68,7 +69,7 @@ export const usePerformanceMonitor = (componentName?: string) => {
   const trackMemoryUsage = useCallback(() => {
     if ('memory' in performance) {
       const memory = (performance as any).memory;
-      if (process.env.NODE_ENV === 'development') {
+      if (process.env.NODE_ENV === 'development' && localStorage.getItem('debug.performance') === 'true') {
         console.log('Memory Usage:', {
           used: `${Math.round(memory.usedJSHeapSize / 1024 / 1024)} MB`,
           total: `${Math.round(memory.totalJSHeapSize / 1024 / 1024)} MB`,
@@ -104,8 +105,8 @@ export const usePerformanceMonitor = (componentName?: string) => {
     reportWebVitals();
     optimizeImages();
 
-    // Track memory usage periodically in development
-    if (process.env.NODE_ENV === 'development') {
+    // Track memory usage periodically in development (only if debug enabled)
+    if (process.env.NODE_ENV === 'development' && localStorage.getItem('debug.performance') === 'true') {
       const memoryInterval = setInterval(trackMemoryUsage, 10000);
       return () => clearInterval(memoryInterval);
     }
