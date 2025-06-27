@@ -23,8 +23,10 @@ const IconImg = ({ src, alt }: { src: string; alt: string }) => (
 
 export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
+  const [activeNestedSubmenu, setActiveNestedSubmenu] = useState<string | null>(null);
   const [submenuTimeout, setSubmenuTimeout] = useState<NodeJS.Timeout | null>(null);
   const submenuHoverRef = useRef(false);
+  const nestedSubmenuHoverRef = useRef(false);
   const parentHoverRef = useRef(false);
   const menuRootRef = useRef<HTMLDivElement>(null);
   const { activeDialog, closeDialog } = useGlobalDialog();
@@ -57,18 +59,23 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
   const closeSubmenu = () => {
     clearSubmenuTimeout();
     setSubmenuTimeout(setTimeout(() => {
-      if (!submenuHoverRef.current && !parentHoverRef.current) {
+      if (!submenuHoverRef.current && !parentHoverRef.current && !nestedSubmenuHoverRef.current) {
         setActiveSubmenu(null);
+        setActiveNestedSubmenu(null);
       }
-    }, 500));
+    }, 1000));
   };
 
   const handleParentEnter = (label: string, hasSubmenu?: boolean) => {
     parentHoverRef.current = true;
+    clearSubmenuTimeout(); // Clear any pending timeout
     if (hasSubmenu) {
       openSubmenu(label);
+      // Clear nested submenu when switching main menu items
+      setActiveNestedSubmenu(null);
     } else {
       setActiveSubmenu(null);
+      setActiveNestedSubmenu(null);
     }
   };
 
@@ -85,6 +92,35 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
   const handleSubmenuLeave = () => {
     submenuHoverRef.current = false;
     closeSubmenu();
+  };
+
+  const handleSubmenuItemEnter = (label: string, hasSubmenu?: boolean) => {
+    // Keep the submenu open when hovering over submenu items
+    submenuHoverRef.current = true;
+    clearSubmenuTimeout();
+    if (hasSubmenu) {
+      // For nested submenus, use separate state
+      setActiveNestedSubmenu(label);
+    } else {
+      // Clear nested submenu if hovering over non-submenu item
+      setActiveNestedSubmenu(null);
+    }
+  };
+
+  const handleNestedSubmenuEnter = () => {
+    nestedSubmenuHoverRef.current = true;
+    clearSubmenuTimeout();
+  };
+
+  const handleNestedSubmenuLeave = () => {
+    nestedSubmenuHoverRef.current = false;
+    closeSubmenu();
+  };
+
+  const handleNestedSubmenuItemEnter = () => {
+    // Keep the nested submenu open when hovering over nested items
+    nestedSubmenuHoverRef.current = true;
+    clearSubmenuTimeout();
   };
 
   const handleExternalLink = (url: string) => {
@@ -109,7 +145,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
         { label: 'MS-DOS Prompt', icon: '/icons/MS-DOS logo.ico' },
         { label: 'Windows Explorer', icon: '/icons/Computer with programs.ico' },
         { type: 'separator' },
-        { label: 'Portfolio Source Code', icon: '/icons/Generic.ico', action: () => handleExternalLink('https://github.com/yourusername/portfolio') },
+        { label: 'Portfolio Source Code', icon: '/icons/Generic.ico', action: () => handleExternalLink('https://github.com/prithivrajmu/pixel-desktop-remastered') },
       ]
     },
     {
@@ -172,8 +208,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
           <div
             key={index}
             className="flex items-center px-3 py-1 cursor-pointer text-sm relative group text-black hover:bg-blue-600 hover:text-white"
-            onMouseEnter={() => handleParentEnter(item.label || '', item.hasSubmenu)}
-            onMouseLeave={handleParentLeave}
+            onMouseEnter={() => handleSubmenuItemEnter(item.label || '', item.hasSubmenu)}
             onMouseDown={(e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -187,9 +222,37 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
             {item.hasSubmenu && (
               <>
                 <ChevronRight size={10} className="ml-2" />
-                {activeSubmenu === item.label && item.submenu && (
+                {activeNestedSubmenu === item.label && item.submenu && (
                   <div className="absolute top-0 left-full z-50">
-                    {renderSubmenu(item.submenu, level + 1)}
+                    <div
+                      className="absolute left-full top-0 w-48 bg-gray-300 border-2 border-gray-500 shadow-lg z-50"
+                      style={{ borderStyle: 'outset' }}
+                      onMouseEnter={handleNestedSubmenuEnter}
+                      onMouseLeave={handleNestedSubmenuLeave}
+                    >
+                      {item.submenu.map((nestedItem, nestedIndex) => {
+                        if (nestedItem.type === 'separator') {
+                          return <div key={nestedIndex} className="h-px bg-gray-500 mx-2 my-1" />;
+                        }
+                        return (
+                                                     <div
+                             key={nestedIndex}
+                             className="flex items-center px-3 py-1 cursor-pointer text-sm relative group text-black hover:bg-blue-600 hover:text-white"
+                             onMouseEnter={handleNestedSubmenuItemEnter}
+                             onMouseDown={(e) => {
+                               e.preventDefault();
+                               e.stopPropagation();
+                               handleItemClick(nestedItem);
+                             }}
+                           >
+                            <span className="w-6 text-center mr-3">
+                              {nestedItem.icon && <IconImg src={nestedItem.icon} alt={nestedItem.label || ''} />}
+                            </span>
+                            <span className="flex-1">{nestedItem.label}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                 )}
               </>
@@ -236,7 +299,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
             whiteSpace: 'nowrap',
           }}
         >
-          Windows95
+          Prithiv95
         </span>
       </div>
       {/* Menu Items */}

@@ -58,17 +58,24 @@ export const InternetExplorer: React.FC = () => {
     <div className="bg-white h-full flex flex-col">
       {/* Browser Navigation */}
       <div className="bg-gray-200 border-b-2 border-gray-400 p-2">
-        <div className="flex items-center space-x-2 mb-2">
-          <button className="bg-gray-300 border border-gray-400 px-2 py-1 text-xs" style={{ borderStyle: 'outset' }}>Back</button>
-          <button className="bg-gray-300 border border-gray-400 px-2 py-1 text-xs" style={{ borderStyle: 'outset' }}>Forward</button>
-          <button className="bg-gray-300 border border-gray-400 px-2 py-1 text-xs" style={{ borderStyle: 'outset' }}>Stop</button>
-          <button className="bg-gray-300 border border-gray-400 px-2 py-1 text-xs" style={{ borderStyle: 'outset' }}>Refresh</button>
-        </div>
-        <div className="flex items-center space-x-2">
-          <span className="text-xs">Address:</span>
-          <div className="flex-1 bg-white border border-gray-400 px-2 py-1 text-xs" style={{ borderStyle: 'inset' }}>
-            http://johndeveloper.portfolio/blog{currentPage !== 'home' ? `/${currentPage}` : ''}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center space-x-2">
+            <span className="text-blue-600">http://prithivraj.portfolio/blog{currentPage !== 'home' ? `/${currentPage}` : ''}</span>
+            <button className="px-2 py-1 bg-gray-200 border border-gray-400 text-xs" style={{ borderStyle: 'outset' }}>
+              Go
+            </button>
           </div>
+          <div className="flex space-x-1">
+            <button className="px-2 py-1 bg-gray-200 border border-gray-400 text-xs" style={{ borderStyle: 'outset' }}>Back</button>
+            <button className="px-2 py-1 bg-gray-200 border border-gray-400 text-xs" style={{ borderStyle: 'outset' }}>Forward</button>
+            <button className="px-2 py-1 bg-gray-200 border border-gray-400 text-xs" style={{ borderStyle: 'outset' }}>Stop</button>
+            <button className="px-2 py-1 bg-gray-200 border border-gray-400 text-xs" style={{ borderStyle: 'outset' }}>Refresh</button>
+            <button className="px-2 py-1 bg-gray-200 border border-gray-400 text-xs" style={{ borderStyle: 'outset' }}>Home</button>
+          </div>
+        </div>
+
+        <div className="border-b border-gray-400 mb-4 pb-2">
+          <h1 className="text-2xl font-bold mb-2">Prithiv's Developer Blog</h1>
         </div>
       </div>
 
@@ -77,7 +84,7 @@ export const InternetExplorer: React.FC = () => {
         {currentPage === 'home' && (
           <div>
             <header className="text-center mb-8">
-              <h1 className="text-2xl font-bold mb-2">John's Developer Blog</h1>
+              <h1 className="text-2xl font-bold mb-2">Prithiv's Developer Blog</h1>
               <div className="text-sm text-gray-600">
                 <em>Thoughts on Technology, Development, and Digital Innovation</em>
               </div>
@@ -123,7 +130,7 @@ export const InternetExplorer: React.FC = () => {
               <div className="mt-8 text-center">
                 <hr className="mb-4 border-gray-400" />
                 <div className="text-xs text-gray-600">
-                  <p>© 1995 John Developer. All rights reserved.</p>
+                  <p>© 1995 Prithiv Raj. All rights reserved.</p>
                   <p>Best viewed in Netscape Navigator 2.0 or Internet Explorer 3.0</p>
                 </div>
               </div>

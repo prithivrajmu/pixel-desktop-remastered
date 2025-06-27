@@ -1,73 +1,90 @@
-# Welcome to your Lovable project
+# Prithiv Raj - Windows 95 Portfolio
 
-## Project info
+A retro-styled portfolio website built with React and TypeScript, featuring a Windows 95-inspired interface and user experience.
 
-**URL**: https://lovable.dev/projects/4e5758b6-8a84-4558-b329-b0fbcf475106
+## About
 
-## How can I edit this code?
+This is a portfolio website for Prithiv Raj, presented as an interactive Windows 95 desktop environment. The project showcases technical skills, work experience, and projects through a nostalgic yet functional interface.
 
-There are several ways of editing your application.
+## Features
 
-**Use Lovable**
+- **Windows 95 UI/UX**: Authentic retro interface with classic Windows 95 styling
+- **Interactive Desktop**: Clickable icons, windows, and applications
+- **Portfolio Applications**: 
+  - My Computer (Technical Skills)
+  - My Documents (Work Experience)
+  - Internet Explorer (Blog/Articles)
+  - Recycle Bin (Archived Roles)
+  - Contact (Contact Information)
+- **Customizable Background**: Multiple background options including videos
+- **Responsive Design**: Works on various screen sizes
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/4e5758b6-8a84-4558-b329-b0fbcf475106) and start prompting.
+## Technologies Used
 
-Changes made via Lovable will be committed automatically to this repo.
+- **Frontend**: React 18, TypeScript
+- **Styling**: Tailwind CSS, shadcn/ui components
+- **Build Tool**: Vite
+- **State Management**: Zustand
+- **Icons**: Custom Windows 95-style icons
 
-**Use your preferred IDE**
+## Getting Started
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Prerequisites
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- Node.js (v16 or higher)
+- npm or yarn
 
-Follow these steps:
+### Installation
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd pixel-desktop-remastered
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+2. Install dependencies:
+```bash
+npm install
+```
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+3. Start the development server:
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+4. Open your browser and navigate to `http://localhost:5173`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Available Scripts
 
-**Use GitHub Codespaces**
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Project Structure
 
-## What technologies are used for this project?
+```
+src/
+├── components/          # React components
+│   ├── applications/    # Portfolio applications
+│   └── ui/             # Reusable UI components
+├── config/             # Configuration files
+├── data/               # Static data and content
+├── hooks/              # Custom React hooks
+└── pages/              # Page components
+```
 
-This project is built with:
+## Deployment
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+The project can be deployed to any static hosting service:
 
-## How can I deploy this project?
+1. Build the project: `npm run build`
+2. Deploy the `dist` folder to your hosting service
 
-Simply open [Lovable](https://lovable.dev/projects/4e5758b6-8a84-4558-b329-b0fbcf475106) and click on Share -> Publish.
+## License
 
-## Can I connect a custom domain to my Lovable project?
+This project is part of Prithiv Raj's portfolio. All rights reserved.
 
-Yes, you can!
+## Contact
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+For questions or collaboration opportunities, please reach out through the Contact application in the portfolio.

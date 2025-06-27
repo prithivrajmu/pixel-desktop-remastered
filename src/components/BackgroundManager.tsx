@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getVideoUrl } from '../config/cloudinary';
 
 export interface BackgroundOption {
   id: string;
@@ -19,7 +20,7 @@ export const BackgroundManager: React.FC<BackgroundManagerProps> = ({
 }) => {
   const [backgroundError, setBackgroundError] = useState(false);
 
-  // Updated to use the unified videos folder
+  // Updated to use Cloudinary for videos
   const backgrounds: Record<string, BackgroundOption> = {
     'default': {
       id: 'default',
@@ -40,30 +41,30 @@ export const BackgroundManager: React.FC<BackgroundManagerProps> = ({
       type: 'image',
       path: '/backgrounds/windows_95_os_2.png'
     },
-    // Video backgrounds now use the unified videos folder
+    // Video backgrounds now use Cloudinary
     'background-video-1': {
       id: 'background-video-1',
       name: 'Shadows On a Wall',
       type: 'video',
-      path: '/videos/moving_bg_3.mp4'
+      path: getVideoUrl('moving_bg_3')
     },
     'background-video-2': {
       id: 'background-video-2',
       name: 'Boy Running',
       type: 'video',
-      path: '/videos/boy_runnin.mp4'
+      path: getVideoUrl('boy_runnin')
     },
     'background-video-3': {
       id: 'background-video-3',
       name: 'Grasslands',
       type: 'video',
-      path: '/videos/moving_bg_2.mp4'
+      path: getVideoUrl('moving_bg_2')
     },
     'background-video-4': {
       id: 'background-video-4',
       name: 'Flowers',
       type: 'video',
-      path: '/videos/moving_bg.mp4'
+      path: getVideoUrl('moving_bg')
     }
   };
 
@@ -134,30 +135,30 @@ export const getAvailableBackgrounds = (): BackgroundOption[] => {
       type: 'image',
       path: '/backgrounds/windows_95_os_2.png'
     },
-    // Video backgrounds now use the unified videos folder
+    // Video backgrounds now use Cloudinary
     {
       id: 'background-video-1',
       name: 'Shadows On a Wall',
       type: 'video',
-      path: '/videos/moving_bg_3.mp4'
+      path: getVideoUrl('moving_bg_3')
     },
     {
       id: 'background-video-2',
       name: 'Boy Running',
       type: 'video',
-      path: '/videos/boy_running.mp4'
+      path: getVideoUrl('boy_runnin')
     },
     {
       id: 'background-video-3',
       name: 'Grasslands',
       type: 'video',
-      path: '/videos/moving_bg_2.mp4'
+      path: getVideoUrl('moving_bg_2')
     },
     {
       id: 'background-video-4',
       name: 'Flowers',
       type: 'video',
-      path: '/videos/moving_bg_1.mp4'
+      path: getVideoUrl('moving_bg')
     }
   ];
 };
