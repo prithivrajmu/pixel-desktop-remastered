@@ -95,28 +95,29 @@ export const Welcome: React.FC<WelcomeProps> = ({ onClose }) => {
         </div>
 
         {/* Right section with buttons */}
-        <div className="w-32 p-4 flex flex-col space-y-2">
+        <div className="w-36 p-4 flex flex-col space-y-2">
           <button 
-            className="w-full py-2 px-3 bg-gray-300 border-2 border-gray-400 text-xs hover:bg-gray-200"
+            className="w-full py-2 px-2 bg-gray-300 border-2 border-gray-400 text-xs hover:bg-gray-200 whitespace-nowrap overflow-hidden text-ellipsis"
             style={{ borderStyle: 'outset' }}
           >
             Windows Tour
           </button>
           <button 
-            className="w-full py-2 px-3 bg-gray-300 border-2 border-gray-400 text-xs hover:bg-gray-200"
+            className="w-full py-2 px-2 bg-gray-300 border-2 border-gray-400 text-xs hover:bg-gray-200 whitespace-nowrap overflow-hidden text-ellipsis"
             style={{ borderStyle: 'outset' }}
           >
             What's New
           </button>
           <button 
-            className="w-full py-2 px-3 bg-gray-300 border-2 border-gray-400 text-xs hover:bg-gray-200"
+            className="w-full py-2 px-2 bg-gray-300 border-2 border-gray-400 text-xs hover:bg-gray-200 whitespace-nowrap overflow-hidden text-ellipsis"
             style={{ borderStyle: 'outset' }}
+            title="Online Registration"
           >
             Online Registration
           </button>
           <div className="flex-1"></div>
           <button 
-            className="w-full py-2 px-3 bg-gray-300 border-2 border-gray-400 text-xs hover:bg-gray-200"
+            className="w-full py-2 px-2 bg-gray-300 border-2 border-gray-400 text-xs hover:bg-gray-200 whitespace-nowrap overflow-hidden text-ellipsis"
             style={{ borderStyle: 'outset' }}
             onClick={onClose}
           >
