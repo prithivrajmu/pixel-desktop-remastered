@@ -50,16 +50,7 @@ cloudinary upload public/videos/moving_bg_2.mp4 --folder pixel-desktop-videos
 cloudinary upload public/videos/moving_bg.mp4 --folder pixel-desktop-videos
 ```
 
-## 🧹 **Step 5: Remove Local Videos (Optional)**
-
-Once you've confirmed Cloudinary is working:
-
-```bash
-# Remove the videos directory to save 20M
-rm -rf public/videos/
-```
-
-## ✅ **Step 6: Test Your Setup**
+## ✅ **Step 5: Test Your Setup**
 
 1. Start your development server: `npm run dev`
 2. Test background videos in your portfolio

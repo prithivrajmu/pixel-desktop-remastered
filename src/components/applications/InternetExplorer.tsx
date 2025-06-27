@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { loadBlogPosts, loadSinglePost, BlogPost } from '../../data/blogPosts';
+import { useSounds } from '../SoundManager';
 
 export const InternetExplorer: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<string>('home');
@@ -7,6 +8,7 @@ export const InternetExplorer: React.FC = () => {
   const [currentPost, setCurrentPost] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
   const [postLoading, setPostLoading] = useState(false);
+  const sounds = useSounds();
 
   // Load all posts for the home page
   useEffect(() => {
@@ -76,7 +78,12 @@ export const InternetExplorer: React.FC = () => {
             className="w-6 h-6 bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0]"
             style={{ borderStyle: 'outset' }}
             title="Back"
-            onClick={() => currentPage !== 'home' && setCurrentPage('home')}
+            onClick={() => {
+              if (currentPage !== 'home') {
+                sounds.playClick();
+                setCurrentPage('home');
+              }
+            }}
           >
             ←
           </button>
@@ -105,7 +112,10 @@ export const InternetExplorer: React.FC = () => {
             className="w-6 h-6 bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0]"
             style={{ borderStyle: 'outset' }}
             title="Home"
-            onClick={() => setCurrentPage('home')}
+            onClick={() => {
+              sounds.playClick();
+              setCurrentPage('home');
+            }}
           >
             🏠
           </button>
@@ -148,6 +158,7 @@ export const InternetExplorer: React.FC = () => {
                           className="text-blue-600 underline hover:text-purple-600"
                           onClick={(e) => {
                             e.preventDefault();
+                            sounds.playDialUpConnect();
                             setCurrentPage(article.id);
                           }}
                         >

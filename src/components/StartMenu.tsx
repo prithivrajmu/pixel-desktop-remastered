@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { useGlobalDialog } from '../hooks/useGlobalDialog';
+import { useSounds } from './SoundManager';
 
 interface StartMenuProps {
   onShutdown: () => void;
@@ -30,6 +31,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
   const parentHoverRef = useRef(false);
   const menuRootRef = useRef<HTMLDivElement>(null);
   const { activeDialog, closeDialog } = useGlobalDialog();
+  const sounds = useSounds();
 
   // Global click listener to close menu if click is outside
   useEffect(() => {
@@ -54,6 +56,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
   const openSubmenu = (label: string) => {
     clearSubmenuTimeout();
     setActiveSubmenu(label);
+    sounds.playMenuOpen();
   };
 
   const closeSubmenu = () => {
@@ -183,6 +186,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
   ];
 
   const handleItemClick = (item: MenuItem) => {
+    sounds.playMenuSelect();
     if (item.action) {
       item.action();
     } else if (item.url) {

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSounds } from '../SoundManager';
 
 interface RetiredProject {
   name:string;
@@ -9,6 +10,8 @@ interface RetiredProject {
 }
 
 export const RecycleBin: React.FC = () => {
+  const sounds = useSounds();
+  
   const retiredProjects: RetiredProject[] = [
     {
       name: 'Mashey - Sr. Analytics Consultant',
@@ -91,6 +94,7 @@ export const RecycleBin: React.FC = () => {
             className="w-6 h-6 bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0]"
             style={{ borderStyle: 'outset' }}
             title="Empty Recycle Bin"
+            onClick={() => sounds.playRecycleBinEmpty()}
           >
             🗑
           </button>

@@ -91,13 +91,16 @@ export const Desktop: React.FC = () => {
   // Show welcome screen on startup
   useEffect(() => {
     if (!welcomeOpenedRef.current) {
+      // Play boot sequence sound
+      sounds.playBootSequence();
+      
       const timer = setTimeout(() => {
         openWindow(welcomeWindow);
         welcomeOpenedRef.current = true;
       }, 1000);
       return () => clearTimeout(timer);
     }
-  }, [openWindow]);
+  }, [openWindow, sounds]);
 
   // Enhanced center window function with better positioning
   const centerWindow = (size: { width: number; height: number }) => {

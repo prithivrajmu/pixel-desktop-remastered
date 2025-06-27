@@ -130,6 +130,11 @@ export const Window: React.FC<WindowProps> = ({
     setIsResizing(false);
   }, []);
 
+  // Play window open sound on mount
+  useEffect(() => {
+    sounds.playWindowOpen();
+  }, [sounds]);
+
   useEffect(() => {
     if (isDragging || isResizing) {
       document.addEventListener('mousemove', handleMouseMove);

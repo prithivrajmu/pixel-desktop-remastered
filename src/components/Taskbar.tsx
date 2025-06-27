@@ -2,6 +2,7 @@ import React from 'react';
 import { WindowData } from './Desktop';
 import { VolumeControl } from './VolumeControl';
 import { Clock } from './Clock';
+import { useSounds } from './SoundManager';
 
 interface TaskbarProps {
   windows: WindowData[];
@@ -18,6 +19,7 @@ export const Taskbar: React.FC<TaskbarProps> = ({
   onStartClick,
   isStartMenuOpen,
 }) => {
+  const sounds = useSounds();
   return (
     <div 
       className="absolute bottom-0 left-0 right-0 bg-gray-300 border-t-2 border-gray-400 flex items-center z-50"
@@ -75,7 +77,10 @@ export const Taskbar: React.FC<TaskbarProps> = ({
               fontSize: '10px',
               opacity: window.isMinimized ? 0.7 : 1
             }}
-            onClick={() => onWindowClick(window.id)}
+            onClick={() => {
+              sounds.playClick();
+              onWindowClick(window.id);
+            }}
             title={window.title}
           >
             {window.icon && (

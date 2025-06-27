@@ -1,11 +1,13 @@
 
 import { useState, useEffect } from 'react';
 import { WindowData } from '../components/Desktop';
+import { useSounds } from '../components/SoundManager';
 
 export const useKeyboardEvents = (windows: WindowData[], focusWindow: (id: string) => void) => {
   const [isAltTabOpen, setIsAltTabOpen] = useState(false);
   const [altTabIndex, setAltTabIndex] = useState(0);
   const [keysPressed, setKeysPressed] = useState<Set<string>>(new Set());
+  const sounds = useSounds();
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -15,6 +17,7 @@ export const useKeyboardEvents = (windows: WindowData[], focusWindow: (id: strin
 
       if (e.altKey && e.key === 'Tab') {
         e.preventDefault();
+        sounds.playMenuSelect();
         if (!isAltTabOpen && windows.length > 0) {
           setIsAltTabOpen(true);
           setAltTabIndex(0);
@@ -24,10 +27,12 @@ export const useKeyboardEvents = (windows: WindowData[], focusWindow: (id: strin
       }
 
       if (isAltTabOpen && e.key === 'Enter') {
+        sounds.playClick();
         handleAltTabSelect();
       }
 
       if (isAltTabOpen && e.key === 'Escape') {
+        sounds.playError();
         setIsAltTabOpen(false);
       }
     };
