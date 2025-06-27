@@ -1,7 +1,0 @@
-{
-  "id": "modern-web-dev",
-  "title": "The Evolution of Web Development",
-  "date": "1995-10-15",
-  "preview": "Exploring how web technologies have evolved from simple HTML pages to complex applications...",
-  "content": "The world of web development has undergone tremendous changes since the early days of the World Wide Web. What started as simple HTML documents has evolved into complex, interactive applications that power our digital lives.\n\nIn the beginning, web pages were static documents, primarily used for sharing information. HTML provided the structure, and that was about it. But as the web grew, so did the demand for more dynamic and interactive experiences.\n\nThe introduction of JavaScript in 1995 marked a turning point. Suddenly, web pages could respond to user interactions, validate forms, and create dynamic content. This was just the beginning of what would become a revolution in how we think about web applications.\n\nToday, we're seeing frameworks and libraries that make it easier than ever to build complex applications. The future holds even more promise as we continue to push the boundaries of what's possible on the web.\n\nAs developers, we must continue to embrace new technologies while maintaining our focus on user experience and accessibility. The web is for everyone, and our applications should reflect that principle."
-}

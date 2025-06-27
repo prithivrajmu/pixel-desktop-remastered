@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { Minus, X, Square } from 'lucide-react';
+import { useSounds } from './SoundManager';
 
 interface WindowProps {
   title: string;
@@ -41,6 +42,7 @@ export const Window: React.FC<WindowProps> = ({
   const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
   const windowRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const sounds = useSounds();
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     if (e.target === e.currentTarget || (e.target as HTMLElement).classList.contains('title-bar')) {

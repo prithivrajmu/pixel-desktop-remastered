@@ -139,38 +139,53 @@ export const InternetExplorer: React.FC = () => {
               <div className="max-w-2xl mx-auto">
                 <h2 className="text-lg font-bold mb-4">Recent Articles</h2>
                 
-                {blogPosts.map((article) => (
-                  <div key={article.id} className="mb-6 pb-4 border-b border-gray-300">
-                    <h3 className="text-base font-bold mb-1">
-                      <a 
-                        href="#" 
-                        className="text-blue-600 underline hover:text-purple-600"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setCurrentPage(article.id);
-                        }}
-                      >
-                        {article.title}
-                      </a>
-                    </h3>
-                    <div className="text-xs text-gray-600 mb-2">
-                      Published: {article.date}
+                {blogPosts.length > 0 ? (
+                  blogPosts.map((article) => (
+                    <div key={article.id} className="mb-6 pb-4 border-b border-gray-300">
+                      <h3 className="text-base font-bold mb-1">
+                        <a 
+                          href="#" 
+                          className="text-blue-600 underline hover:text-purple-600"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setCurrentPage(article.id);
+                          }}
+                        >
+                          {article.title}
+                        </a>
+                      </h3>
+                      <div className="text-xs text-gray-600 mb-2">
+                        Published: {article.date}
+                      </div>
+                      <p className="text-sm leading-relaxed">{article.preview}</p>
+                      <div className="text-xs mt-2">
+                        <a 
+                          href="#" 
+                          className="text-blue-600 underline"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setCurrentPage(article.id);
+                          }}
+                        >
+                          Read more...
+                        </a>
+                      </div>
                     </div>
-                    <p className="text-sm leading-relaxed">{article.preview}</p>
-                    <div className="text-xs mt-2">
-                      <a 
-                        href="#" 
-                        className="text-blue-600 underline"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setCurrentPage(article.id);
-                        }}
-                      >
-                        Read more...
-                      </a>
+                  ))
+                ) : (
+                  <div className="text-center py-12">
+                    <div className="text-6xl mb-4">📝</div>
+                    <h3 className="text-lg font-bold mb-2">No Articles Yet</h3>
+                    <p className="text-sm text-gray-600 mb-4">
+                      I haven't written anything yet, but stay tuned!<br/>
+                      Great things are coming soon.
+                    </p>
+                    <div className="text-xs text-gray-500 italic">
+                      "The best time to plant a tree was 20 years ago.<br/>
+                      The second best time is now." - Chinese Proverb
                     </div>
                   </div>
-                ))}
+                )}
 
                 <div className="mt-8 text-center">
                   <hr className="mb-4 border-gray-400" />
@@ -222,7 +237,12 @@ export const InternetExplorer: React.FC = () => {
       <div className="bg-[#c0c0c0] border-t border-[#808080] px-2 py-1 flex justify-between items-center text-xs">
         <div className="flex items-center">
           <div className="bg-[#c0c0c0] border border-[#808080] px-2 py-0.5 mr-2" style={{ borderStyle: 'inset' }}>
-            {currentPage === 'home' ? `${blogPosts.length} articles available` : 'Article loaded'}
+            {currentPage === 'home' 
+              ? blogPosts.length > 0 
+                ? `${blogPosts.length} articles available` 
+                : 'No articles yet'
+              : 'Article loaded'
+            }
           </div>
         </div>
         <div className="flex items-center">
