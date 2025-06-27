@@ -3,11 +3,14 @@ import { Taskbar } from './Taskbar';
 import { Window } from './Window';
 import { DesktopIcon } from './DesktopIcon';
 import { StartMenu } from './StartMenu';
-import { WindowSwitcher } from './WindowSwitcher';
-import { ShutdownDialog } from './ShutdownDialog';
-import { ShutdownScreen } from './ShutdownScreen';
 import { ContextMenu } from './ContextMenu';
-import { DisplayProperties } from './DisplayProperties';
+import { 
+  WindowSwitcher, 
+  ShutdownDialog, 
+  ShutdownScreen, 
+  DisplayProperties, 
+  PropertiesDialog 
+} from './LazyComponents';
 import { SoundManager, useSounds } from './SoundManager';
 import { IconManager } from './IconManager';
 import { BackgroundManager } from './BackgroundManager';
@@ -15,6 +18,8 @@ import { useDesktopState } from '../hooks/useDesktopState';
 import { useKeyboardEvents } from '../hooks/useKeyboardEvents';
 import { useContextMenu } from '../hooks/useContextMenu';
 import { useGlobalDialog } from '../hooks/useGlobalDialog';
+import { useSmartPreloader } from '../hooks/useComponentPreloader';
+import { usePerformanceMonitor } from '../hooks/usePerformanceMonitor';
 import { desktopIcons, welcomeWindow } from '../config/desktopIcons';
 
 export interface WindowData {
@@ -65,7 +70,13 @@ export const Desktop: React.FC = () => {
 
   const sounds = useSounds();
 
+  // Initialize performance optimizations
+  useSmartPreloader();
+  usePerformanceMonitor('Desktop');
+
   const [isDisplayPropertiesOpen, setIsDisplayPropertiesOpen] = useState(false);
+  const [isPropertiesDialogOpen, setIsPropertiesDialogOpen] = useState(false);
+  const [selectedIconForProperties, setSelectedIconForProperties] = useState<any>(null);
 
   // Handle window resize for maximized windows
   useEffect(() => {
@@ -148,6 +159,15 @@ export const Desktop: React.FC = () => {
     closeContextMenu();
   };
 
+  const handleIconProperties = () => {
+    const icon = desktopIcons.find(i => i.id === contextMenu.targetId);
+    if (icon) {
+      setSelectedIconForProperties(icon);
+      setIsPropertiesDialogOpen(true);
+    }
+    closeContextMenu();
+  };
+
   const desktopContextItems = [
     { label: 'Arrange Icons', disabled: true },
     { label: 'Line up Icons', disabled: true },
@@ -176,7 +196,7 @@ export const Desktop: React.FC = () => {
     { label: 'Delete', disabled: true },
     { label: 'Rename', disabled: true },
     { separator: true },
-    { label: 'Properties', disabled: true }
+    { label: 'Properties', onClick: handleIconProperties }
   ];
 
   return (
@@ -315,18 +335,41 @@ export const Desktop: React.FC = () => {
         {/* Display Properties Modal Dialog */}
         {isDisplayPropertiesOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100]">
-            <div className="bg-gray-300 border-2 border-gray-400 shadow-lg min-w-[400px] min-h-[500px]" style={{ borderStyle: 'outset' }}>
-              <div className="flex items-center justify-between px-4 py-2 bg-[#000080]">
-                <span className="text-white text-xs font-bold">Display Properties</span>
-                <button
-                  className="w-5 h-4 bg-gray-300 border border-gray-400 flex items-center justify-center hover:bg-gray-200 text-xs"
-                  style={{ borderStyle: 'outset' }}
-                  onClick={() => setIsDisplayPropertiesOpen(false)}
-                >
-                  ×
-                </button>
+            <div 
+              className="bg-[#c0c0c0] border-2 border-gray-400 shadow-lg w-[500px] h-[400px]" 
+              style={{ 
+                borderStyle: 'outset',
+                fontFamily: '"MS Sans Serif", sans-serif'
+              }}
+            >
+              {/* Title Bar */}
+              <div className="bg-[#000080] text-white px-2 py-1 flex items-center justify-between text-xs">
+                <span className="font-bold">Display Properties</span>
+                <div className="flex items-center space-x-1">
+                  <button 
+                    className="w-4 h-4 bg-[#c0c0c0] border border-gray-400 flex items-center justify-center text-black text-xs hover:bg-gray-200"
+                    style={{ borderStyle: 'outset' }}
+                    title="Help"
+                    onClick={() => sounds.playClick()}
+                  >
+                    ?
+                  </button>
+                  <button
+                    className="w-4 h-4 bg-[#c0c0c0] border border-gray-400 flex items-center justify-center text-black text-xs hover:bg-gray-200"
+                    style={{ borderStyle: 'outset' }}
+                    onClick={() => {
+                      sounds.playClick();
+                      setIsDisplayPropertiesOpen(false);
+                    }}
+                    title="Close"
+                  >
+                    ×
+                  </button>
+                </div>
               </div>
-              <div className="p-2">
+              
+              {/* Content */}
+              <div className="h-[calc(100%-24px)]">
                 <DisplayProperties
                   selectedBackground={selectedBackground}
                   onBackgroundChange={setSelectedBackground}
@@ -335,6 +378,18 @@ export const Desktop: React.FC = () => {
               </div>
             </div>
           </div>
+        )}
+
+        {/* Icon Properties Dialog */}
+        {isPropertiesDialogOpen && selectedIconForProperties && (
+          <PropertiesDialog
+            isOpen={isPropertiesDialogOpen}
+            onClose={() => {
+              setIsPropertiesDialogOpen(false);
+              setSelectedIconForProperties(null);
+            }}
+            iconData={selectedIconForProperties}
+          />
         )}
       </div>
     </>

@@ -10,15 +10,25 @@ export interface VideoAsset {
 // Centralized video asset configuration
 export const videoAssets = {
   backgrounds: {
-    'background-video-1': {
-      id: 'background-video-1',
-      name: 'Background Video 1',
+    'shadows-on-wall': {
+      id: 'shadows-on-wall',
+      name: 'Shadows on Wall',
       path: getVideoUrl('moving_bg_3')
     },
-    'background-video-2': {
-      id: 'background-video-2',
-      name: 'Background Video 2',
+    'boy-running': {
+      id: 'boy-running',
+      name: 'Boy Running',
       path: getVideoUrl('boy_runnin')
+    },
+    'grasslands': {
+      id: 'grasslands',
+      name: 'Grasslands',
+      path: getVideoUrl('moving_bg_2')
+    },
+    'flowers': {
+      id: 'flowers',
+      name: 'Flowers',
+      path: getVideoUrl('moving_bg')
     }
   },
   screensavers: {

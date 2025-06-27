@@ -1,4 +1,5 @@
 import React from 'react';
+import OptimizedImage from './OptimizedImage';
 
 export interface CustomIcon {
   id: string;
@@ -47,14 +48,27 @@ export const IconManager: React.FC<IconManagerProps> = ({
   }
 
   return (
-    <img
+    <OptimizedImage
       src={iconPath}
       alt={iconId}
       width={size}
       height={size}
       className={className}
       onError={handleImageError}
-      style={{ imageRendering: 'pixelated' }}
+      loading="lazy"
+      fallback={
+        <div 
+          className={`flex items-center justify-center ${className}`}
+          style={{ fontSize: `${size}px` }}
+        >
+          {iconId === 'my-computer' && '💻'}
+          {iconId === 'inbox' && '📁'}
+          {iconId === 'recycle-bin' && '🗑️'}
+          {iconId === 'the-internet' && '🌐'}
+          {iconId === 'set-up-the-microsoft-network' && '📧'}
+          {!['my-computer', 'inbox', 'recycle-bin', 'the-internet', 'set-up-the-microsoft-network'].includes(iconId) && '📄'}
+        </div>
+      }
     />
   );
 };

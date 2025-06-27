@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useCallback, useEffect, memo } from 'react';
 import { Minus, X, Square } from 'lucide-react';
 import { useSounds } from './SoundManager';
 
@@ -19,7 +19,7 @@ interface WindowProps {
   onUpdateSize: (size: { width: number; height: number }) => void;
 }
 
-export const Window: React.FC<WindowProps> = ({
+export const Window: React.FC<WindowProps> = memo(({
   title,
   icon,
   children,
@@ -261,4 +261,6 @@ export const Window: React.FC<WindowProps> = ({
       />
     </div>
   );
-};
+});
+
+Window.displayName = 'Window';

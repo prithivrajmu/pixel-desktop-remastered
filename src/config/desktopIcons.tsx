@@ -1,10 +1,12 @@
 import React from 'react';
-import { MyComputer } from '../components/applications/MyComputer';
-import { MyDocuments } from '../components/applications/MyDocuments';
-import { InternetExplorer } from '../components/applications/InternetExplorer';
-import { RecycleBin } from '../components/applications/RecycleBin';
-import { Welcome } from '../components/applications/Welcome';
-import { Contact } from '../components/applications/Contact';
+import { 
+  MyComputer, 
+  MyDocuments, 
+  InternetExplorer, 
+  RecycleBin, 
+  Welcome, 
+  Contact 
+} from '../components/LazyComponents';
 
 export const desktopIcons = [
   { 

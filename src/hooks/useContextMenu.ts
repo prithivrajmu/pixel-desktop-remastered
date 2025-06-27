@@ -19,23 +19,48 @@ export const useContextMenu = () => {
 
   const handleDesktopRightClick = (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
+    
+    // Ensure we close any existing context menu first
     setContextMenu({
-      isVisible: true,
-      position: { x: e.clientX, y: e.clientY },
+      isVisible: false,
+      position: { x: 0, y: 0 },
       type: 'desktop'
     });
+    
+    // Then open the new one with a small delay to ensure proper rendering
+    setTimeout(() => {
+      setContextMenu({
+        isVisible: true,
+        position: { x: e.clientX, y: e.clientY },
+        type: 'desktop'
+      });
+    }, 10);
+    
     setSelectedIcons(new Set());
   };
 
   const handleIconRightClick = (e: React.MouseEvent, iconId: string) => {
     e.preventDefault();
     e.stopPropagation();
+    
+    // Ensure we close any existing context menu first
     setContextMenu({
-      isVisible: true,
-      position: { x: e.clientX, y: e.clientY },
-      type: 'icon',
-      targetId: iconId
+      isVisible: false,
+      position: { x: 0, y: 0 },
+      type: 'icon'
     });
+    
+    // Then open the new one with a small delay to ensure proper rendering
+    setTimeout(() => {
+      setContextMenu({
+        isVisible: true,
+        position: { x: e.clientX, y: e.clientY },
+        type: 'icon',
+        targetId: iconId
+      });
+    }, 10);
+    
     setSelectedIcons(new Set([iconId]));
   };
 

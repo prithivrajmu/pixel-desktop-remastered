@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo, useRef } from 'react';
 import { getVideoUrl } from '../config/cloudinary';
+import { videoAssets } from '../config/videoAssets';
 
 export interface BackgroundOption {
   id: string;
@@ -14,79 +15,50 @@ interface BackgroundManagerProps {
   className?: string;
 }
 
-export const BackgroundManager: React.FC<BackgroundManagerProps> = ({ 
+export const BackgroundManager: React.FC<BackgroundManagerProps> = memo(({ 
   selectedBackground, 
   className = "" 
 }) => {
   const [backgroundError, setBackgroundError] = useState(false);
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Updated to use Cloudinary for videos
+  // Static wallpaper backgrounds only
   const backgrounds: Record<string, BackgroundOption> = {
     'default': {
       id: 'default',
-      name: 'Windows 95 Default',
+      name: 'Windows 95 Default (Teal)',
       type: 'image',
-      path: "data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3Ccircle cx='10' cy='10' r='2'/%3E%3Ccircle cx='50' cy='50' r='2'/%3E%3Ccircle cx='50' cy='10' r='1'/%3E%3Ccircle cx='10' cy='50' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"
+      path: '#008080' // Solid teal color
     },
-    // Add your custom backgrounds here
-    'custom-bg-1': {
-      id: 'custom-bg-1',
-      name: 'Windows Classic 1',
+    'windows_95_os': {
+      id: 'windows_95_os',
+      name: 'Windows 95 OS',
       type: 'image',
       path: '/backgrounds/windows_95_os.png'
     },
-    'custom-bg-2': {
-      id: 'custom-bg-2',
-      name: 'Windows Classic 2',
+    'windows_95_os_2': {
+      id: 'windows_95_os_2',
+      name: 'Windows 95 OS 2',
       type: 'image',
       path: '/backgrounds/windows_95_os_2.png'
-    },
-    // Video backgrounds now use Cloudinary
-    'background-video-1': {
-      id: 'background-video-1',
-      name: 'Shadows On a Wall',
-      type: 'video',
-      path: getVideoUrl('moving_bg_3')
-    },
-    'background-video-2': {
-      id: 'background-video-2',
-      name: 'Boy Running',
-      type: 'video',
-      path: getVideoUrl('boy_runnin')
-    },
-    'background-video-3': {
-      id: 'background-video-3',
-      name: 'Grasslands',
-      type: 'video',
-      path: getVideoUrl('moving_bg_2')
-    },
-    'background-video-4': {
-      id: 'background-video-4',
-      name: 'Flowers',
-      type: 'video',
-      path: getVideoUrl('moving_bg')
     }
   };
 
+  // Check if it's a video background from videoAssets
+  const videoBackground = Object.values(videoAssets.backgrounds).find(v => v.id === selectedBackground);
+  
   const currentBackground = backgrounds[selectedBackground] || backgrounds['default'];
 
   const handleMediaError = () => {
     setBackgroundError(true);
   };
 
-  if (selectedBackground === 'teal-bg') {
-    return (
-      <div
-        className={`fixed inset-0 w-full h-full ${className}`}
-        style={{ backgroundColor: '#008080' }}
-      />
-    );
-  }
-
-  if (currentBackground.type === 'video' && !backgroundError) {
+  // Handle video backgrounds
+  if (videoBackground && !backgroundError) {
     return (
       <video
-        key={currentBackground.id}
+        key={videoBackground.id}
         className={`fixed inset-0 w-full h-full object-cover ${className}`}
         autoPlay
         loop
@@ -94,8 +66,18 @@ export const BackgroundManager: React.FC<BackgroundManagerProps> = ({
         playsInline
         onError={handleMediaError}
       >
-        <source src={currentBackground.path} type="video/mp4" />
+        <source src={videoBackground.path} type="video/mp4" />
       </video>
+    );
+  }
+
+  // Handle default teal background
+  if (selectedBackground === 'default' || currentBackground.path === '#008080') {
+    return (
+      <div
+        className={`fixed inset-0 w-full h-full ${className}`}
+        style={{ backgroundColor: '#008080' }}
+      />
     );
   }
 
@@ -112,53 +94,29 @@ export const BackgroundManager: React.FC<BackgroundManagerProps> = ({
       }}
     />
   );
-};
+});
 
 export const getAvailableBackgrounds = (): BackgroundOption[] => {
   return [
     {
       id: 'default',
-      name: 'Windows 95 Default',
+      name: 'Windows 95 Default (Teal)',
       type: 'image',
-      path: "data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3Ccircle cx='10' cy='10' r='2'/%3E%3Ccircle cx='50' cy='50' r='2'/%3E%3Ccircle cx='50' cy='10' r='1'/%3E%3Ccircle cx='10' cy='50' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"
+      path: '#008080'
     },
-    // Add your custom backgrounds here
     {
-      id: 'custom-bg-1',
-      name: 'Windows Classic 1',
+      id: 'windows_95_os',
+      name: 'Windows 95 OS',
       type: 'image',
       path: '/backgrounds/windows_95_os.png'
     },
     {
-      id: 'custom-bg-2',
-      name: 'Windows Classic 2',
+      id: 'windows_95_os_2',
+      name: 'Windows 95 OS 2',
       type: 'image',
       path: '/backgrounds/windows_95_os_2.png'
-    },
-    // Video backgrounds now use Cloudinary
-    {
-      id: 'background-video-1',
-      name: 'Shadows On a Wall',
-      type: 'video',
-      path: getVideoUrl('moving_bg_3')
-    },
-    {
-      id: 'background-video-2',
-      name: 'Boy Running',
-      type: 'video',
-      path: getVideoUrl('boy_runnin')
-    },
-    {
-      id: 'background-video-3',
-      name: 'Grasslands',
-      type: 'video',
-      path: getVideoUrl('moving_bg_2')
-    },
-    {
-      id: 'background-video-4',
-      name: 'Flowers',
-      type: 'video',
-      path: getVideoUrl('moving_bg')
     }
   ];
 };
+
+BackgroundManager.displayName = 'BackgroundManager';

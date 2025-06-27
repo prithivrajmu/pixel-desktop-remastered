@@ -194,16 +194,31 @@ export const MyComputer: React.FC = () => {
       {/* Main Content Area */}
       <div className="flex-1 bg-white p-4 overflow-auto">
         <div className="flex items-start space-x-4 mb-6">
-          <div className="w-32 h-40 bg-gray-300 border-2 border-gray-400 flex items-center justify-center text-6xl" style={{ borderStyle: 'inset' }}>
-            👨‍💻
+          <div className="w-32 h-40 bg-white border-2 border-gray-400 flex items-center justify-center overflow-hidden p-1" style={{ borderStyle: 'inset' }}>
+            <img 
+              src="/icons/profile_prithiv.png"
+              alt="Prithiv Raj M U"
+              className="w-full h-full object-contain rounded-sm"
+              style={{ 
+                imageRendering: 'auto',
+                maxWidth: '100%',
+                maxHeight: '100%'
+              }}
+              onError={(e) => {
+                // Fallback to a default icon if image fails to load
+                e.currentTarget.src = "/icons/People.ico";
+                e.currentTarget.style.imageRendering = 'pixelated';
+              }}
+            />
           </div>
           <div className="flex-1">
-            <h2 className="text-lg font-bold mb-2">System Properties</h2>
+            <h2 className="text-lg font-bold mb-2">My Defragged Identity</h2>
             <div className="space-y-1 text-xs">
               <p><strong>Name:</strong> Prithiv Raj M U</p>
-              <p><strong>Profession:</strong> Founder & Tech Leader | Data & Operations Expert</p>
+              <p><strong>Profession:</strong> Founder & Tech Leader | Learning LLMs, Vibe Coding</p>
               <p><strong>Experience:</strong> 9+ Years</p>
-              <p><strong>Location:</strong> Chennai, India</p>
+              <p><strong>Location:</strong> Chennai, India | San Francisco, USA</p>
+              <p><strong>Pronouns:</strong> He/Him</p>
             </div>
           </div>
         </div>
