@@ -1,29 +1,58 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { loadBlogPosts, loadSinglePost, BlogPost } from '../../data/blogPosts';
 
 export const InternetExplorer: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState('home');
+  const [currentPage, setCurrentPage] = useState<string>('home');
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [currentPost, setCurrentPost] = useState<BlogPost | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [postLoading, setPostLoading] = useState(false);
 
-  const articles = [
-    {
-      id: 'modern-web-dev',
-      title: 'The Evolution of Web Development',
-      date: '1995-10-15',
-      preview: 'Exploring how web technologies have evolved from simple HTML pages to complex applications...'
-    },
-    {
-      id: 'retro-computing',
-      title: 'Why Retro Computing Still Matters',
-      date: '1995-09-20',
-      preview: 'A look at how classic computing interfaces can inspire modern design...'
-    },
-    {
-      id: 'javascript-future',
-      title: 'The Future of JavaScript',
-      date: '1995-08-10',
-      preview: 'Predictions about where JavaScript might be heading in the coming years...'
+  // Load all posts for the home page
+  useEffect(() => {
+    const loadPosts = async () => {
+      try {
+        const posts = await loadBlogPosts();
+        setBlogPosts(posts);
+      } catch (error) {
+        console.error('Failed to load blog posts:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadPosts();
+  }, []);
+
+  // Load individual post when navigating to a specific post
+  useEffect(() => {
+    if (currentPage !== 'home') {
+      const loadPost = async () => {
+        setPostLoading(true);
+        try {
+          const post = await loadSinglePost(currentPage);
+          setCurrentPost(post);
+        } catch (error) {
+          console.error('Failed to load post:', error);
+        } finally {
+          setPostLoading(false);
+        }
+      };
+      
+      loadPost();
     }
-  ];
+  }, [currentPage]);
+
+  if (loading) {
+    return (
+      <div className="bg-white h-full flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-lg mb-2">Loading...</div>
+          <div className="text-sm text-gray-600">Please wait while the blog loads</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white h-full flex flex-col">
@@ -38,7 +67,7 @@ export const InternetExplorer: React.FC = () => {
         <div className="flex items-center space-x-2">
           <span className="text-xs">Address:</span>
           <div className="flex-1 bg-white border border-gray-400 px-2 py-1 text-xs" style={{ borderStyle: 'inset' }}>
-            http://johndeveloper.portfolio/blog
+            http://johndeveloper.portfolio/blog{currentPage !== 'home' ? `/${currentPage}` : ''}
           </div>
         </div>
       </div>
@@ -58,7 +87,7 @@ export const InternetExplorer: React.FC = () => {
             <div className="max-w-2xl mx-auto">
               <h2 className="text-lg font-bold mb-4">Recent Articles</h2>
               
-              {articles.map((article) => (
+              {blogPosts.map((article) => (
                 <div key={article.id} className="mb-6 pb-4 border-b border-gray-300">
                   <h3 className="text-base font-bold mb-1">
                     <a 
@@ -112,18 +141,26 @@ export const InternetExplorer: React.FC = () => {
                 ← Back to Blog Home
               </button>
             </div>
-            <div className="max-w-2xl mx-auto">
-              <h1 className="text-xl font-bold mb-4">
-                {articles.find(a => a.id === currentPage)?.title}
-              </h1>
-              <div className="text-sm text-gray-600 mb-6">
-                Published: {articles.find(a => a.id === currentPage)?.date}
+            {postLoading ? (
+              <div className="text-center py-8">
+                <div className="text-lg mb-2">Loading article...</div>
               </div>
-              <div className="prose prose-sm">
-                <p>This is where the full article content would appear. In a real implementation, you would fetch the article content based on the ID and display it here.</p>
-                <p>The article would include detailed insights, code examples, and thoughtful commentary on the topic at hand.</p>
+            ) : currentPost ? (
+              <div className="max-w-2xl mx-auto">
+                <h1 className="text-xl font-bold mb-4">{currentPost.title}</h1>
+                <div className="text-sm text-gray-600 mb-6">
+                  Published: {currentPost.date}
+                </div>
+                <div className="prose prose-sm whitespace-pre-line">
+                  {currentPost.content}
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="text-center py-8">
+                <div className="text-lg mb-2">Article not found</div>
+                <div className="text-sm text-gray-600">The requested article could not be loaded.</div>
+              </div>
+            )}
           </div>
         )}
       </div>

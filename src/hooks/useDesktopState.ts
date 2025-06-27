@@ -1,4 +1,3 @@
-
 import { useState, useCallback } from 'react';
 import { WindowData } from '../components/Desktop';
 
@@ -6,7 +5,9 @@ export const useDesktopState = () => {
   const [windows, setWindows] = useState<WindowData[]>([]);
   const [activeWindowId, setActiveWindowId] = useState<string | null>(null);
   const [nextZIndex, setNextZIndex] = useState(10);
-  const [selectedBackground, setSelectedBackground] = useState('default');
+  const [selectedBackground, setSelectedBackground] = useState(() => {
+    return localStorage.getItem('display.background') || 'default';
+  });
 
   const openWindow = useCallback((windowData: Omit<WindowData, 'id' | 'zIndex'>) => {
     const id = `window-${Date.now()}`;

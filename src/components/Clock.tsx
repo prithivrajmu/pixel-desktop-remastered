@@ -1,44 +1,69 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { DateTimeDialog } from './DateTimeDialog';
+import { useGlobalDialog } from '../hooks/useGlobalDialog';
 
 export const Clock: React.FC = () => {
   const [time, setTime] = useState(new Date());
+  const [dialogPos, setDialogPos] = useState<{ left: number; top: number; bottom: number } | null>(null);
+  const clockRef = useRef<HTMLDivElement>(null);
+  const { activeDialog, openDialog, closeDialog } = useGlobalDialog();
 
   useEffect(() => {
     const timer = setInterval(() => {
       setTime(new Date());
     }, 1000);
-
     return () => clearInterval(timer);
   }, []);
 
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString([], { 
       hour: '2-digit', 
-      minute: '2-digit' 
+      minute: '2-digit',
+      hour12: false
     });
   };
 
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString([], {
-      month: 'numeric',
-      day: 'numeric',
-      year: '2-digit'
-    });
+  const formatDay = (date: Date) => {
+    return date.toLocaleDateString([], { weekday: 'short' });
+  };
+
+  const handleClockClick = () => {
+    if (clockRef.current) {
+      const rect = clockRef.current.getBoundingClientRect();
+      setDialogPos({
+        left: window.innerWidth, // align right edge of dialog to window
+        top: rect.top,
+        bottom: rect.bottom
+      });
+    }
+    openDialog('datetime');
   };
 
   return (
-    <div 
-      className="bg-gray-200 border border-gray-400 px-1 py-1 text-xs leading-tight cursor-default text-center min-w-0"
-      style={{ 
-        borderStyle: 'inset',
-        fontSize: '10px',
-        width: '50px'
-      }}
-      title={`${formatTime(time)} ${formatDate(time)}`}
-    >
-      <div className="truncate">{formatTime(time)}</div>
-      <div className="truncate">{formatDate(time)}</div>
-    </div>
+    <>
+      <div 
+        ref={clockRef}
+        className="bg-gray-300 border border-gray-400 text-xs leading-tight muted cursor-default text-center flex items-center justify-center select-none"
+        style={{ 
+          borderStyle: 'inset',
+          fontSize: '11px',
+          width: '64px',
+          height: '22px',
+          padding: 0,
+          margin: 0
+        }}
+        title={formatDay(time) + ' ' + formatTime(time)}
+        onClick={handleClockClick}
+      >
+        {formatDay(time)} {formatTime(time)}
+      </div>
+      {activeDialog === 'datetime' && dialogPos && (
+        <DateTimeDialog 
+          date={time} 
+          onClose={() => closeDialog()} 
+          position={dialogPos}
+        />
+      )}
+    </>
   );
 };

@@ -1,7 +1,10 @@
-
 import React from 'react';
 
-export const Welcome: React.FC = () => {
+interface WelcomeProps {
+  onClose?: () => void;
+}
+
+export const Welcome: React.FC<WelcomeProps> = ({ onClose }) => {
   return (
     <div className="bg-gray-300 h-full p-0 overflow-hidden" style={{ fontFamily: '"MS Sans Serif", sans-serif' }}>
       {/* Welcome Content */}
@@ -13,11 +16,15 @@ export const Welcome: React.FC = () => {
               ?
             </div>
             <div>
-              <h3 className="font-bold text-sm mb-2">Did you know...</h3>
+              <h3 className="font-bold text-sm mb-2">Welcome!</h3>
               <p className="text-xs leading-relaxed mb-4">
-                To open a program, you just click the Start button, and then click the program's icon.
+                This is a Windows 95-inspired portfolio website build by Prithiv Raj M U.
+              </p>            
+              <h4 className="font-bold text-sm mb-2">Did you know...</h4>
+              <p className="text-xs leading-relaxed mb-4">
+                You can leverage data analytics and simulation to modernize a 50-year-old business, driving efficiency and reducing waste. That's the power of combining tech with tradition!
               </p>
-            </div>
+              </div>
           </div>
           
           {/* Computer illustration */}
@@ -70,6 +77,7 @@ export const Welcome: React.FC = () => {
           <button 
             className="w-full py-2 px-3 bg-gray-300 border-2 border-gray-400 text-xs hover:bg-gray-200"
             style={{ borderStyle: 'outset' }}
+            onClick={onClose}
           >
             Close
           </button>

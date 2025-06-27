@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 interface Project {
@@ -6,46 +5,45 @@ interface Project {
   icon: string;
   description: string;
   tech: string[];
-  status: 'completed' | 'in-progress' | 'archived';
+  status: 'current' | 'completed';
 }
 
 export const MyDocuments: React.FC = () => {
   const projects: Project[] = [
     {
-      name: 'E-Commerce Platform',
-      icon: '🛒',
-      description: 'Full-stack online store with payment integration',
-      tech: ['React', 'Node.js', 'MongoDB', 'Stripe'],
+      name: 'A M Foods - Director',
+      icon: '🍲',
+      description: 'Driving modernization and operational efficiency for a legacy restaurant brand (est. 1973). Architected custom inventory & payroll software.',
+      tech: ['Business Leadership', 'Software Dev', 'Digital Transformation', 'Data-Driven Inventory'],
+      status: 'current'
+    },
+    {
+      name: 'Nalam Properties - Founder',
+      icon: '🏠',
+      description: 'Launched a real estate venture (nalamproperties.com). Built a proprietary website and lead management system from the ground up.',
+      tech: ['Entrepreneurship', 'Full-Stack Dev', 'SEO', 'Agent-Based Simulation'],
+      status: 'current'
+    },
+    {
+      name: 'Zipline - Sr. Data Analyst',
+      icon: '✈️',
+      description: 'Managed software/data teams to build operational tools. Reduced aircraft manufacturing costs by 15% and improved efficiency by 25%.',
+      tech: ['ETL', 'Docker', 'Sisense', 'Tableau', 'Hypothesis Testing', 'Process Improvement'],
       status: 'completed'
     },
     {
-      name: 'Task Management App',
-      icon: '📋',
-      description: 'Collaborative project management tool',
-      tech: ['Vue.js', 'Express', 'PostgreSQL'],
+      name: 'Volansi - Lead Data Eng.',
+      icon: '🚁',
+      description: 'Led data team for drone manufacturing & delivery. Developed hub-and-spoke network models to optimize fleet operations.',
+      tech: ['Python', 'Scipy', 'OpenCV', 'SQL', 'Team Leadership', 'Agile'],
       status: 'completed'
-    },
-    {
-      name: 'Weather Dashboard',
-      icon: '🌤️',
-      description: 'Real-time weather data visualization',
-      tech: ['React', 'D3.js', 'OpenWeather API'],
-      status: 'in-progress'
-    },
-    {
-      name: 'Chat Application',
-      icon: '💬',
-      description: 'Real-time messaging with WebSocket',
-      tech: ['Socket.io', 'React', 'Redis'],
-      status: 'archived'
     }
   ];
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'completed': return 'text-green-700';
-      case 'in-progress': return 'text-blue-700';
-      case 'archived': return 'text-gray-600';
+      case 'current': return 'text-green-700';
+      case 'completed': return 'text-blue-700';
       default: return 'text-black';
     }
   };
@@ -53,9 +51,9 @@ export const MyDocuments: React.FC = () => {
   return (
     <div className="p-4 bg-gray-200 h-full">
       <div className="mb-4">
-        <h2 className="text-lg font-bold mb-2">My Projects</h2>
+        <h2 className="text-lg font-bold mb-2">My Experience</h2>
         <div className="text-xs text-gray-600">
-          Double-click a project to view details
+          Double-click an item to view details
         </div>
       </div>
 
@@ -79,14 +77,14 @@ export const MyDocuments: React.FC = () => {
               <span className="text-2xl">{project.icon}</span>
               <div className="flex-1">
                 <h3 className="font-bold text-sm">{project.name}</h3>
-                <div className={`text-xs ${getStatusColor(project.status)}`}>
-                  {project.status.replace('-', ' ').toUpperCase()}
+                <div className={`text-xs font-bold ${getStatusColor(project.status)}`}>
+                  {project.status.toUpperCase()}
                 </div>
               </div>
             </div>
             <p className="text-xs mb-2 leading-relaxed">{project.description}</p>
             <div className="text-xs">
-              <strong>Tech:</strong> {project.tech.join(', ')}
+              <strong>Skills:</strong> {project.tech.join(', ')}
             </div>
           </div>
         ))}
@@ -99,10 +97,7 @@ export const MyDocuments: React.FC = () => {
             📄 Resume.pdf
           </button>
           <button className="bg-gray-300 border border-gray-400 px-3 py-1 hover:bg-gray-200" style={{ borderStyle: 'outset' }}>
-            🔗 GitHub
-          </button>
-          <button className="bg-gray-300 border border-gray-400 px-3 py-1 hover:bg-gray-200" style={{ borderStyle: 'outset' }}>
-            💼 LinkedIn
+            <a href="https://linkedin.com/in/prithivrajmu" target="_blank" rel="noopener noreferrer" className="text-blue-700 underline hover:text-blue-900">🔗 LinkedIn</a>
           </button>
         </div>
       </div>

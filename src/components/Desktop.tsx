@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Taskbar } from './Taskbar';
 import { Window } from './Window';
 import { DesktopIcon } from './DesktopIcon';
@@ -14,16 +14,20 @@ import { BackgroundManager } from './BackgroundManager';
 import { useDesktopState } from '../hooks/useDesktopState';
 import { useKeyboardEvents } from '../hooks/useKeyboardEvents';
 import { useContextMenu } from '../hooks/useContextMenu';
+import { useGlobalDialog } from '../hooks/useGlobalDialog';
 import { desktopIcons, welcomeWindow } from '../config/desktopIcons';
 
 export interface WindowData {
   id: string;
   title: string;
-  component: React.ComponentType;
+  icon?: string;
+  component: React.ComponentType<any>;
   isMinimized: boolean;
   position: { x: number; y: number };
   size: { width: number; height: number };
   zIndex: number;
+  prevSize?: { width: number; height: number };
+  prevPosition?: { x: number; y: number };
 }
 
 export const Desktop: React.FC = () => {
@@ -38,9 +42,10 @@ export const Desktop: React.FC = () => {
     setSelectedBackground
   } = useDesktopState();
 
-  const [isStartMenuOpen, setIsStartMenuOpen] = useState(false);
   const [isShutdownDialogOpen, setIsShutdownDialogOpen] = useState(false);
   const [isShutdownScreenVisible, setIsShutdownScreenVisible] = useState(false);
+  const welcomeOpenedRef = useRef(false);
+  const { activeDialog, openDialog, closeDialog } = useGlobalDialog();
 
   const {
     contextMenu,
@@ -60,15 +65,41 @@ export const Desktop: React.FC = () => {
 
   const sounds = useSounds();
 
+  const [isDisplayPropertiesOpen, setIsDisplayPropertiesOpen] = useState(false);
+
+  // Handle window resize for maximized windows
+  useEffect(() => {
+    const handleWindowResize = () => {
+      windows.forEach(windowData => {
+        const isMaximized = windowData.size.width === window.innerWidth && windowData.size.height === window.innerHeight - 40;
+        if (isMaximized) {
+          // Update maximized windows to new screen dimensions
+          const maxWidth = window.innerWidth;
+          const maxHeight = window.innerHeight - 40;
+          updateWindow(windowData.id, {
+            size: { width: maxWidth, height: maxHeight },
+            position: { x: 0, y: 0 }
+          });
+        }
+      });
+    };
+
+    window.addEventListener('resize', handleWindowResize);
+    return () => window.removeEventListener('resize', handleWindowResize);
+  }, [windows, updateWindow]);
+
   // Show welcome screen on startup
   useEffect(() => {
-    const timer = setTimeout(() => {
-      openWindow(welcomeWindow);
-    }, 1000);
-    return () => clearTimeout(timer);
+    if (!welcomeOpenedRef.current) {
+      const timer = setTimeout(() => {
+        openWindow(welcomeWindow);
+        welcomeOpenedRef.current = true;
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
   }, [openWindow]);
 
-  // Center window function
+  // Enhanced center window function with better positioning
   const centerWindow = (size: { width: number; height: number }) => {
     const x = Math.max(0, (window.innerWidth - size.width) / 2);
     const y = Math.max(0, (window.innerHeight - size.height - 40) / 2); // Account for taskbar
@@ -76,20 +107,29 @@ export const Desktop: React.FC = () => {
   };
 
   const handleOpenWindow = (windowConfig: any) => {
-    const centeredPosition = centerWindow(windowConfig.size);
+    // Use fixed size of 800x600 for all windows
+    const fixedSize = { width: 800, height: 600 };
+    const centeredPosition = centerWindow(fixedSize);
+    
     openWindow({
       ...windowConfig,
-      position: centeredPosition
+      position: centeredPosition,
+      size: fixedSize
     });
   };
 
   const handleShutdown = () => {
     setIsShutdownDialogOpen(true);
-    setIsStartMenuOpen(false);
+    closeDialog();
   };
 
-  const confirmShutdown = () => {
+  const confirmShutdown = (action: 'shutdown' | 'restart' | 'msdos' | 'logoff') => {
     setIsShutdownDialogOpen(false);
+    if (action === 'restart') {
+      window.location.reload();
+      return;
+    }
+    // For simplicity treat other actions same as shutdown
     sounds.playShutdown();
     setTimeout(() => {
       setIsShutdownScreenVisible(true);
@@ -101,19 +141,7 @@ export const Desktop: React.FC = () => {
   };
 
   const handleDisplayProperties = () => {
-    const centeredPosition = centerWindow({ width: 400, height: 500 });
-    openWindow({
-      title: 'Display Properties',
-      component: () => (
-        <DisplayProperties 
-          selectedBackground={selectedBackground}
-          onBackgroundChange={setSelectedBackground}
-        />
-      ),
-      isMinimized: false,
-      position: centeredPosition,
-      size: { width: 400, height: 500 }
-    });
+    setIsDisplayPropertiesOpen(true);
     closeContextMenu();
   };
 
@@ -184,38 +212,47 @@ export const Desktop: React.FC = () => {
           />
         ))}
 
-        {windows.map(window => (
+        {windows.map(windowData => (
           <Window
-            key={window.id}
-            title={window.title}
-            isActive={activeWindowId === window.id}
-            isMinimized={window.isMinimized}
-            position={window.position}
-            size={window.size}
-            zIndex={window.zIndex}
-            onClose={() => closeWindow(window.id)}
-            onFocus={() => focusWindow(window.id)}
-            onMinimize={() => updateWindow(window.id, { isMinimized: true })}
+            key={windowData.id}
+            title={windowData.title}
+            icon={windowData.icon}
+            isActive={activeWindowId === windowData.id}
+            isMinimized={windowData.isMinimized}
+            position={windowData.position}
+            size={windowData.size}
+            zIndex={windowData.zIndex}
+            onClose={() => closeWindow(windowData.id)}
+            onFocus={() => focusWindow(windowData.id)}
+            onMinimize={() => updateWindow(windowData.id, { isMinimized: true })}
             onMaximize={() => {
-              const isMaximized = window.size.width === window.innerWidth && window.size.height === window.innerHeight - 40;
-              if (isMaximized) {
-                // Restore to original size
-                updateWindow(window.id, { 
-                  size: { width: 500, height: 400 },
-                  position: centerWindow({ width: 500, height: 400 })
+              const isMaximized = windowData.size.width === window.innerWidth && windowData.size.height === window.innerHeight - 40;
+              if (!isMaximized) {
+                // Store previous size and position, then maximize
+                const maxWidth = window.innerWidth;
+                const maxHeight = window.innerHeight - 40; // Account for taskbar
+                updateWindow(windowData.id, {
+                  prevSize: windowData.size,
+                  prevPosition: windowData.position,
+                  size: { width: maxWidth, height: maxHeight },
+                  position: { x: 0, y: 0 }
                 });
               } else {
-                // Maximize
-                updateWindow(window.id, { 
-                  size: { width: window.innerWidth, height: window.innerHeight - 40 },
-                  position: { x: 0, y: 0 }
+                // Restore previous size and position if available, else use default
+                updateWindow(windowData.id, {
+                  size: windowData.prevSize || { width: 800, height: 600 },
+                  position: windowData.prevPosition || centerWindow({ width: 800, height: 600 })
                 });
               }
             }}
-            onUpdatePosition={(position) => updateWindow(window.id, { position })}
-            onUpdateSize={(size) => updateWindow(window.id, { size })}
+            onUpdatePosition={(position) => updateWindow(windowData.id, { position })}
+            onUpdateSize={(size) => updateWindow(windowData.id, { size })}
           >
-            <window.component />
+            {windowData.title === 'Welcome' ? (
+              <windowData.component onClose={() => closeWindow(windowData.id)} />
+            ) : (
+              <windowData.component />
+            )}
           </Window>
         ))}
 
@@ -226,9 +263,8 @@ export const Desktop: React.FC = () => {
           items={contextMenu.type === 'desktop' ? desktopContextItems : iconContextItems}
         />
 
-        {isStartMenuOpen && (
+        {activeDialog === 'start' && (
           <StartMenu 
-            onClose={() => setIsStartMenuOpen(false)} 
             onShutdown={handleShutdown}
           />
         )}
@@ -263,11 +299,40 @@ export const Desktop: React.FC = () => {
             focusWindow(id);
           }}
           onStartClick={() => {
-            setIsStartMenuOpen(!isStartMenuOpen);
+            if (activeDialog === 'start') {
+              closeDialog();
+            } else {
+              openDialog('start');
+            }
             sounds.playClick();
           }}
-          isStartMenuOpen={isStartMenuOpen}
+          isStartMenuOpen={activeDialog === 'start'}
         />
+
+        {/* Display Properties Modal Dialog */}
+        {isDisplayPropertiesOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100]">
+            <div className="bg-gray-300 border-2 border-gray-400 shadow-lg min-w-[400px] min-h-[500px]" style={{ borderStyle: 'outset' }}>
+              <div className="flex items-center justify-between px-4 py-2 bg-[#000080]">
+                <span className="text-white text-xs font-bold">Display Properties</span>
+                <button
+                  className="w-5 h-4 bg-gray-300 border border-gray-400 flex items-center justify-center hover:bg-gray-200 text-xs"
+                  style={{ borderStyle: 'outset' }}
+                  onClick={() => setIsDisplayPropertiesOpen(false)}
+                >
+                  ×
+                </button>
+              </div>
+              <div className="p-2">
+                <DisplayProperties
+                  selectedBackground={selectedBackground}
+                  onBackgroundChange={setSelectedBackground}
+                  onClose={() => setIsDisplayPropertiesOpen(false)}
+                />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

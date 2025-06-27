@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { WindowData } from './Desktop';
 import { VolumeControl } from './VolumeControl';
@@ -22,6 +21,7 @@ export const Taskbar: React.FC<TaskbarProps> = ({
   return (
     <div 
       className="absolute bottom-0 left-0 right-0 bg-gray-300 border-t-2 border-gray-400 flex items-center z-50"
+      data-taskbar
       style={{ 
         height: '28px',
         borderStyle: 'outset',
@@ -35,19 +35,19 @@ export const Taskbar: React.FC<TaskbarProps> = ({
         }`}
         style={{ 
           borderStyle: isStartMenuOpen ? 'inset' : 'outset',
-          fontSize: '11px'
+          fontSize: '11px',
+          height: '24px',
+          minWidth: '60px',
         }}
         onClick={onStartClick}
       >
-        <div 
-          className="w-4 h-4 flex items-center justify-center text-white text-xs font-bold"
-          style={{
-            background: 'linear-gradient(45deg, #ff0000 0%, #ffff00 25%, #00ff00 50%, #00ffff 75%, #0000ff 100%)',
-            borderRadius: '1px'
-          }}
-        >
-          ⊞
-        </div>
+        <img
+          src="/icons/Windows logo (without text).ico"
+          alt="Start"
+          width={18}
+          height={18}
+          style={{ imageRendering: 'pixelated', marginRight: 4 }}
+        />
         <span>Start</span>
       </button>
 
@@ -62,7 +62,7 @@ export const Taskbar: React.FC<TaskbarProps> = ({
         {windows.map(window => (
           <button
             key={window.id}
-            className={`h-5 px-2 bg-gray-300 border border-gray-400 text-xs truncate flex-shrink-0 transition-all duration-150 ${
+            className={`h-5 px-2 bg-gray-300 border border-gray-400 text-xs truncate flex-shrink-0 transition-all duration-150 flex items-center space-x-1 ${
               activeWindowId === window.id && !window.isMinimized
                 ? 'bg-gray-400 border-gray-500 shadow-inner' 
                 : 'hover:bg-gray-200 shadow-sm'
@@ -78,6 +78,9 @@ export const Taskbar: React.FC<TaskbarProps> = ({
             onClick={() => onWindowClick(window.id)}
             title={window.title}
           >
+            {window.icon && (
+              <img src={window.icon} alt="icon" width={16} height={16} style={{ marginRight: 4, imageRendering: 'pixelated' }} />
+            )}
             {window.title}
           </button>
         ))}
@@ -85,11 +88,14 @@ export const Taskbar: React.FC<TaskbarProps> = ({
 
       {/* System Tray */}
       <div 
-        className="flex items-center space-x-1 px-1 border border-gray-400 bg-gray-300 flex-shrink-0"
+        className="flex items-center space-x-1 bg-gray-300"
         style={{ 
           borderStyle: 'inset',
-          height: '22px',
-          marginRight: '2px'
+          height: '24px',
+          minHeight: '24px',
+          maxHeight: '24px',
+          marginRight: '2px',
+          alignItems: 'center',
         }}
       >
         <VolumeControl />

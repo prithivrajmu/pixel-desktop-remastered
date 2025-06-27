@@ -71,7 +71,7 @@ export const DesktopIcon: React.FC<DesktopIconProps> = ({
         }`}
         style={{ 
           textShadow: isSelected ? 'none' : '1px 1px 1px rgba(0,0,0,0.8)',
-          wordWrap: 'break-word',
+          wordWrap: 'normal',
           maxWidth: '64px'
         }}
       >

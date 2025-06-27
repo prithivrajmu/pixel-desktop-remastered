@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 import * as Tone from 'tone';
 
@@ -6,7 +5,7 @@ class WindowsSounds {
   private static instance: WindowsSounds;
   private isInitialized = false;
   private masterVolume = 0.5; // Default 50%
-  private isMuted = true; // Default muted
+  private isMuted = false; // Default not muted
 
   public static getInstance(): WindowsSounds {
     if (!WindowsSounds.instance) {

@@ -1,19 +1,58 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { getAvailableBackgrounds } from './BackgroundManager';
 
 interface DisplayPropertiesProps {
   selectedBackground: string;
   onBackgroundChange: (backgroundId: string) => void;
+  onClose: () => void; // Add onClose for dialog control
 }
 
 export const DisplayProperties: React.FC<DisplayPropertiesProps> = ({
   selectedBackground,
-  onBackgroundChange
+  onBackgroundChange,
+  onClose
 }) => {
   const [activeTab, setActiveTab] = useState('Background');
   const backgrounds = getAvailableBackgrounds();
 
+  // Internal state for background selection (not persisted until Apply/OK)
+  const [tempBackground, setTempBackground] = useState(selectedBackground);
+  // Store last persisted background for Cancel
+  const lastPersistedBackground = useRef(selectedBackground);
+
+  // On mount, load from localStorage if available
+  useEffect(() => {
+    const saved = localStorage.getItem('display.background');
+    if (saved && saved !== tempBackground) {
+      setTempBackground(saved);
+      lastPersistedBackground.current = saved;
+      onBackgroundChange(saved); // Preview on open
+    }
+  }, []);
+
+  // When parent changes selectedBackground (e.g. from outside dialog)
+  useEffect(() => {
+    setTempBackground(selectedBackground);
+    lastPersistedBackground.current = selectedBackground;
+  }, [selectedBackground]);
+
+  // Handle Apply/OK/Cancel
+  const handleApply = () => {
+    localStorage.setItem('display.background', tempBackground);
+    lastPersistedBackground.current = tempBackground;
+    onBackgroundChange(tempBackground);
+  };
+  const handleOK = () => {
+    onClose();
+  };
+  const handleCancel = () => {
+    onClose();
+  };
+
   const tabs = ['Background', 'Screen Saver', 'Appearance', 'Settings'];
+
+  // If the selected background is 'default', use a teal color
+  const getBackgroundId = (id: string) => id === 'default' ? 'teal-bg' : id;
 
   return (
     <div className="h-full bg-gray-300 p-2">
@@ -48,9 +87,13 @@ export const DisplayProperties: React.FC<DisplayPropertiesProps> = ({
                 <div
                   key={bg.id}
                   className={`px-2 py-1 text-sm cursor-pointer hover:bg-blue-100 ${
-                    selectedBackground === bg.id ? 'bg-blue-600 text-white' : ''
+                    tempBackground === getBackgroundId(bg.id) ? 'bg-blue-600 text-white' : ''
                   }`}
-                  onClick={() => onBackgroundChange(bg.id)}
+                  onClick={() => setTempBackground(getBackgroundId(bg.id))}
+                  onDoubleClick={() => {
+                    setTempBackground(getBackgroundId(bg.id));
+                    setTimeout(() => handleApply(), 0);
+                  }}
                 >
                   {bg.name}
                 </div>
@@ -80,18 +123,21 @@ export const DisplayProperties: React.FC<DisplayPropertiesProps> = ({
             <button 
               className="px-6 py-2 bg-gray-300 border-2 border-gray-400 text-sm hover:bg-gray-200"
               style={{ borderStyle: 'outset' }}
+              onClick={handleOK}
             >
               OK
             </button>
             <button 
               className="px-6 py-2 bg-gray-300 border-2 border-gray-400 text-sm hover:bg-gray-200"
               style={{ borderStyle: 'outset' }}
+              onClick={handleCancel}
             >
               Cancel
             </button>
             <button 
               className="px-6 py-2 bg-gray-300 border-2 border-gray-400 text-sm hover:bg-gray-200"
               style={{ borderStyle: 'outset' }}
+              onClick={handleApply}
             >
               Apply
             </button>

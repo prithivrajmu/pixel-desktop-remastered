@@ -3,6 +3,7 @@ import { Minus, X, Square } from 'lucide-react';
 
 interface WindowProps {
   title: string;
+  icon?: string;
   children: React.ReactNode;
   isActive: boolean;
   isMinimized: boolean;
@@ -19,6 +20,7 @@ interface WindowProps {
 
 export const Window: React.FC<WindowProps> = ({
   title,
+  icon,
   children,
   isActive,
   isMinimized,
@@ -39,24 +41,6 @@ export const Window: React.FC<WindowProps> = ({
   const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
   const windowRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-
-  // Auto-resize to content on mount
-  useEffect(() => {
-    if (contentRef.current) {
-      const contentHeight = contentRef.current.scrollHeight;
-      const contentWidth = contentRef.current.scrollWidth;
-      
-      // Only resize if content is smaller than current window
-      if (contentHeight < size.height - 32 || contentWidth < size.width) {
-        const newHeight = Math.max(200, Math.min(contentHeight + 60, window.innerHeight - 100));
-        const newWidth = Math.max(300, Math.min(contentWidth + 40, window.innerWidth - 100));
-        
-        if (newHeight !== size.height || newWidth !== size.width) {
-          onUpdateSize({ width: newWidth, height: newHeight });
-        }
-      }
-    }
-  }, [children]);
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     if (e.target === e.currentTarget || (e.target as HTMLElement).classList.contains('title-bar')) {
@@ -175,7 +159,7 @@ export const Window: React.FC<WindowProps> = ({
         height: size.height,
         zIndex,
         borderStyle: 'outset',
-        fontFamily: '"MS Sans Serif", sans-serif'
+        fontFamily: '"MS Sans Serif", "Microsoft Sans Serif", sans-serif'
       }}
       onClick={onFocus}
     >
@@ -183,18 +167,25 @@ export const Window: React.FC<WindowProps> = ({
       <div
         className={`title-bar h-7 px-2 flex items-center justify-between cursor-move ${
           isActive 
-            ? 'bg-gradient-to-r from-blue-800 to-blue-600' 
-            : 'bg-gradient-to-r from-gray-600 to-gray-500'
+            ? 'bg-[#000080]' 
+            : 'bg-[#808080]'
         }`}
+        style={{ fontFamily: '"MS Sans Serif", "Microsoft Sans Serif", sans-serif' }}
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
-        <span className="text-white text-xs font-bold truncate">{title}</span>
+        <div className="flex items-center space-x-1">
+          {icon && <img src={icon} alt="Window Icon" className="w-4 h-4" />}
+          <span className="text-white text-xs font-bold truncate">{title}</span>
+        </div>
         <div className="flex space-x-px">
           <button
             className="w-5 h-4 bg-gray-300 border border-gray-400 flex items-center justify-center hover:bg-gray-200 text-xs"
-            style={{ borderStyle: 'outset' }}
+            style={{ 
+              borderStyle: 'outset',
+              fontFamily: '"MS Sans Serif", "Microsoft Sans Serif", sans-serif'
+            }}
             onClick={(e) => {
               e.stopPropagation();
               onMinimize();
@@ -204,7 +195,10 @@ export const Window: React.FC<WindowProps> = ({
           </button>
           <button
             className="w-5 h-4 bg-gray-300 border border-gray-400 flex items-center justify-center hover:bg-gray-200 text-xs"
-            style={{ borderStyle: 'outset' }}
+            style={{ 
+              borderStyle: 'outset',
+              fontFamily: '"MS Sans Serif", "Microsoft Sans Serif", sans-serif'
+            }}
             onClick={(e) => {
               e.stopPropagation();
               onMaximize();
@@ -214,7 +208,10 @@ export const Window: React.FC<WindowProps> = ({
           </button>
           <button
             className="w-5 h-4 bg-gray-300 border border-gray-400 flex items-center justify-center hover:bg-gray-200 text-xs"
-            style={{ borderStyle: 'outset' }}
+            style={{ 
+              borderStyle: 'outset',
+              fontFamily: '"MS Sans Serif", "Microsoft Sans Serif", sans-serif'
+            }}
             onClick={(e) => {
               e.stopPropagation();
               onClose();
@@ -228,8 +225,12 @@ export const Window: React.FC<WindowProps> = ({
       {/* Window Content */}
       <div 
         ref={contentRef}
-        className="bg-white overflow-auto" 
-        style={{ height: 'calc(100% - 28px)' }}
+        className="bg-white flex flex-col justify-start" 
+        style={{ 
+          height: 'calc(100% - 28px)',
+          overflow: 'auto', // Will only show scrollbars if content is larger than container
+          fontFamily: '"MS Sans Serif", "Microsoft Sans Serif", sans-serif'
+        }}
       >
         {children}
       </div>

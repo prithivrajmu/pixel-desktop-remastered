@@ -1,95 +1,80 @@
-
 import React from 'react';
 import { MyComputer } from '../components/applications/MyComputer';
 import { MyDocuments } from '../components/applications/MyDocuments';
 import { InternetExplorer } from '../components/applications/InternetExplorer';
-import { Notepad } from '../components/applications/Notepad';
 import { RecycleBin } from '../components/applications/RecycleBin';
 import { Welcome } from '../components/applications/Welcome';
+import { Contact } from '../components/applications/Contact';
 
 export const desktopIcons = [
   { 
     id: 'my-computer', 
     name: 'My Computer', 
-    icon: '💻', 
     position: { x: 20, y: 20 },
     tooltip: 'About Me, Skills, and Bio',
+    icon: '/icons/My Computer.ico',
     windowConfig: {
       title: 'My Computer',
+      icon: '/icons/My Computer.ico',
       component: MyComputer,
       isMinimized: false,
-      position: { x: 0, y: 0 }, // Will be centered
-      size: { width: 500, height: 400 }
+      position: { x: 0, y: 0 } // Will be centered and auto-sized
     }
   },
   { 
     id: 'inbox', 
-    name: 'Inbox', 
-    icon: '📥', 
+    name: 'My Documents', 
     position: { x: 20, y: 100 },
-    tooltip: 'Messages and Communications',
+    tooltip: 'My Projects and Experiences',
+    icon: '/icons/Documents Folder.ico',
     windowConfig: {
       title: 'Inbox',
+      icon: '/icons/Documents Folder.ico',
       component: MyDocuments,
       isMinimized: false,
-      position: { x: 0, y: 0 },
-      size: { width: 600, height: 500 }
+      position: { x: 0, y: 0 } // Will be centered and auto-sized
     }
   },
   { 
     id: 'recycle-bin', 
     name: 'Recycle Bin', 
-    icon: '🗑️', 
     position: { x: 20, y: 180 },
     tooltip: 'Archived Projects and Ideas',
+    icon: '/icons/Recycle Bin with folder and document.ico',
     windowConfig: {
       title: 'Recycle Bin',
+      icon: '/icons/Recycle Bin with folder and document.ico',
       component: RecycleBin,
       isMinimized: false,
-      position: { x: 0, y: 0 },
-      size: { width: 450, height: 400 }
+      position: { x: 0, y: 0 } // Will be centered and auto-sized
     }
   },
   { 
     id: 'the-internet', 
-    name: 'The Internet', 
-    icon: '🌐', 
+    name: 'Internet Explorer', 
     position: { x: 20, y: 260 },
     tooltip: 'My Writings and Blog',
+    icon: '/icons/SMALL.ico',
     windowConfig: {
       title: 'The Internet',
+      icon: '/icons/SMALL.ico',
       component: InternetExplorer,
       isMinimized: false,
-      position: { x: 0, y: 0 },
-      size: { width: 700, height: 500 }
-    }
-  },
-  { 
-    id: 'online-services', 
-    name: 'Online Services', 
-    icon: '📁', 
-    position: { x: 20, y: 340 },
-    tooltip: 'My Projects and Portfolio',
-    windowConfig: {
-      title: 'Online Services',
-      component: MyDocuments,
-      isMinimized: false,
-      position: { x: 0, y: 0 },
-      size: { width: 600, height: 500 }
+      position: { x: 0, y: 0 } // Will be centered and auto-sized
     }
   },
   { 
     id: 'set-up-the-microsoft-network', 
-    name: 'Set Up The Microsoft Network', 
-    icon: '🔧', 
-    position: { x: 20, y: 420 },
-    tooltip: 'Contact and Network',
+    name: 'Contact Me', 
+    position: { x: 20, y: 340 },
+    tooltip: 'Contact Information',
+    icon: '/icons/Letter.ico',
     windowConfig: {
-      title: 'Network Setup',
-      component: Notepad,
+      title: 'Contact Information',
+      icon: '/icons/Letter.ico',
+      component: Contact,
       isMinimized: false,
-      position: { x: 0, y: 0 },
-      size: { width: 500, height: 400 }
+      position: { x: 0, y: 0 } // Will be centered and auto-sized
     }
   }
 ];
@@ -97,8 +82,9 @@ export const desktopIcons = [
 // Welcome window that shows on startup
 export const welcomeWindow = {
   title: 'Welcome',
+  icon: '/icons/Windows logo (without text).ico',
   component: Welcome,
   isMinimized: false,
-  position: { x: 0, y: 0 }, // Will be centered
-  size: { width: 500, height: 350 }
+  position: { x: 0, y: 0 }, // Will be centered and auto-sized
+  size: { width: 800, height: 600 } // Open at 800x600
 };

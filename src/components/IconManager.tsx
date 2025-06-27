@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 export interface CustomIcon {
@@ -22,21 +21,13 @@ export const IconManager: React.FC<IconManagerProps> = ({
   size = 32 
 }) => {
   const [iconError, setIconError] = React.useState(false);
-  
-  // You can replace this with your custom icons mapping
-  const customIcons: Record<string, string> = {
-    'my-computer': '/icons/computer.png',
-    'my-documents': '/icons/documents.png',
-    'internet-explorer': '/icons/internet.png',
-    'notepad': '/icons/notepad.png',
-    'recycle-bin': '/icons/recycle.png'
-  };
-
-  const iconPath = customIcons[iconId];
 
   const handleImageError = () => {
     setIconError(true);
   };
+
+  // Use the fallback path directly since we're now passing the correct icon paths
+  const iconPath = fallback;
 
   if (!iconPath || iconError) {
     return (
@@ -44,7 +35,13 @@ export const IconManager: React.FC<IconManagerProps> = ({
         className={`flex items-center justify-center ${className}`}
         style={{ fontSize: `${size}px` }}
       >
-        {fallback}
+        {/* Fallback emoji for each icon type */}
+        {iconId === 'my-computer' && '💻'}
+        {iconId === 'inbox' && '📁'}
+        {iconId === 'recycle-bin' && '🗑️'}
+        {iconId === 'the-internet' && '🌐'}
+        {iconId === 'set-up-the-microsoft-network' && '📧'}
+        {!['my-computer', 'inbox', 'recycle-bin', 'the-internet', 'set-up-the-microsoft-network'].includes(iconId) && '📄'}
       </div>
     );
   }

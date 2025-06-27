@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 export const MyComputer: React.FC = () => {
@@ -11,10 +10,10 @@ export const MyComputer: React.FC = () => {
         <div className="flex-1">
           <h2 className="text-lg font-bold mb-2">System Properties</h2>
           <div className="space-y-1 text-xs">
-            <p><strong>Name:</strong> John Developer</p>
-            <p><strong>Profession:</strong> Full Stack Developer</p>
-            <p><strong>Experience:</strong> 5+ Years</p>
-            <p><strong>Location:</strong> San Francisco, CA</p>
+            <p><strong>Name:</strong> Prithiv Raj M U</p>
+            <p><strong>Profession:</strong> Founder & Tech Leader | Data & Operations Expert</p>
+            <p><strong>Experience:</strong> 9+ Years</p>
+            <p><strong>Location:</strong> Chennai, India</p>
           </div>
         </div>
       </div>
@@ -23,16 +22,27 @@ export const MyComputer: React.FC = () => {
         <h3 className="font-bold mb-2">Skills & Technologies</h3>
         <div className="grid grid-cols-2 gap-2 text-xs">
           <div>
-            <p><strong>Languages:</strong></p>
-            <p>• JavaScript/TypeScript</p>
+            <p><strong>Languages & Databases:</strong></p>
             <p>• Python</p>
-            <p>• Java</p>
+            <p>• SQL</p>
+            <p>• C++/C</p>
+            <p>• R</p>
+            <p>• JavaScript / TypeScript</p>
+            <p>• Snowflake</p>
+            <p>• BigQuery</p>
+            <p>• Postgres</p>
           </div>
           <div>
-            <p><strong>Frameworks:</strong></p>
-            <p>• React/Next.js</p>
-            <p>• Node.js</p>
-            <p>• Django</p>
+            <p><strong>Frameworks & Tools:</strong></p>
+            <p>• React</p>
+            <p>• Looker</p>
+            <p>• dbt</p>
+            <p>• Databricks</p>
+            <p>• Sisense</p>
+            <p>• Spark</p>
+            <p>• Flask</p>
+            <p>• Docker</p>
+            <p>• AWS, GCP</p>
           </div>
         </div>
       </div>
@@ -40,9 +50,7 @@ export const MyComputer: React.FC = () => {
       <div className="border-2 border-gray-400 p-3" style={{ borderStyle: 'inset' }}>
         <h3 className="font-bold mb-2">About</h3>
         <p className="text-xs leading-relaxed">
-          Passionate full-stack developer with expertise in modern web technologies. 
-          I enjoy creating innovative solutions and have a particular fondness for 
-          retro computing aesthetics, as evidenced by this Windows 95-inspired portfolio!
+          A results-driven leader with over 9 years of experience spanning high-growth startups and successful entrepreneurial ventures. Proven ability to build and lead high-performing teams, architect complex data solutions from the ground up, and drive business modernization. Combines deep expertise in data science, analytics, and agent-based simulation with a founder's mindset for product development, operational efficiency, and P&L responsibility.
         </p>
       </div>
     </div>

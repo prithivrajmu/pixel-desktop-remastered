@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 
 export interface BackgroundOption {
@@ -20,7 +19,7 @@ export const BackgroundManager: React.FC<BackgroundManagerProps> = ({
 }) => {
   const [backgroundError, setBackgroundError] = useState(false);
 
-  // Default backgrounds - you can add your custom ones here
+  // Updated to use the unified videos folder
   const backgrounds: Record<string, BackgroundOption> = {
     'default': {
       id: 'default',
@@ -28,17 +27,43 @@ export const BackgroundManager: React.FC<BackgroundManagerProps> = ({
       type: 'image',
       path: "data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3Ccircle cx='10' cy='10' r='2'/%3E%3Ccircle cx='50' cy='50' r='2'/%3E%3Ccircle cx='50' cy='10' r='1'/%3E%3Ccircle cx='10' cy='50' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"
     },
-    'custom-image-1': {
-      id: 'custom-image-1',
-      name: 'Custom Background 1',
+    // Add your custom backgrounds here
+    'custom-bg-1': {
+      id: 'custom-bg-1',
+      name: 'Windows Classic 1',
       type: 'image',
-      path: '/backgrounds/bg1.png'
+      path: '/backgrounds/windows_95_os.png'
     },
-    'custom-video-1': {
-      id: 'custom-video-1',
-      name: 'Custom Video 1',
+    'custom-bg-2': {
+      id: 'custom-bg-2',
+      name: 'Windows Classic 2',
+      type: 'image',
+      path: '/backgrounds/windows_95_os_2.png'
+    },
+    // Video backgrounds now use the unified videos folder
+    'background-video-1': {
+      id: 'background-video-1',
+      name: 'Shadows On a Wall',
       type: 'video',
-      path: '/backgrounds/bg1.mp4'
+      path: '/videos/moving_bg_3.mp4'
+    },
+    'background-video-2': {
+      id: 'background-video-2',
+      name: 'Boy Running',
+      type: 'video',
+      path: '/videos/boy_runnin.mp4'
+    },
+    'background-video-3': {
+      id: 'background-video-3',
+      name: 'Grasslands',
+      type: 'video',
+      path: '/videos/moving_bg_2.mp4'
+    },
+    'background-video-4': {
+      id: 'background-video-4',
+      name: 'Flowers',
+      type: 'video',
+      path: '/videos/moving_bg.mp4'
     }
   };
 
@@ -48,9 +73,19 @@ export const BackgroundManager: React.FC<BackgroundManagerProps> = ({
     setBackgroundError(true);
   };
 
+  if (selectedBackground === 'teal-bg') {
+    return (
+      <div
+        className={`fixed inset-0 w-full h-full ${className}`}
+        style={{ backgroundColor: '#008080' }}
+      />
+    );
+  }
+
   if (currentBackground.type === 'video' && !backgroundError) {
     return (
       <video
+        key={currentBackground.id}
         className={`fixed inset-0 w-full h-full object-cover ${className}`}
         autoPlay
         loop
@@ -88,16 +123,41 @@ export const getAvailableBackgrounds = (): BackgroundOption[] => {
     },
     // Add your custom backgrounds here
     {
-      id: 'custom-image-1',
-      name: 'Custom Background 1',
+      id: 'custom-bg-1',
+      name: 'Windows Classic 1',
       type: 'image',
-      path: '/backgrounds/bg1.png'
+      path: '/backgrounds/windows_95_os.png'
     },
     {
-      id: 'custom-video-1',
-      name: 'Custom Video 1',
+      id: 'custom-bg-2',
+      name: 'Windows Classic 2',
+      type: 'image',
+      path: '/backgrounds/windows_95_os_2.png'
+    },
+    // Video backgrounds now use the unified videos folder
+    {
+      id: 'background-video-1',
+      name: 'Shadows On a Wall',
       type: 'video',
-      path: '/backgrounds/bg1.mp4'
+      path: '/videos/moving_bg_3.mp4'
+    },
+    {
+      id: 'background-video-2',
+      name: 'Boy Running',
+      type: 'video',
+      path: '/videos/boy_running.mp4'
+    },
+    {
+      id: 'background-video-3',
+      name: 'Grasslands',
+      type: 'video',
+      path: '/videos/moving_bg_2.mp4'
+    },
+    {
+      id: 'background-video-4',
+      name: 'Flowers',
+      type: 'video',
+      path: '/videos/moving_bg_1.mp4'
     }
   ];
 };
