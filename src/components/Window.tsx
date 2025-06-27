@@ -190,6 +190,7 @@ export const Window: React.FC<WindowProps> = ({
             }}
             onClick={(e) => {
               e.stopPropagation();
+              sounds.playWindowMinimize();
               onMinimize();
             }}
           >
