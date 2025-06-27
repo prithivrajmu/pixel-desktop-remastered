@@ -204,6 +204,7 @@ export const Window: React.FC<WindowProps> = ({
             }}
             onClick={(e) => {
               e.stopPropagation();
+              sounds.playWindowMaximize();
               onMaximize();
             }}
           >
@@ -217,6 +218,7 @@ export const Window: React.FC<WindowProps> = ({
             }}
             onClick={(e) => {
               e.stopPropagation();
+              sounds.playWindowClose();
               onClose();
             }}
           >
