@@ -186,11 +186,11 @@ export const MyDocuments: React.FC = () => {
             >
               ← Back to My Documents
             </button>
-            <button 
-              onClick={() => window.open('https://github.com/prithivraj', '_blank')}
-              className="bg-[#c0c0c0] text-black px-4 py-2 border-2 border-gray-300 hover:bg-gray-200"
-              style={{ borderStyle: 'outset' }}
-            >
+                         <button 
+               onClick={() => window.open('https://github.com/prithivraj', '_blank', 'noopener,noreferrer')}
+               className="bg-[#c0c0c0] text-black px-4 py-2 border-2 border-gray-300 hover:bg-gray-200"
+               style={{ borderStyle: 'outset' }}
+             >
               💻 Visit GitHub Portfolio
             </button>
           </div>
