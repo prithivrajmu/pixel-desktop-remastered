@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { downloadResume } from '../../utils/downloadUtils';
 
 export const MyComputer: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<string>('Win98');
@@ -76,6 +77,10 @@ export const MyComputer: React.FC = () => {
 
   const handleItemDoubleClick = (itemId: string) => {
     console.log(`Opening ${itemId}`);
+  };
+
+  const handleDownloadResume = () => {
+    downloadResume();
   };
 
   return (
@@ -220,34 +225,65 @@ export const MyComputer: React.FC = () => {
               <p><strong>Location:</strong> Chennai, India | San Francisco, USA</p>
               <p><strong>Pronouns:</strong> He/Him</p>
             </div>
+            
+            {/* Download Resume Button */}
+            <div className="mt-3">
+              <button 
+                onClick={handleDownloadResume}
+                className="bg-[#c0c0c0] border-2 border-gray-400 px-4 py-2 text-xs hover:bg-gray-200 active:border-style-inset transition-colors"
+                style={{ borderStyle: 'outset' }}
+                onMouseDown={(e) => {
+                  e.currentTarget.style.borderStyle = 'inset';
+                }}
+                onMouseUp={(e) => {
+                  e.currentTarget.style.borderStyle = 'outset';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderStyle = 'outset';
+                }}
+              >
+                <img src="/icons/Mail text.ico" alt="Resume" className="w-4 h-4 inline mr-1" />
+                Download Resume
+              </button>
+            </div>
           </div>
         </div>
+        
+
         
         <div className="border-2 border-gray-400 p-3 mb-4" style={{ borderStyle: 'inset' }}>
           <h3 className="font-bold mb-2">Skills & Technologies</h3>
           <div className="grid grid-cols-2 gap-2 text-xs">
             <div>
-              <p><strong>Languages & Databases:</strong></p>
-              <p>• Python</p>
+              <p><strong>Languages:</strong></p>
+              <p>• Python (NumPy, Pandas, SciPy, PyTorch)</p>
               <p>• SQL</p>
               <p>• C++/C</p>
               <p>• R</p>
-              <p>• JavaScript / TypeScript</p>
+              <p>• JavaScript/TypeScript</p>
+            </div>
+            <div>
+              <p><strong>Databases:</strong></p>
               <p>• Snowflake</p>
               <p>• BigQuery</p>
               <p>• Postgres</p>
             </div>
             <div>
               <p><strong>Frameworks & Tools:</strong></p>
-              <p>• React</p>
-              <p>• Looker</p>
-              <p>• dbt</p>
-              <p>• Databricks</p>
-              <p>• Sisense</p>
-              <p>• Spark</p>
-              <p>• Flask</p>
-              <p>• Docker</p>
-              <p>• AWS, GCP</p>
+              <p>• React, Flask</p>
+              <p>• Looker, dbt, Databricks</p>
+              <p>• Sisense, Spark</p>
+              <p>• Docker, AWS, GCP, Git</p>
+            </div>
+            <div>
+              <p><strong>Expertise:</strong></p>
+              <p>• Data Science, Machine Learning</p>
+              <p>• Agent-Based Simulation</p>
+              <p>• Operations Research</p>
+              <p>• ETL/ELT Architecture</p>
+              <p>• Data Warehousing</p>
+              <p>• Full-Stack Web Development</p>
+              <p>• SEO</p>
             </div>
           </div>
         </div>

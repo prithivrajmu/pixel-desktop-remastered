@@ -5,8 +5,8 @@ export interface AssetConfig {
   id: string;
   name: string;
   path: string;
-  type: 'image' | 'video' | 'icon';
-  category?: 'background' | 'screensaver' | 'icon';
+  type: 'image' | 'video' | 'icon' | 'document';
+  category?: 'background' | 'screensaver' | 'icon' | 'document';
 }
 
 // Icon assets - automatically loaded from /public/icons/
@@ -126,20 +126,53 @@ export const screensaverAssets: Record<string, AssetConfig> = {
   }
 };
 
+// Document assets - resumes, portfolios, etc.
+export const documentAssets: Record<string, AssetConfig> = {
+  'resume': {
+    id: 'resume',
+    name: 'Prithiv Raj MU Resume',
+    path: '/resume/Prithiv_Raj_MU_Resume.pdf',
+    type: 'document',
+    category: 'document'
+  },
+  'cover-letter': {
+    id: 'cover-letter',
+    name: 'Cover Letter',
+    path: '/resume/Cover_Letter.doc',
+    type: 'document',
+    category: 'document'
+  },
+  'portfolio': {
+    id: 'portfolio',
+    name: 'Portfolio Presentation',
+    path: '/resume/Portfolio.ppt',
+    type: 'document',
+    category: 'document'
+  },
+  'certifications': {
+    id: 'certifications',
+    name: 'Certifications',
+    path: '/resume/Certifications.pdf',
+    type: 'document',
+    category: 'document'
+  }
+};
+
 // Helper functions
 export const getAllAssets = (): AssetConfig[] => {
   return [
     ...Object.values(iconAssets),
     ...Object.values(backgroundAssets),
-    ...Object.values(screensaverAssets)
+    ...Object.values(screensaverAssets),
+    ...Object.values(documentAssets)
   ];
 };
 
-export const getAssetsByCategory = (category: 'background' | 'screensaver' | 'icon'): AssetConfig[] => {
+export const getAssetsByCategory = (category: 'background' | 'screensaver' | 'icon' | 'document'): AssetConfig[] => {
   return getAllAssets().filter(asset => asset.category === category);
 };
 
-export const getAssetsByType = (type: 'image' | 'video' | 'icon'): AssetConfig[] => {
+export const getAssetsByType = (type: 'image' | 'video' | 'icon' | 'document'): AssetConfig[] => {
   return getAllAssets().filter(asset => asset.type === type);
 };
 
@@ -160,4 +193,9 @@ export const getSharedVideos = (): AssetConfig[] => {
   return backgroundVideos.filter(bgVideo => 
     screensaverVideos.some(ssVideo => ssVideo.path === bgVideo.path)
   );
+};
+
+// Get all documents
+export const getAllDocuments = (): AssetConfig[] => {
+  return getAllAssets().filter(asset => asset.type === 'document');
 }; 
