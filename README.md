@@ -88,3 +88,7 @@ This project is part of Prithiv Raj's portfolio. All rights reserved.
 ## Contact
 
 For questions or collaboration opportunities, please reach out through the Contact application in the portfolio.
+
+or 
+
+Email: prithivrajmu@gmail.com or visit prithivraj.xyz
