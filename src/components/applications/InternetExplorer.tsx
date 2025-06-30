@@ -146,7 +146,7 @@ export const InternetExplorer: React.FC = () => {
                 <hr className="my-4 border-gray-400" />
               </header>
 
-              <div className="max-w-2xl mx-auto">
+              <div>
                 <h2 className="text-lg font-bold mb-4">Recent Posts</h2>
                 
                 {blogPosts.length > 0 ? (
@@ -224,7 +224,7 @@ export const InternetExplorer: React.FC = () => {
                   <div className="text-lg mb-2">Loading article...</div>
                 </div>
               ) : currentPost ? (
-                <div className="max-w-2xl mx-auto">
+                <div>
                   <h1 className="text-xl font-bold mb-4">{currentPost.title}</h1>
                   <div className="text-sm text-gray-600 mb-6">
                     Published: {currentPost.date}
