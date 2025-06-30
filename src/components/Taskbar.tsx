@@ -111,7 +111,7 @@ export const Taskbar: React.FC<TaskbarProps> = ({
 
       {/* System Tray */}
       <div 
-        className="flex items-center space-x-1 bg-gray-300"
+        className="flex items-center bg-gray-300 flex-shrink-0"
         style={{ 
           borderStyle: 'inset',
           height: `${taskbarHeight - 4}px`,
@@ -119,7 +119,9 @@ export const Taskbar: React.FC<TaskbarProps> = ({
           maxHeight: `${taskbarHeight - 4}px`,
           marginRight: '2px',
           alignItems: 'center',
-          padding: screenSize.isMobile ? '0 4px' : '0 2px'
+          padding: screenSize.isMobile ? '0 2px' : '0 2px',
+          gap: screenSize.isMobile ? '2px' : '4px',
+          minWidth: screenSize.isMobile ? '80px' : 'auto'
         }}
       >
         <VolumeControl />

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useSounds } from './SoundManager';
 import { VolumeDialog } from './VolumeDialog';
 import { useGlobalDialog } from '../hooks/useGlobalDialog';
+import { useScreenSize } from '../hooks/use-mobile';
 
 interface VolumeControlProps {
   className?: string;
@@ -16,6 +17,7 @@ export const VolumeControl: React.FC<VolumeControlProps> = ({ className }) => {
   const [dialogPos, setDialogPos] = useState<{ left: number; top: number; bottom: number } | null>(null);
   const sounds = useSounds();
   const { activeDialog, openDialog, closeDialog } = useGlobalDialog();
+  const screenSize = useScreenSize();
 
   useEffect(() => {
     sounds.setVolume(volume);
@@ -73,15 +75,25 @@ export const VolumeControl: React.FC<VolumeControlProps> = ({ className }) => {
     <div ref={volumeRef} className={`relative ${className}`} style={{ display: 'inline-block' }}>
       <button
         ref={buttonRef}
-        className="w-6 h-6 bg-gray-300 border border-gray-400 flex items-center justify-center hover:bg-gray-200 text-xs"
-        style={{ borderStyle: 'outset', padding: 0 }}
+        className={`bg-gray-300 border border-gray-400 flex items-center justify-center hover:bg-gray-200 text-xs ${
+          screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
+        }`}
+        style={{ 
+          borderStyle: 'outset', 
+          padding: 0,
+          width: screenSize.isMobile ? '28px' : '24px',
+          height: screenSize.isMobile ? '28px' : '22px',
+          minWidth: screenSize.isMobile ? '28px' : 'auto',
+          minHeight: screenSize.isMobile ? '28px' : 'auto',
+          touchAction: 'manipulation'
+        }}
         onClick={handleIconClick}
       >
         <img
           src={isMuted || volume === 0 ? '/icons/Mute volume.ico' : '/icons/Volume.ico'}
           alt={isMuted || volume === 0 ? 'Muted' : 'Volume'}
-          width={18}
-          height={18}
+          width={screenSize.isMobile ? 20 : 16}
+          height={screenSize.isMobile ? 20 : 16}
           style={{ imageRendering: 'pixelated' }}
         />
       </button>

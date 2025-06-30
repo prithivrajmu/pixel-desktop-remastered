@@ -1,4 +1,5 @@
 import React from 'react';
+import { useScreenSize } from '../hooks/use-mobile';
 
 interface DateTimeDialogProps {
   date: Date;
@@ -14,6 +15,7 @@ const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 
 const daysShort = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
 export const DateTimeDialog: React.FC<DateTimeDialogProps> = ({ date, onClose, position }) => {
+  const screenSize = useScreenSize();
   const [tab, setTab] = React.useState<'datetime' | 'timezone'>('datetime');
   const [selectedDate, setSelectedDate] = React.useState(date);
   const [calendarMonth, setCalendarMonth] = React.useState(date.getMonth());
@@ -33,10 +35,18 @@ export const DateTimeDialog: React.FC<DateTimeDialogProps> = ({ date, onClose, p
   const today = new Date();
 
   // Position relative to trigger, but render on top of taskbar
-  const dialogWidth = 340;
-  const dialogHeight = 320;
-  const left = window.innerWidth - dialogWidth ;
-  const top = Math.max(8, position.bottom - dialogHeight - 45);
+  const dialogWidth = screenSize.isMobile ? Math.min(350, window.innerWidth - 16) : 340;
+  const dialogHeight = screenSize.isMobile ? Math.min(400, window.innerHeight - 100) : 320;
+  
+  let left, top;
+  if (screenSize.isMobile) {
+    // Center on mobile
+    left = (window.innerWidth - dialogWidth) / 2;
+    top = Math.max(8, (window.innerHeight - dialogHeight) / 2);
+  } else {
+    left = window.innerWidth - dialogWidth;
+    top = Math.max(8, position.bottom - dialogHeight - 45);
+  }
 
   return (
     <div
@@ -45,8 +55,13 @@ export const DateTimeDialog: React.FC<DateTimeDialogProps> = ({ date, onClose, p
       onClick={onClose}
     >
       <div
-        className="bg-gray-200 border-2 border-gray-400 shadow-lg min-w-[340px] max-w-[98vw] z-[70]"
-        style={{ borderStyle: 'outset', fontFamily: 'MS Sans Serif, sans-serif', width: 340 }}
+        className="bg-gray-200 border-2 border-gray-400 shadow-lg max-w-[98vw] z-[70]"
+        style={{ 
+          borderStyle: 'outset', 
+          fontFamily: 'MS Sans Serif, sans-serif', 
+          width: dialogWidth,
+          maxHeight: screenSize.isMobile ? '90vh' : 'auto'
+        }}
         onClick={e => e.stopPropagation()}
       >
         {/* Title Bar */}
@@ -60,9 +75,19 @@ export const DateTimeDialog: React.FC<DateTimeDialogProps> = ({ date, onClose, p
           <button className={`px-3 py-1 ${tab === 'timezone' ? 'bg-white font-bold border-t-2 border-l-2 border-r-2 border-gray-400' : ''} text-gray-500`} disabled>Time Zone</button>
         </div>
         {/* Content */}
-        <div className="flex p-3 gap-4 min-h-[180px]">
+        <div className={`p-3 min-h-[180px] ${
+          screenSize.isMobile ? 'flex flex-col gap-3' : 'flex gap-4'
+        }`}>
           {/* Date group box */}
-          <fieldset className="border border-gray-400 p-2" style={{ borderStyle: 'inset', minWidth: 150, position: 'relative' }}>
+          <fieldset 
+            className="border border-gray-400 p-2" 
+            style={{ 
+              borderStyle: 'inset', 
+              minWidth: screenSize.isMobile ? 'auto' : 150, 
+              position: 'relative',
+              flex: screenSize.isMobile ? 'none' : '1'
+            }}
+          >
             <legend className="px-1 text-xs" style={{ color: '#222', fontWeight: 600, fontSize: 12, marginLeft: 8 }}>Date</legend>
             <div className="flex items-center mb-1">
               <select
@@ -104,10 +129,23 @@ export const DateTimeDialog: React.FC<DateTimeDialogProps> = ({ date, onClose, p
             </div>
           </fieldset>
           {/* Time group box */}
-          <fieldset className="border border-gray-400 p-2 flex-1" style={{ borderStyle: 'inset', minWidth: 150, position: 'relative' }}>
+          <fieldset 
+            className="border border-gray-400 p-2"
+            style={{ 
+              borderStyle: 'inset', 
+              minWidth: screenSize.isMobile ? 'auto' : 150, 
+              position: 'relative',
+              flex: screenSize.isMobile ? 'none' : '1'
+            }}
+          >
             <legend className="px-1 text-xs" style={{ color: '#222', fontWeight: 600, fontSize: 12, marginLeft: 8 }}>Time</legend>
             <div className="flex flex-col items-center justify-center">
-              <svg width={110} height={110} viewBox="0 0 100 100" className="mb-2">
+              <svg 
+                width={screenSize.isMobile ? 90 : 110} 
+                height={screenSize.isMobile ? 90 : 110} 
+                viewBox="0 0 100 100" 
+                className="mb-2"
+              >
                 <circle cx={50} cy={50} r={48} fill="#e5e7eb" stroke="#888" strokeWidth={2} />
                 {/* Hour marks */}
                 {Array(12).fill(null).map((_, i) => {

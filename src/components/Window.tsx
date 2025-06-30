@@ -186,7 +186,7 @@ export const Window: React.FC<WindowProps> = memo(({
             : 'bg-[#808080]'
         }`}
         style={{ 
-          height: screenSize.isMobile ? '32px' : '28px',
+          height: screenSize.isMobile ? '36px' : '28px',
           fontFamily: '"MS Sans Serif", "Microsoft Sans Serif", sans-serif',
           touchAction: 'none'
         }}
@@ -208,17 +208,19 @@ export const Window: React.FC<WindowProps> = memo(({
             {title}
           </span>
         </div>
-        <div className="flex space-x-px">
+        <div className={`flex ${screenSize.isMobile ? 'space-x-1' : 'space-x-px'}`}>
           <button
             className={`bg-gray-300 border border-gray-400 flex items-center justify-center hover:bg-gray-200 text-xs ${
               screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
             }`}
             style={{ 
-              width: screenSize.isMobile ? '24px' : '20px',
-              height: screenSize.isMobile ? '18px' : '16px',
+              width: screenSize.isMobile ? '32px' : '20px',
+              height: screenSize.isMobile ? '28px' : '16px',
               borderStyle: 'outset',
               fontFamily: '"MS Sans Serif", "Microsoft Sans Serif", sans-serif',
-              touchAction: 'manipulation'
+              touchAction: 'manipulation',
+              minWidth: screenSize.isMobile ? '32px' : 'auto',
+              minHeight: screenSize.isMobile ? '28px' : 'auto'
             }}
             onClick={(e) => {
               e.stopPropagation();
@@ -226,18 +228,20 @@ export const Window: React.FC<WindowProps> = memo(({
               onMinimize();
             }}
           >
-            <Minus size={8} />
+            <Minus size={screenSize.isMobile ? 12 : 8} />
           </button>
           <button
             className={`bg-gray-300 border border-gray-400 flex items-center justify-center hover:bg-gray-200 text-xs ${
               screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
             }`}
             style={{ 
-              width: screenSize.isMobile ? '24px' : '20px',
-              height: screenSize.isMobile ? '18px' : '16px',
+              width: screenSize.isMobile ? '32px' : '20px',
+              height: screenSize.isMobile ? '28px' : '16px',
               borderStyle: 'outset',
               fontFamily: '"MS Sans Serif", "Microsoft Sans Serif", sans-serif',
-              touchAction: 'manipulation'
+              touchAction: 'manipulation',
+              minWidth: screenSize.isMobile ? '32px' : 'auto',
+              minHeight: screenSize.isMobile ? '28px' : 'auto'
             }}
             onClick={(e) => {
               e.stopPropagation();
@@ -245,18 +249,20 @@ export const Window: React.FC<WindowProps> = memo(({
               onMaximize();
             }}
           >
-            <Square size={screenSize.isMobile ? 8 : 6} />
+            <Square size={screenSize.isMobile ? 10 : 6} />
           </button>
           <button
             className={`bg-gray-300 border border-gray-400 flex items-center justify-center hover:bg-gray-200 text-xs ${
               screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
             }`}
             style={{ 
-              width: screenSize.isMobile ? '24px' : '20px',
-              height: screenSize.isMobile ? '18px' : '16px',
+              width: screenSize.isMobile ? '32px' : '20px',
+              height: screenSize.isMobile ? '28px' : '16px',
               borderStyle: 'outset',
               fontFamily: '"MS Sans Serif", "Microsoft Sans Serif", sans-serif',
-              touchAction: 'manipulation'
+              touchAction: 'manipulation',
+              minWidth: screenSize.isMobile ? '32px' : 'auto',
+              minHeight: screenSize.isMobile ? '28px' : 'auto'
             }}
             onClick={(e) => {
               e.stopPropagation();
@@ -264,7 +270,7 @@ export const Window: React.FC<WindowProps> = memo(({
               onClose();
             }}
           >
-            <X size={screenSize.isMobile ? 10 : 8} />
+            <X size={screenSize.isMobile ? 12 : 8} />
           </button>
         </div>
       </div>
@@ -274,7 +280,7 @@ export const Window: React.FC<WindowProps> = memo(({
         ref={contentRef}
         className="bg-white flex flex-col justify-start" 
         style={{ 
-          height: `calc(100% - ${screenSize.isMobile ? '32px' : '28px'})`,
+          height: `calc(100% - ${screenSize.isMobile ? '36px' : '28px'})`,
           overflow: 'auto',
           fontFamily: '"MS Sans Serif", "Microsoft Sans Serif", sans-serif',
           // Better scrolling on mobile

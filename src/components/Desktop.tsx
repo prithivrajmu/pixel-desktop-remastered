@@ -84,18 +84,19 @@ export const Desktop: React.FC = () => {
   const getOptimalWindowSize = useCallback(() => {
     const { width, height, isMobile, isTablet } = screenSize;
     const taskbarHeight = isMobile ? 48 : 28; // Larger taskbar on mobile
-    const padding = isMobile ? 8 : 16;
+    const titleBarHeight = isMobile ? 36 : 28; // Account for title bar
+    const padding = isMobile ? 16 : 16; // More padding on mobile for better UX
     
     if (isMobile) {
-      // On mobile, windows should be nearly fullscreen
+      // On mobile, windows should be nearly fullscreen with proper spacing
       return {
-        width: Math.max(320, width - padding * 2),
-        height: Math.max(480, height - taskbarHeight - padding * 2)
+        width: Math.max(320, width - padding),
+        height: Math.max(400, height - taskbarHeight - titleBarHeight - padding)
       };
     } else if (isTablet) {
-      // On tablet, use 80% of screen with minimum sizes
+      // On tablet, use 85% of screen with minimum sizes
       return {
-        width: Math.min(Math.max(600, width * 0.8), width - padding * 2),
+        width: Math.min(Math.max(600, width * 0.85), width - padding * 2),
         height: Math.min(Math.max(500, height * 0.8), height - taskbarHeight - padding * 2)
       };
     } else {
@@ -112,9 +113,15 @@ export const Desktop: React.FC = () => {
     const availableWidth = window.innerWidth;
     const availableHeight = window.innerHeight - taskbarHeight;
     
-    const x = Math.max(0, (availableWidth - size.width) / 2);
-    const y = Math.max(0, (availableHeight - size.height) / 2);
-    return { x, y };
+    if (screenSize.isMobile) {
+      // On mobile, position windows at top-left with minimal padding
+      return { x: 8, y: 8 };
+    } else {
+      // Center windows on tablet and desktop
+      const x = Math.max(0, (availableWidth - size.width) / 2);
+      const y = Math.max(0, (availableHeight - size.height) / 2);
+      return { x, y };
+    }
   }, [screenSize]);
 
   // Handle window resize for maximized windows and responsive updates
@@ -129,7 +136,7 @@ export const Desktop: React.FC = () => {
         if (isMaximized || screenSize.isMobile) {
           // Update maximized windows or force mobile windows to optimal size
           const optimalSize = getOptimalWindowSize();
-          const centeredPosition = screenSize.isMobile ? { x: 4, y: 4 } : centerWindow(optimalSize);
+          const centeredPosition = centerWindow(optimalSize);
           
           updateWindow(windowData.id, {
             size: optimalSize,
@@ -163,6 +170,28 @@ export const Desktop: React.FC = () => {
       window.removeEventListener('orientationchange', handleWindowResize);
     };
   }, [windows, updateWindow, screenSize, getOptimalWindowSize, centerWindow]);
+
+  // Immediately resize all windows when screen size detection changes
+  useEffect(() => {
+    if (screenSize.width > 0 && windows.length > 0) {
+      windows.forEach(windowData => {
+        const optimalSize = getOptimalWindowSize();
+        const optimalPosition = centerWindow(optimalSize);
+        
+        // Only update if the size or position would change significantly
+        const sizeDiff = Math.abs(windowData.size.width - optimalSize.width) > 50 || 
+                         Math.abs(windowData.size.height - optimalSize.height) > 50;
+        const posDiff = screenSize.isMobile && (windowData.position.x > 20 || windowData.position.y > 20);
+        
+        if (sizeDiff || posDiff) {
+          updateWindow(windowData.id, {
+            size: optimalSize,
+            position: optimalPosition
+          });
+        }
+      });
+    }
+  }, [screenSize.isMobile, screenSize.isTablet, screenSize.width, screenSize.height, windows, getOptimalWindowSize, centerWindow, updateWindow]);
 
   // Show welcome screen on startup
   useEffect(() => {
