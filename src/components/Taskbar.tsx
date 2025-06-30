@@ -30,12 +30,15 @@ export const Taskbar: React.FC<TaskbarProps> = ({
   
   return (
     <div 
-      className="absolute bottom-0 left-0 right-0 bg-gray-300 border-t-2 border-gray-400 flex items-center z-50"
+      className="fixed bottom-0 left-0 right-0 w-full bg-gray-300 border-t-2 border-gray-400 flex items-center z-50"
       data-taskbar
       style={{ 
         height: `${taskbarHeight}px`,
         borderStyle: 'outset',
-        fontFamily: '"MS Sans Serif", sans-serif'
+        fontFamily: '"MS Sans Serif", sans-serif',
+        width: '100%',
+        minWidth: '100%',
+        maxWidth: '100vw'
       }}
     >
       {/* Start Button */}

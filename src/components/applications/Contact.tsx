@@ -1,6 +1,9 @@
 import React from 'react';
+import { useScreenSize } from '../../hooks/use-mobile';
 
 export const Contact: React.FC = () => {
+  const screenSize = useScreenSize();
+  
   return (
     <div className="h-full flex flex-col bg-[#c0c0c0]" style={{ fontFamily: '"MS Sans Serif", "Microsoft Sans Serif", sans-serif' }}>
       {/* Menu Bar */}
@@ -18,22 +21,43 @@ export const Contact: React.FC = () => {
         <div className="flex items-center gap-1 mb-1">
           {/* Navigation Buttons */}
           <button 
-            className="w-6 h-6 bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0]"
-            style={{ borderStyle: 'outset' }}
+            className={`bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0] ${
+              screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
+            }`}
+            style={{ 
+              borderStyle: 'outset',
+              width: screenSize.isMobile ? '32px' : '24px',
+              height: screenSize.isMobile ? '32px' : '24px',
+              touchAction: 'manipulation'
+            }}
             title="Back"
           >
             ←
           </button>
           <button 
-            className="w-6 h-6 bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0]"
-            style={{ borderStyle: 'outset' }}
+            className={`bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0] ${
+              screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
+            }`}
+            style={{ 
+              borderStyle: 'outset',
+              width: screenSize.isMobile ? '32px' : '24px',
+              height: screenSize.isMobile ? '32px' : '24px',
+              touchAction: 'manipulation'
+            }}
             title="Forward"
           >
             →
           </button>
           <button 
-            className="w-6 h-6 bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0]"
-            style={{ borderStyle: 'outset' }}
+            className={`bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0] ${
+              screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
+            }`}
+            style={{ 
+              borderStyle: 'outset',
+              width: screenSize.isMobile ? '32px' : '24px',
+              height: screenSize.isMobile ? '32px' : '24px',
+              touchAction: 'manipulation'
+            }}
             title="Up"
           >
             ↑
@@ -43,22 +67,43 @@ export const Contact: React.FC = () => {
           
           {/* Action Buttons */}
           <button 
-            className="w-6 h-6 bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0]"
-            style={{ borderStyle: 'outset' }}
+            className={`bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0] ${
+              screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
+            }`}
+            style={{ 
+              borderStyle: 'outset',
+              width: screenSize.isMobile ? '32px' : '24px',
+              height: screenSize.isMobile ? '32px' : '24px',
+              touchAction: 'manipulation'
+            }}
             title="Cut"
           >
             ✂
           </button>
           <button 
-            className="w-6 h-6 bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0]"
-            style={{ borderStyle: 'outset' }}
+            className={`bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0] ${
+              screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
+            }`}
+            style={{ 
+              borderStyle: 'outset',
+              width: screenSize.isMobile ? '32px' : '24px',
+              height: screenSize.isMobile ? '32px' : '24px',
+              touchAction: 'manipulation'
+            }}
             title="Copy"
           >
             📋
           </button>
           <button 
-            className="w-6 h-6 bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0]"
-            style={{ borderStyle: 'outset' }}
+            className={`bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0] ${
+              screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
+            }`}
+            style={{ 
+              borderStyle: 'outset',
+              width: screenSize.isMobile ? '32px' : '24px',
+              height: screenSize.isMobile ? '32px' : '24px',
+              touchAction: 'manipulation'
+            }}
             title="Paste"
           >
             📄

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { loadBlogPosts, loadSinglePost, BlogPost } from '../../data/blogPosts';
 import { useSounds } from '../SoundManager';
+import { useScreenSize } from '../../hooks/use-mobile';
 
 export const InternetExplorer: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<string>('home');
@@ -9,6 +10,7 @@ export const InternetExplorer: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [postLoading, setPostLoading] = useState(false);
   const sounds = useSounds();
+  const screenSize = useScreenSize();
 
   // Load all posts for the home page
   useEffect(() => {
@@ -75,8 +77,16 @@ export const InternetExplorer: React.FC = () => {
         <div className="flex items-center gap-1 mb-1">
           {/* Navigation Buttons */}
           <button 
-            className="w-6 h-6 bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0]"
-            style={{ borderStyle: 'outset' }}
+            className={`bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0] ${
+              screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
+            }`}
+            style={{ 
+              borderStyle: 'outset',
+              width: screenSize.isMobile ? '32px' : '24px',
+              height: screenSize.isMobile ? '32px' : '24px',
+              minWidth: screenSize.isMobile ? '32px' : 'auto',
+              touchAction: 'manipulation'
+            }}
             title="Back"
             onClick={() => {
               if (currentPage !== 'home') {
@@ -88,29 +98,61 @@ export const InternetExplorer: React.FC = () => {
             ←
           </button>
           <button 
-            className="w-6 h-6 bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0]"
-            style={{ borderStyle: 'outset' }}
+            className={`bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0] ${
+              screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
+            }`}
+            style={{ 
+              borderStyle: 'outset',
+              width: screenSize.isMobile ? '32px' : '24px',
+              height: screenSize.isMobile ? '32px' : '24px',
+              minWidth: screenSize.isMobile ? '32px' : 'auto',
+              touchAction: 'manipulation'
+            }}
             title="Forward"
           >
             →
           </button>
           <button 
-            className="w-6 h-6 bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0]"
-            style={{ borderStyle: 'outset' }}
+            className={`bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0] ${
+              screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
+            }`}
+            style={{ 
+              borderStyle: 'outset',
+              width: screenSize.isMobile ? '32px' : '24px',
+              height: screenSize.isMobile ? '32px' : '24px',
+              minWidth: screenSize.isMobile ? '32px' : 'auto',
+              touchAction: 'manipulation'
+            }}
             title="Stop"
           >
             ⊠
           </button>
           <button 
-            className="w-6 h-6 bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0]"
-            style={{ borderStyle: 'outset' }}
+            className={`bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0] ${
+              screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
+            }`}
+            style={{ 
+              borderStyle: 'outset',
+              width: screenSize.isMobile ? '32px' : '24px',
+              height: screenSize.isMobile ? '32px' : '24px',
+              minWidth: screenSize.isMobile ? '32px' : 'auto',
+              touchAction: 'manipulation'
+            }}
             title="Refresh"
           >
             ↻
           </button>
           <button 
-            className="w-6 h-6 bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0]"
-            style={{ borderStyle: 'outset' }}
+            className={`bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0] ${
+              screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
+            }`}
+            style={{ 
+              borderStyle: 'outset',
+              width: screenSize.isMobile ? '32px' : '24px',
+              height: screenSize.isMobile ? '32px' : '24px',
+              minWidth: screenSize.isMobile ? '32px' : 'auto',
+              touchAction: 'manipulation'
+            }}
             title="Home"
             onClick={() => {
               sounds.playClick();
@@ -127,7 +169,16 @@ export const InternetExplorer: React.FC = () => {
           <div className="flex-1 flex items-center bg-white border border-[#808080] px-2 py-0.5 text-xs" style={{ borderStyle: 'inset' }}>
             <span className="text-blue-600">http://prithivraj.portfolio/blog{currentPage !== 'home' ? `/${currentPage}` : ''}</span>
           </div>
-          <button className="px-2 py-0.5 bg-[#c0c0c0] border border-[#808080] text-xs hover:bg-[#e0e0e0]" style={{ borderStyle: 'outset' }}>
+          <button 
+            className={`px-2 py-0.5 bg-[#c0c0c0] border border-[#808080] text-xs hover:bg-[#e0e0e0] ${
+              screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
+            }`} 
+            style={{ 
+              borderStyle: 'outset',
+              minHeight: screenSize.isMobile ? '32px' : 'auto',
+              touchAction: 'manipulation'
+            }}
+          >
             Go
           </button>
         </div>

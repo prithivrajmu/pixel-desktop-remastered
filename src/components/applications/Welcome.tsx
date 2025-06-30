@@ -1,10 +1,13 @@
 import React from 'react';
+import { useScreenSize } from '../../hooks/use-mobile';
 
 interface WelcomeProps {
   onClose?: () => void;
 }
 
 export const Welcome: React.FC<WelcomeProps> = ({ onClose }) => {
+  const screenSize = useScreenSize();
+  
   return (
     <div className="bg-gray-300 h-full p-0 overflow-hidden" style={{ fontFamily: '"MS Sans Serif", sans-serif' }}>
       {/* Welcome Content */}
@@ -97,28 +100,52 @@ export const Welcome: React.FC<WelcomeProps> = ({ onClose }) => {
         {/* Right section with buttons */}
         <div className="w-36 p-4 flex flex-col space-y-2">
           <button 
-            className="w-full py-2 px-2 bg-gray-300 border-2 border-gray-400 text-xs hover:bg-gray-200 whitespace-nowrap overflow-hidden text-ellipsis"
-            style={{ borderStyle: 'outset' }}
+            className={`w-full py-2 px-2 bg-gray-300 border-2 border-gray-400 text-xs hover:bg-gray-200 whitespace-nowrap overflow-hidden text-ellipsis ${
+              screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
+            }`}
+            style={{ 
+              borderStyle: 'outset',
+              minHeight: screenSize.isMobile ? '44px' : 'auto',
+              touchAction: 'manipulation'
+            }}
           >
             Windows Tour
           </button>
           <button 
-            className="w-full py-2 px-2 bg-gray-300 border-2 border-gray-400 text-xs hover:bg-gray-200 whitespace-nowrap overflow-hidden text-ellipsis"
-            style={{ borderStyle: 'outset' }}
+            className={`w-full py-2 px-2 bg-gray-300 border-2 border-gray-400 text-xs hover:bg-gray-200 whitespace-nowrap overflow-hidden text-ellipsis ${
+              screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
+            }`}
+            style={{ 
+              borderStyle: 'outset',
+              minHeight: screenSize.isMobile ? '44px' : 'auto',
+              touchAction: 'manipulation'
+            }}
           >
             What's New
           </button>
           <button 
-            className="w-full py-2 px-2 bg-gray-300 border-2 border-gray-400 text-xs hover:bg-gray-200 whitespace-nowrap overflow-hidden text-ellipsis"
-            style={{ borderStyle: 'outset' }}
+            className={`w-full py-2 px-2 bg-gray-300 border-2 border-gray-400 text-xs hover:bg-gray-200 whitespace-nowrap overflow-hidden text-ellipsis ${
+              screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
+            }`}
+            style={{ 
+              borderStyle: 'outset',
+              minHeight: screenSize.isMobile ? '44px' : 'auto',
+              touchAction: 'manipulation'
+            }}
             title="Online Registration"
           >
             Online Registration
           </button>
           <div className="flex-1"></div>
           <button 
-            className="w-full py-2 px-2 bg-gray-300 border-2 border-gray-400 text-xs hover:bg-gray-200 whitespace-nowrap overflow-hidden text-ellipsis"
-            style={{ borderStyle: 'outset' }}
+            className={`w-full py-2 px-2 bg-gray-300 border-2 border-gray-400 text-xs hover:bg-gray-200 whitespace-nowrap overflow-hidden text-ellipsis ${
+              screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
+            }`}
+            style={{ 
+              borderStyle: 'outset',
+              minHeight: screenSize.isMobile ? '44px' : 'auto',
+              touchAction: 'manipulation'
+            }}
             onClick={onClose}
           >
             Close
