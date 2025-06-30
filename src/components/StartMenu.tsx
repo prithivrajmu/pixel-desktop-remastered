@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { useGlobalDialog } from '../hooks/useGlobalDialog';
 import { useSounds } from './SoundManager';
+import { useScreenSize } from '../hooks/use-mobile';
 
 interface StartMenuProps {
   onShutdown: () => void;
@@ -32,6 +33,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
   const menuRootRef = useRef<HTMLDivElement>(null);
   const { activeDialog, closeDialog } = useGlobalDialog();
   const sounds = useSounds();
+  const screenSize = useScreenSize();
 
   // Global click listener to close menu if click is outside
   useEffect(() => {
@@ -270,13 +272,22 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
   return (
     <div 
       ref={menuRootRef}
-      className="absolute bottom-0 left-0 flex bg-gray-300 border-2 border-gray-500 shadow-xl z-40"
-      style={{ borderStyle: 'outset', minWidth: 270 }}
+      className={`absolute bottom-0 left-0 flex bg-gray-300 border-2 border-gray-500 shadow-xl z-40 ${
+        screenSize.isMobile ? 'w-full' : ''
+      }`}
+      style={{ 
+        borderStyle: 'outset', 
+        minWidth: screenSize.isMobile ? '100%' : 270,
+        maxHeight: screenSize.isMobile ? '70vh' : 'auto',
+    overflow: screenSize.isMobile ? 'auto' : 'visible'
+      }}
       onClick={(e) => e.stopPropagation()}
     >
       {/* Vertical Windows95 label */}
       <div
-        className="flex flex-col items-center justify-center bg-gray-200 border-r-2 border-gray-500 select-none"
+        className={`flex flex-col items-center justify-center bg-gray-200 border-r-2 border-gray-500 select-none ${
+          screenSize.isMobile ? 'hidden' : ''
+        }`}
         style={{
           width: 44,
           borderStyle: 'outset',
@@ -308,8 +319,12 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
       </div>
       {/* Menu Items */}
       <div 
-        className="py-1 relative flex-1" 
-        style={{ minWidth: 210, fontFamily: 'MS Sans Serif, sans-serif' }}
+        className={`py-1 relative flex-1 ${screenSize.isMobile ? 'overflow-y-auto' : ''}`}
+        style={{ 
+          minWidth: screenSize.isMobile ? 'auto' : 210, 
+          fontFamily: 'MS Sans Serif, sans-serif',
+          WebkitOverflowScrolling: 'touch'
+        }}
       >
         {menuItems.map((item, index) => {
           if (item.type === 'separator') {
@@ -320,15 +335,37 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
           return (
             <div
               key={index}
-              className="flex items-center px-3 py-1 hover:bg-blue-600 hover:text-white cursor-pointer group relative"
-              onMouseEnter={() => handleParentEnter(item.label || '', item.hasSubmenu)}
-              onMouseLeave={handleParentLeave}
-              onMouseDown={(e) => {
+              className={`flex items-center px-3 py-1 hover:bg-blue-600 hover:text-white cursor-pointer group relative ${
+                screenSize.isTouchDevice ? 'active:bg-blue-700' : ''
+              }`}
+              onMouseEnter={() => !screenSize.isMobile && handleParentEnter(item.label || '', item.hasSubmenu)}
+              onMouseLeave={() => !screenSize.isMobile && handleParentLeave()}
+              onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                handleItemClick(item);
+                if (screenSize.isMobile && item.hasSubmenu) {
+                  // On mobile, toggle submenu on click instead of hover
+                  if (activeSubmenu === item.label) {
+                    setActiveSubmenu(null);
+                  } else {
+                    setActiveSubmenu(item.label || '');
+                  }
+                } else {
+                  handleItemClick(item);
+                }
               }}
-              style={{ fontSize: '14px', minHeight: 28 }}
+              onMouseDown={(e) => {
+                if (!screenSize.isMobile) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleItemClick(item);
+                }
+              }}
+              style={{ 
+                fontSize: screenSize.isMobile ? '16px' : '14px', 
+                minHeight: screenSize.isMobile ? 44 : 28,
+                touchAction: 'manipulation'
+              }}
             >
               <span className="w-7 flex items-center justify-center mr-3">
                 {item.icon && <IconImg src={item.icon} alt={item.label || ''} />}
@@ -336,8 +373,39 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
               <span className="flex-1 text-left" style={{ paddingLeft: 2 }}>{item.label}</span>
               {item.hasSubmenu && <ChevronRight size={13} className="ml-2" />}
               {activeSubmenu === item.label && item.submenu && (
-                <div className="absolute top-0 left-full z-50">
-                  {renderSubmenu(item.submenu, 1)}
+                <div className={`absolute z-50 ${
+                  screenSize.isMobile 
+                    ? 'top-full left-0 right-0' 
+                    : 'top-0 left-full'
+                }`}>
+                  {screenSize.isMobile ? (
+                    <div className="bg-gray-300 border-2 border-gray-500 shadow-lg">
+                      {item.submenu.map((subItem, subIndex) => {
+                        if (subItem.type === 'separator') {
+                          return <div key={subIndex} className="h-px bg-gray-500 mx-2 my-1" />;
+                        }
+                        return (
+                          <div
+                            key={subIndex}
+                            className="flex items-center px-4 py-3 cursor-pointer text-base text-black hover:bg-blue-600 hover:text-white active:bg-blue-700"
+                            style={{ touchAction: 'manipulation', minHeight: 44 }}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleItemClick(subItem);
+                            }}
+                          >
+                            <span className="w-7 flex items-center justify-center mr-3">
+                              {subItem.icon && <IconImg src={subItem.icon} alt={subItem.label || ''} />}
+                            </span>
+                            <span className="flex-1">{subItem.label}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    renderSubmenu(item.submenu, 1)
+                  )}
                 </div>
               )}
             </div>

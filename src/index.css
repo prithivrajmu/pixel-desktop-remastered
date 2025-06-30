@@ -101,3 +101,87 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Mobile and responsive enhancements */
+@layer utilities {
+  /* Improved touch targets */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Better scrolling on mobile */
+  .smooth-scroll {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  /* Prevent text selection on UI elements */
+  .no-select {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  /* Hide scrollbars but keep functionality */
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Mobile viewport fixes */
+  @media (max-width: 640px) {
+    html {
+      /* Prevent zoom on input focus */
+      font-size: 16px;
+    }
+    
+    body {
+      /* Prevent bounce scrolling */
+      overflow: hidden;
+      position: fixed;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Larger touch targets on mobile */
+    button, [role="button"] {
+      min-height: 44px;
+      min-width: 44px;
+    }
+
+    /* Better typography on mobile */
+    .text-xs {
+      font-size: 0.875rem;
+    }
+  }
+
+  /* Tablet specific styles */
+  @media (min-width: 640px) and (max-width: 1024px) {
+    button, [role="button"] {
+      min-height: 36px;
+      min-width: 36px;
+    }
+  }
+
+  /* Desktop styles */
+  @media (min-width: 1024px) {
+    body {
+      overflow: auto;
+      position: static;
+    }
+  }
+
+  /* Landscape phone specific adjustments */
+  @media (max-width: 640px) and (orientation: landscape) {
+    /* Smaller taskbar in landscape */
+    [data-taskbar] {
+      height: 40px !important;
+    }
+  }
+}
