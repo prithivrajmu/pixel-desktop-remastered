@@ -187,7 +187,7 @@ export const MyDocuments: React.FC = () => {
               ← Back to My Documents
             </button>
                          <button 
-               onClick={() => window.open('https://github.com/prithivraj', '_blank', 'noopener,noreferrer')}
+               onClick={() => window.open('https://github.com/prithivrajmu', '_blank', 'noopener,noreferrer')}
                className="bg-[#c0c0c0] text-black px-4 py-2 border-2 border-gray-300 hover:bg-gray-200"
                style={{ borderStyle: 'outset' }}
              >
@@ -482,7 +482,7 @@ export const MyDocuments: React.FC = () => {
               <a href="https://linkedin.com/in/prithivrajmu" target="_blank" rel="noopener noreferrer" className="text-blue-700 underline hover:text-blue-900">🔗 LinkedIn</a>
             </button>
             <button className="bg-gray-300 border border-gray-400 px-3 py-1 hover:bg-gray-200" style={{ borderStyle: 'outset' }}>
-              <a href="https://github.com/prithivraj" target="_blank" rel="noopener noreferrer" className="text-blue-700 underline hover:text-blue-900">💻 GitHub</a>
+              <a href="https://github.com/prithivrajmu" target="_blank" rel="noopener noreferrer" className="text-blue-700 underline hover:text-blue-900">💻 GitHub</a>
             </button>
           </div>
         </div>

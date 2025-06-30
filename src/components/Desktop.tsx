@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Taskbar } from './Taskbar';
 import { Window } from './Window';
 import { DesktopIcon } from './DesktopIcon';
@@ -20,6 +20,7 @@ import { useContextMenu } from '../hooks/useContextMenu';
 import { useGlobalDialog } from '../hooks/useGlobalDialog';
 import { useSmartPreloader } from '../hooks/useComponentPreloader';
 import { usePerformanceMonitor } from '../hooks/usePerformanceMonitor';
+import { useScreenSize } from '../hooks/use-mobile';
 import { desktopIcons, welcomeWindow } from '../config/desktopIcons';
 
 export interface WindowData {
@@ -69,6 +70,7 @@ export const Desktop: React.FC = () => {
   } = useKeyboardEvents(windows, focusWindow);
 
   const sounds = useSounds();
+  const screenSize = useScreenSize();
 
   // Initialize performance optimizations
   useSmartPreloader();
@@ -78,26 +80,89 @@ export const Desktop: React.FC = () => {
   const [isPropertiesDialogOpen, setIsPropertiesDialogOpen] = useState(false);
   const [selectedIconForProperties, setSelectedIconForProperties] = useState<any>(null);
 
-  // Handle window resize for maximized windows
+  // Enhanced responsive window positioning and sizing
+  const getOptimalWindowSize = useCallback(() => {
+    const { width, height, isMobile, isTablet } = screenSize;
+    const taskbarHeight = isMobile ? 48 : 28; // Larger taskbar on mobile
+    const padding = isMobile ? 8 : 16;
+    
+    if (isMobile) {
+      // On mobile, windows should be nearly fullscreen
+      return {
+        width: Math.max(320, width - padding * 2),
+        height: Math.max(480, height - taskbarHeight - padding * 2)
+      };
+    } else if (isTablet) {
+      // On tablet, use 80% of screen with minimum sizes
+      return {
+        width: Math.min(Math.max(600, width * 0.8), width - padding * 2),
+        height: Math.min(Math.max(500, height * 0.8), height - taskbarHeight - padding * 2)
+      };
+    } else {
+      // Desktop: use original fixed size but constrain to screen
+      return {
+        width: Math.min(800, width - padding * 2),
+        height: Math.min(600, height - taskbarHeight - padding * 2)
+      };
+    }
+  }, [screenSize]);
+
+  const centerWindow = useCallback((size: { width: number; height: number }) => {
+    const taskbarHeight = screenSize.isMobile ? 48 : 28;
+    const availableWidth = window.innerWidth;
+    const availableHeight = window.innerHeight - taskbarHeight;
+    
+    const x = Math.max(0, (availableWidth - size.width) / 2);
+    const y = Math.max(0, (availableHeight - size.height) / 2);
+    return { x, y };
+  }, [screenSize]);
+
+  // Handle window resize for maximized windows and responsive updates
   useEffect(() => {
     const handleWindowResize = () => {
+      const taskbarHeight = screenSize.isMobile ? 48 : 28;
+      
       windows.forEach(windowData => {
-        const isMaximized = windowData.size.width === window.innerWidth && windowData.size.height === window.innerHeight - 40;
-        if (isMaximized) {
-          // Update maximized windows to new screen dimensions
-          const maxWidth = window.innerWidth;
-          const maxHeight = window.innerHeight - 40;
+        const isMaximized = windowData.size.width >= window.innerWidth - 20 && 
+                          windowData.size.height >= window.innerHeight - taskbarHeight - 20;
+        
+        if (isMaximized || screenSize.isMobile) {
+          // Update maximized windows or force mobile windows to optimal size
+          const optimalSize = getOptimalWindowSize();
+          const centeredPosition = screenSize.isMobile ? { x: 4, y: 4 } : centerWindow(optimalSize);
+          
           updateWindow(windowData.id, {
-            size: { width: maxWidth, height: maxHeight },
-            position: { x: 0, y: 0 }
+            size: optimalSize,
+            position: centeredPosition
           });
+        } else if (screenSize.isTablet) {
+          // Ensure tablet windows fit within screen bounds
+          const maxWidth = window.innerWidth - 32;
+          const maxHeight = window.innerHeight - taskbarHeight - 32;
+          
+          if (windowData.size.width > maxWidth || windowData.size.height > maxHeight) {
+            updateWindow(windowData.id, {
+              size: {
+                width: Math.min(windowData.size.width, maxWidth),
+                height: Math.min(windowData.size.height, maxHeight)
+              },
+              position: {
+                x: Math.min(windowData.position.x, maxWidth - windowData.size.width),
+                y: Math.min(windowData.position.y, maxHeight - windowData.size.height)
+              }
+            });
+          }
         }
       });
     };
 
     window.addEventListener('resize', handleWindowResize);
-    return () => window.removeEventListener('resize', handleWindowResize);
-  }, [windows, updateWindow]);
+    window.addEventListener('orientationchange', handleWindowResize);
+    return () => {
+      window.removeEventListener('resize', handleWindowResize);
+      window.removeEventListener('orientationchange', handleWindowResize);
+    };
+  }, [windows, updateWindow, screenSize, getOptimalWindowSize, centerWindow]);
 
   // Show welcome screen on startup
   useEffect(() => {
@@ -113,22 +178,14 @@ export const Desktop: React.FC = () => {
     }
   }, [openWindow, sounds]);
 
-  // Enhanced center window function with better positioning
-  const centerWindow = (size: { width: number; height: number }) => {
-    const x = Math.max(0, (window.innerWidth - size.width) / 2);
-    const y = Math.max(0, (window.innerHeight - size.height - 40) / 2); // Account for taskbar
-    return { x, y };
-  };
-
   const handleOpenWindow = (windowConfig: any) => {
-    // Use fixed size of 800x600 for all windows
-    const fixedSize = { width: 800, height: 600 };
-    const centeredPosition = centerWindow(fixedSize);
+    const optimalSize = getOptimalWindowSize();
+    const centeredPosition = centerWindow(optimalSize);
     
     openWindow({
       ...windowConfig,
       position: centeredPosition,
-      size: fixedSize
+      size: optimalSize
     });
   };
 

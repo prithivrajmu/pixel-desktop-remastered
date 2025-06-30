@@ -1,6 +1,7 @@
 import React, { useState, useRef, useCallback, useEffect, memo } from 'react';
 import { Minus, X, Square } from 'lucide-react';
 import { useSounds } from './SoundManager';
+import { useScreenSize } from '../hooks/use-mobile';
 
 interface WindowProps {
   title: string;
@@ -43,6 +44,7 @@ export const Window: React.FC<WindowProps> = memo(({
   const windowRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const sounds = useSounds();
+  const screenSize = useScreenSize();
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     if (e.target === e.currentTarget || (e.target as HTMLElement).classList.contains('title-bar')) {
@@ -100,30 +102,36 @@ export const Window: React.FC<WindowProps> = memo(({
   }, [size, onFocus]);
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
+    const taskbarHeight = screenSize.isMobile ? 48 : 28;
+    
     if (isDragging) {
       const newX = Math.max(0, Math.min(window.innerWidth - size.width, e.clientX - dragStart.x));
-      const newY = Math.max(0, Math.min(window.innerHeight - size.height - 40, e.clientY - dragStart.y));
+      const newY = Math.max(0, Math.min(window.innerHeight - size.height - taskbarHeight, e.clientY - dragStart.y));
       
       onUpdatePosition({ x: newX, y: newY });
     } else if (isResizing) {
       const deltaX = e.clientX - resizeStart.x;
       const deltaY = e.clientY - resizeStart.y;
-      const newWidth = Math.max(300, Math.min(window.innerWidth - position.x, resizeStart.width + deltaX));
-      const newHeight = Math.max(200, Math.min(window.innerHeight - position.y - 40, resizeStart.height + deltaY));
+      const minWidth = screenSize.isMobile ? 250 : 300;
+      const minHeight = screenSize.isMobile ? 150 : 200;
+      const newWidth = Math.max(minWidth, Math.min(window.innerWidth - position.x, resizeStart.width + deltaX));
+      const newHeight = Math.max(minHeight, Math.min(window.innerHeight - position.y - taskbarHeight, resizeStart.height + deltaY));
       
       onUpdateSize({ width: newWidth, height: newHeight });
     }
-  }, [isDragging, isResizing, dragStart, resizeStart, size, position, onUpdatePosition, onUpdateSize]);
+  }, [isDragging, isResizing, dragStart, resizeStart, size, position, onUpdatePosition, onUpdateSize, screenSize]);
 
   const handleTouchMove = useCallback((e: TouchEvent) => {
     const touch = e.touches[0];
+    const taskbarHeight = screenSize.isMobile ? 48 : 28;
+    
     if (isDragging) {
       const newX = Math.max(0, Math.min(window.innerWidth - size.width, touch.clientX - dragStart.x));
-      const newY = Math.max(0, Math.min(window.innerHeight - size.height - 40, touch.clientY - dragStart.y));
+      const newY = Math.max(0, Math.min(window.innerHeight - size.height - taskbarHeight, touch.clientY - dragStart.y));
       
       onUpdatePosition({ x: newX, y: newY });
     }
-  }, [isDragging, dragStart, size, onUpdatePosition]);
+  }, [isDragging, dragStart, size, onUpdatePosition, screenSize]);
 
   const handleMouseUp = useCallback(() => {
     setIsDragging(false);
@@ -172,26 +180,45 @@ export const Window: React.FC<WindowProps> = memo(({
     >
       {/* Title Bar */}
       <div
-        className={`title-bar h-7 px-2 flex items-center justify-between cursor-move ${
+        className={`title-bar px-2 flex items-center justify-between cursor-move ${
           isActive 
             ? 'bg-[#000080]' 
             : 'bg-[#808080]'
         }`}
-        style={{ fontFamily: '"MS Sans Serif", "Microsoft Sans Serif", sans-serif' }}
+        style={{ 
+          height: screenSize.isMobile ? '32px' : '28px',
+          fontFamily: '"MS Sans Serif", "Microsoft Sans Serif", sans-serif',
+          touchAction: 'none'
+        }}
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
         <div className="flex items-center space-x-1">
-          {icon && <img src={icon} alt="Window Icon" className="w-4 h-4" />}
-          <span className="text-white text-xs font-bold truncate">{title}</span>
+          {icon && (
+            <img 
+              src={icon} 
+              alt="Window Icon" 
+              className={screenSize.isMobile ? "w-5 h-5" : "w-4 h-4"} 
+            />
+          )}
+          <span className={`text-white font-bold truncate ${
+            screenSize.isMobile ? 'text-sm' : 'text-xs'
+          }`}>
+            {title}
+          </span>
         </div>
         <div className="flex space-x-px">
           <button
-            className="w-5 h-4 bg-gray-300 border border-gray-400 flex items-center justify-center hover:bg-gray-200 text-xs"
+            className={`bg-gray-300 border border-gray-400 flex items-center justify-center hover:bg-gray-200 text-xs ${
+              screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
+            }`}
             style={{ 
+              width: screenSize.isMobile ? '24px' : '20px',
+              height: screenSize.isMobile ? '18px' : '16px',
               borderStyle: 'outset',
-              fontFamily: '"MS Sans Serif", "Microsoft Sans Serif", sans-serif'
+              fontFamily: '"MS Sans Serif", "Microsoft Sans Serif", sans-serif',
+              touchAction: 'manipulation'
             }}
             onClick={(e) => {
               e.stopPropagation();
@@ -202,10 +229,15 @@ export const Window: React.FC<WindowProps> = memo(({
             <Minus size={8} />
           </button>
           <button
-            className="w-5 h-4 bg-gray-300 border border-gray-400 flex items-center justify-center hover:bg-gray-200 text-xs"
+            className={`bg-gray-300 border border-gray-400 flex items-center justify-center hover:bg-gray-200 text-xs ${
+              screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
+            }`}
             style={{ 
+              width: screenSize.isMobile ? '24px' : '20px',
+              height: screenSize.isMobile ? '18px' : '16px',
               borderStyle: 'outset',
-              fontFamily: '"MS Sans Serif", "Microsoft Sans Serif", sans-serif'
+              fontFamily: '"MS Sans Serif", "Microsoft Sans Serif", sans-serif',
+              touchAction: 'manipulation'
             }}
             onClick={(e) => {
               e.stopPropagation();
@@ -213,13 +245,18 @@ export const Window: React.FC<WindowProps> = memo(({
               onMaximize();
             }}
           >
-            <Square size={6} />
+            <Square size={screenSize.isMobile ? 8 : 6} />
           </button>
           <button
-            className="w-5 h-4 bg-gray-300 border border-gray-400 flex items-center justify-center hover:bg-gray-200 text-xs"
+            className={`bg-gray-300 border border-gray-400 flex items-center justify-center hover:bg-gray-200 text-xs ${
+              screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
+            }`}
             style={{ 
+              width: screenSize.isMobile ? '24px' : '20px',
+              height: screenSize.isMobile ? '18px' : '16px',
               borderStyle: 'outset',
-              fontFamily: '"MS Sans Serif", "Microsoft Sans Serif", sans-serif'
+              fontFamily: '"MS Sans Serif", "Microsoft Sans Serif", sans-serif',
+              touchAction: 'manipulation'
             }}
             onClick={(e) => {
               e.stopPropagation();
@@ -227,7 +264,7 @@ export const Window: React.FC<WindowProps> = memo(({
               onClose();
             }}
           >
-            <X size={8} />
+            <X size={screenSize.isMobile ? 10 : 8} />
           </button>
         </div>
       </div>
@@ -237,28 +274,35 @@ export const Window: React.FC<WindowProps> = memo(({
         ref={contentRef}
         className="bg-white flex flex-col justify-start" 
         style={{ 
-          height: 'calc(100% - 28px)',
-          overflow: 'auto', // Will only show scrollbars if content is larger than container
-          fontFamily: '"MS Sans Serif", "Microsoft Sans Serif", sans-serif'
+          height: `calc(100% - ${screenSize.isMobile ? '32px' : '28px'})`,
+          overflow: 'auto',
+          fontFamily: '"MS Sans Serif", "Microsoft Sans Serif", sans-serif',
+          // Better scrolling on mobile
+          WebkitOverflowScrolling: 'touch'
         }}
       >
         {children}
       </div>
 
-      {/* Resize Handle */}
-      <div
-        className="absolute bottom-0 right-0 w-3 h-3 cursor-nw-resize"
-        onMouseDown={handleResizeMouseDown}
-        style={{
-          background: `repeating-linear-gradient(
-            -45deg,
-            #c0c0c0,
-            #c0c0c0 1px,
-            #808080 1px,
-            #808080 2px
-          )`
-        }}
-      />
+      {/* Resize Handle - Only show on desktop/tablet as mobile windows are typically fullscreen */}
+      {!screenSize.isMobile && (
+        <div
+          className={`absolute bottom-0 right-0 cursor-nw-resize ${
+            screenSize.isTablet ? 'w-4 h-4' : 'w-3 h-3'
+          }`}
+          onMouseDown={handleResizeMouseDown}
+          style={{
+            background: `repeating-linear-gradient(
+              -45deg,
+              #c0c0c0,
+              #c0c0c0 1px,
+              #808080 1px,
+              #808080 2px
+            )`,
+            touchAction: 'none'
+          }}
+        />
+      )}
     </div>
   );
 });

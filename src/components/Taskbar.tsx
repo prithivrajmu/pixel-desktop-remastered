@@ -3,6 +3,7 @@ import { WindowData } from './Desktop';
 import { VolumeControl } from './VolumeControl';
 import { Clock } from './Clock';
 import { useSounds } from './SoundManager';
+import { useScreenSize } from '../hooks/use-mobile';
 
 interface TaskbarProps {
   windows: WindowData[];
@@ -20,34 +21,42 @@ export const Taskbar: React.FC<TaskbarProps> = ({
   isStartMenuOpen,
 }) => {
   const sounds = useSounds();
+  const screenSize = useScreenSize();
+  
+  const taskbarHeight = screenSize.isMobile ? 48 : 28;
+  const startButtonMinWidth = screenSize.isMobile ? 80 : 60;
+  const windowButtonMinWidth = screenSize.isMobile ? 100 : 80;
+  const windowButtonMaxWidth = screenSize.isMobile ? 200 : 150;
+  
   return (
     <div 
       className="absolute bottom-0 left-0 right-0 bg-gray-300 border-t-2 border-gray-400 flex items-center z-50"
       data-taskbar
       style={{ 
-        height: '28px',
+        height: `${taskbarHeight}px`,
         borderStyle: 'outset',
         fontFamily: '"MS Sans Serif", sans-serif'
       }}
     >
       {/* Start Button */}
       <button
-        className={`h-6 px-2 mx-1 bg-gray-300 border border-gray-400 flex items-center space-x-1 font-bold text-xs hover:bg-gray-200 flex-shrink-0 ${
+        className={`px-2 mx-1 bg-gray-300 border border-gray-400 flex items-center space-x-1 font-bold text-xs hover:bg-gray-200 flex-shrink-0 ${
           isStartMenuOpen ? 'pressed' : ''
-        }`}
+        } ${screenSize.isTouchDevice ? 'active:bg-gray-400' : ''}`}
         style={{ 
           borderStyle: isStartMenuOpen ? 'inset' : 'outset',
-          fontSize: '11px',
-          height: '24px',
-          minWidth: '60px',
+          fontSize: screenSize.isMobile ? '12px' : '11px',
+          height: `${taskbarHeight - 4}px`,
+          minWidth: `${startButtonMinWidth}px`,
+          touchAction: 'manipulation'
         }}
         onClick={onStartClick}
       >
         <img
           src="/icons/Windows logo (without text).ico"
           alt="Start"
-          width={18}
-          height={18}
+          width={screenSize.isMobile ? 20 : 18}
+          height={screenSize.isMobile ? 20 : 18}
           style={{ imageRendering: 'pixelated', marginRight: 4 }}
         />
         <span>Start</span>
@@ -60,22 +69,25 @@ export const Taskbar: React.FC<TaskbarProps> = ({
       />
 
       {/* Window Buttons - Show ALL windows including minimized */}
-      <div className="flex-1 flex space-x-px px-1 overflow-hidden min-w-0">
+      <div className="flex-1 flex space-x-px px-1 overflow-x-auto overflow-y-hidden min-w-0" 
+           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
         {windows.map(window => (
           <button
             key={window.id}
-            className={`h-5 px-2 bg-gray-300 border border-gray-400 text-xs truncate flex-shrink-0 transition-all duration-150 flex items-center space-x-1 ${
+            className={`px-2 bg-gray-300 border border-gray-400 text-xs truncate flex-shrink-0 transition-all duration-150 flex items-center space-x-1 ${
               activeWindowId === window.id && !window.isMinimized
                 ? 'bg-gray-400 border-gray-500 shadow-inner' 
                 : 'hover:bg-gray-200 shadow-sm'
-            }`}
+            } ${screenSize.isTouchDevice ? 'active:bg-gray-400' : ''}`}
             style={{ 
               borderStyle: (activeWindowId === window.id && !window.isMinimized) ? 'inset' : 'outset',
               fontWeight: (activeWindowId === window.id && !window.isMinimized) ? 'bold' : 'normal',
-              maxWidth: '150px',
-              minWidth: '80px',
-              fontSize: '10px',
-              opacity: window.isMinimized ? 0.7 : 1
+              maxWidth: `${windowButtonMaxWidth}px`,
+              minWidth: `${windowButtonMinWidth}px`,
+              height: `${taskbarHeight - 8}px`,
+              fontSize: screenSize.isMobile ? '11px' : '10px',
+              opacity: window.isMinimized ? 0.7 : 1,
+              touchAction: 'manipulation'
             }}
             onClick={() => {
               sounds.playClick();
@@ -84,7 +96,13 @@ export const Taskbar: React.FC<TaskbarProps> = ({
             title={window.title}
           >
             {window.icon && (
-              <img src={window.icon} alt="icon" width={16} height={16} style={{ marginRight: 4, imageRendering: 'pixelated' }} />
+              <img 
+                src={window.icon} 
+                alt="icon" 
+                width={screenSize.isMobile ? 18 : 16} 
+                height={screenSize.isMobile ? 18 : 16} 
+                style={{ marginRight: 4, imageRendering: 'pixelated' }} 
+              />
             )}
             {window.title}
           </button>
@@ -96,11 +114,12 @@ export const Taskbar: React.FC<TaskbarProps> = ({
         className="flex items-center space-x-1 bg-gray-300"
         style={{ 
           borderStyle: 'inset',
-          height: '24px',
-          minHeight: '24px',
-          maxHeight: '24px',
+          height: `${taskbarHeight - 4}px`,
+          minHeight: `${taskbarHeight - 4}px`,
+          maxHeight: `${taskbarHeight - 4}px`,
           marginRight: '2px',
           alignItems: 'center',
+          padding: screenSize.isMobile ? '0 4px' : '0 2px'
         }}
       >
         <VolumeControl />
