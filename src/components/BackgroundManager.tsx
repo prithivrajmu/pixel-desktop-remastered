@@ -42,6 +42,12 @@ export const BackgroundManager: React.FC<BackgroundManagerProps> = memo(({
       name: 'Windows 95 OS 2',
       type: 'image',
       path: '/backgrounds/windows_95_os_2.png'
+    },
+    'windows_95_logo': {
+      id: 'windows_95_logo',
+      name: 'Windows 95 Logo',
+      type: 'image',
+      path: '/backgrounds/windows_95_logo.jpg'
     }
   };
 
@@ -115,6 +121,12 @@ export const getAvailableBackgrounds = (): BackgroundOption[] => {
       name: 'Windows 95 OS 2',
       type: 'image',
       path: '/backgrounds/windows_95_os_2.png'
+    },
+    {
+      id: 'windows_95_logo',
+      name: 'Windows 95 Logo',
+      type: 'image',
+      path: '/backgrounds/windows_95_logo.jpg'
     }
   ];
 };

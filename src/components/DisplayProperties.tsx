@@ -202,7 +202,8 @@ export const DisplayProperties: React.FC<DisplayPropertiesProps> = ({
                              tempVideo !== '(None)' ? '#000000' : // Black for video preview
                              tempBackground === 'default' || !tempBackground ? '#008080' : 
                              tempBackground === 'windows_95_os' ? '#c0c0c0' :
-                             tempBackground === 'windows_95_os_2' ? '#000080' : '#008080'
+                             tempBackground === 'windows_95_os_2' ? '#000080' :
+                             tempBackground === 'windows_95_logo' ? '#000080' : '#008080'
                          }}
                       >
                                                  {(tempVideo !== '(None)' || tempBackground !== 'default') && (
