@@ -141,13 +141,13 @@ export const InternetExplorer: React.FC = () => {
               <header className="text-center mb-8">
                 <h1 className="text-2xl font-bold mb-2">Prithiv's Developer Blog</h1>
                 <div className="text-sm text-gray-600">
-                  <em>Thoughts on Technology, Development, and Digital Innovation</em>
+                  <em>Thoughts on Technology, Life, and Digital Innovation</em>
                 </div>
                 <hr className="my-4 border-gray-400" />
               </header>
 
-              <div className="max-w-2xl mx-auto">
-                <h2 className="text-lg font-bold mb-4">Recent Articles</h2>
+              <div>
+                <h2 className="text-lg font-bold mb-4">Recent Posts</h2>
                 
                 {blogPosts.length > 0 ? (
                   blogPosts.map((article) => (
@@ -224,7 +224,7 @@ export const InternetExplorer: React.FC = () => {
                   <div className="text-lg mb-2">Loading article...</div>
                 </div>
               ) : currentPost ? (
-                <div className="max-w-2xl mx-auto">
+                <div>
                   <h1 className="text-xl font-bold mb-4">{currentPost.title}</h1>
                   <div className="text-sm text-gray-600 mb-6">
                     Published: {currentPost.date}
@@ -258,7 +258,7 @@ export const InternetExplorer: React.FC = () => {
         </div>
         <div className="flex items-center">
           <div className="bg-[#c0c0c0] border border-[#808080] px-2 py-0.5" style={{ borderStyle: 'inset' }}>
-            Internet Zone
+            Internet - World Wide Web
           </div>
         </div>
       </div>
