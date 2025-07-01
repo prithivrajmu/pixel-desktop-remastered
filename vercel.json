@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/resume.pdf",
+      "destination": "/resume/Prithiv_Raj_MU_Resume.pdf"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

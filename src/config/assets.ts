@@ -34,7 +34,7 @@ export const iconAssets: Record<string, AssetConfig> = {
   },
   'the-internet': {
     id: 'the-internet',
-    name: 'The Internet',
+    name: 'Internet Explorer',
     path: '/icons/SMALL.ico',
     type: 'icon',
     category: 'icon'

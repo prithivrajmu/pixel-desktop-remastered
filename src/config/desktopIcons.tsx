@@ -31,8 +31,8 @@ export const getResponsiveIconPositions = (screenSize: { isMobile: boolean; isTa
   const availableHeight = height - taskbarHeight - (safeMarginY * 2);
   const availableWidth = width - (safeMarginX * 2);
   
-  // Calculate optimal spacing
-  const baseSpacing = iconContainerSize + 16; // Container size + gap
+  // Calculate optimal spacing for elegant layout
+  const baseSpacing = iconContainerSize + 32; // Container size + increased gap for better spacing
   const maxIconsPerColumn = Math.floor(availableHeight / baseSpacing);
   const totalIcons = 5; // We have 5 desktop icons
   
@@ -49,7 +49,7 @@ export const getResponsiveIconPositions = (screenSize: { isMobile: boolean; isTa
       const column = Math.floor(i / iconsPerColumn);
       const row = i % iconsPerColumn;
       
-      const x = safeMarginX + (column * (iconContainerSize + 20));
+      const x = safeMarginX + (column * (iconContainerSize + 40)); // Increased column spacing
       const y = safeMarginY + (row * actualSpacing);
       
       // Ensure we don't exceed screen bounds
@@ -60,8 +60,9 @@ export const getResponsiveIconPositions = (screenSize: { isMobile: boolean; isTa
     }
     return positions;
   } else {
-    // Single column layout with optimal spacing
-    const optimalSpacing = Math.min(baseSpacing, availableHeight / (totalIcons + 1));
+    // Single column layout with elegant spacing
+    const minSpacing = iconContainerSize + 24; // Minimum elegant spacing
+    const optimalSpacing = Math.max(minSpacing, Math.min(baseSpacing, availableHeight / (totalIcons + 1)));
     
     return Array.from({ length: totalIcons }, (_, i) => ({
       x: safeMarginX,
