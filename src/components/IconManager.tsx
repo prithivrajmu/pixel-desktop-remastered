@@ -38,11 +38,11 @@ export const IconManager: React.FC<IconManagerProps> = ({
       >
         {/* Fallback emoji for each icon type */}
         {iconId === 'my-computer' && '💻'}
-        {iconId === 'inbox' && '📁'}
+        {iconId === 'my-documents' && '📁'}
         {iconId === 'recycle-bin' && '🗑️'}
         {iconId === 'the-internet' && '🌐'}
         {iconId === 'set-up-the-microsoft-network' && '📧'}
-        {!['my-computer', 'inbox', 'recycle-bin', 'the-internet', 'set-up-the-microsoft-network'].includes(iconId) && '📄'}
+        {!['my-computer', 'my-documents', 'recycle-bin', 'the-internet', 'set-up-the-microsoft-network'].includes(iconId) && '📄'}
       </div>
     );
   }
@@ -62,11 +62,11 @@ export const IconManager: React.FC<IconManagerProps> = ({
           style={{ fontSize: `${size}px` }}
         >
           {iconId === 'my-computer' && '💻'}
-          {iconId === 'inbox' && '📁'}
+          {iconId === 'my-documents' && '📁'}
           {iconId === 'recycle-bin' && '🗑️'}
           {iconId === 'the-internet' && '🌐'}
           {iconId === 'set-up-the-microsoft-network' && '📧'}
-          {!['my-computer', 'inbox', 'recycle-bin', 'the-internet', 'set-up-the-microsoft-network'].includes(iconId) && '📄'}
+          {!['my-computer', 'my-documents', 'recycle-bin', 'the-internet', 'set-up-the-microsoft-network'].includes(iconId) && '📄'}
         </div>
       }
     />
