@@ -52,7 +52,7 @@ export const Taskbar: React.FC<TaskbarProps> = ({
           height: `${taskbarHeight - 4}px`,
           minWidth: `${startButtonMinWidth}px`,
           maxWidth: '90px',
-          flexShrink: screenSize.isTablet ? 1 : 0,
+          flexShrink: 0,
           touchAction: 'manipulation'
         }}
         onClick={onStartClick}
