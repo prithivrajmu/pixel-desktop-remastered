@@ -34,6 +34,59 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
 
   if (!isVisible) return null;
 
+  // Debug: Log screen size and position information
+  console.log('🎯 ContextMenu Debug - Screen & Position Info:', {
+    screenWidth: screenSize.width,
+    screenHeight: screenSize.height,
+    isMobile: screenSize.isMobile,
+    isLandscape: screenSize.isLandscape,
+    originalPosition: position,
+    isVisible: isVisible
+  });
+
+  // Calculate adjusted position to keep menu within screen bounds
+  const menuWidth = screenSize.isMobile ? 200 : 144;
+  const menuHeight = items.length * (screenSize.isMobile ? 48 : 24) + 8; // Approximate height
+  
+  let adjustedX = position.x;
+  let adjustedY = position.y;
+  
+  // Debug: Log initial calculations
+  console.log('📏 ContextMenu Debug - Initial Calculations:', {
+    menuWidth,
+    menuHeight,
+    originalX: position.x,
+    originalY: position.y
+  });
+  
+  // Adjust horizontal position
+  if (adjustedX + menuWidth > screenSize.width) {
+    adjustedX = screenSize.width - menuWidth - 10;
+  }
+  if (adjustedX < 10) {
+    adjustedX = 10;
+  }
+  
+  // Adjust vertical position  
+  if (adjustedY + menuHeight > screenSize.height) {
+    adjustedY = screenSize.height - menuHeight - 10;
+  }
+  if (adjustedY < 10) {
+    adjustedY = 10;
+  }
+
+  // Debug: Log final positioning adjustments
+  console.log('🎯 ContextMenu Debug - Position Adjustments:', {
+    adjustedX,
+    adjustedY,
+    wasAdjustedHorizontally: adjustedX !== position.x,
+    wasAdjustedVertically: adjustedY !== position.y,
+    willFitOnScreen: {
+      horizontally: adjustedX + menuWidth <= screenSize.width,
+      vertically: adjustedY + menuHeight <= screenSize.height
+    }
+  });
+
   // Touch-friendly item handling
   const handleItemClick = (item: any) => {
     if (screenSize.isTouchDevice) {
@@ -62,64 +115,76 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
     }
   };
 
-  const renderSubmenu = (submenuItems: any[], parentLabel: string) => (
-    <div 
-      className="absolute left-full top-0 bg-gray-300 border-2 border-gray-400 shadow-lg z-50"
-      style={{ 
-        borderStyle: 'outset',
-        fontSize: screenSize.isMobile ? '14px' : '11px',
-        fontFamily: '"MS Sans Serif", sans-serif',
-        width: screenSize.isMobile ? '160px' : '144px'
-      }}
-    >
-      {submenuItems.map((item, index) => {
-        if (item.separator) {
-          return <div key={index} className="h-px bg-gray-400 mx-1 my-1" />;
-        }
-        
-        return (
-          <div
-            key={index}
-            className={`px-3 text-xs cursor-pointer flex items-center space-x-2 ${
-              item.disabled 
-                ? 'text-gray-500 cursor-not-allowed' 
-                : 'hover:bg-blue-600 hover:text-white'
-            }`}
-            style={{
-              minHeight: screenSize.isMobile ? '44px' : '24px',
-              paddingTop: screenSize.isMobile ? '12px' : '4px',
-              paddingBottom: screenSize.isMobile ? '12px' : '4px',
-              touchAction: 'manipulation'
-            }}
-            onClick={() => {
-              if (!item.disabled && item.onClick) {
-                item.onClick();
-                onClose();
-              }
-            }}
-          >
-            {item.icon && (
-              <span className="text-center" style={{ width: screenSize.isMobile ? '20px' : '16px' }}>
-                {item.icon}
-              </span>
-            )}
-            <span className="flex-1">{item.label}</span>
-          </div>
-        );
-      })}
-    </div>
-  );
+  const renderSubmenu = (submenuItems: any[], parentLabel: string) => {
+    // Calculate submenu position
+    const submenuWidth = screenSize.isMobile ? 160 : 144;
+    let submenuLeft = '100%';
+    
+    // If submenu would go off-screen, show it on the left instead
+    if (adjustedX + menuWidth + submenuWidth > screenSize.width) {
+      submenuLeft = '-100%';
+    }
+    
+    return (
+      <div 
+        className="absolute top-0 bg-gray-300 border-2 border-gray-400 shadow-lg z-50"
+        style={{ 
+          left: submenuLeft,
+          borderStyle: 'outset',
+          fontSize: screenSize.isMobile ? '14px' : '11px',
+          fontFamily: '"MS Sans Serif", sans-serif',
+          width: submenuWidth
+        }}
+      >
+        {submenuItems.map((item, index) => {
+          if (item.separator) {
+            return <div key={index} className="h-px bg-gray-400 mx-1 my-1" />;
+          }
+          
+          return (
+            <div
+              key={index}
+              className={`px-3 text-xs cursor-pointer flex items-center space-x-2 ${
+                item.disabled 
+                  ? 'text-gray-500 cursor-not-allowed' 
+                  : 'hover:bg-blue-600 hover:text-white'
+              }`}
+              style={{
+                minHeight: screenSize.isMobile ? '44px' : '24px',
+                paddingTop: screenSize.isMobile ? '12px' : '4px',
+                paddingBottom: screenSize.isMobile ? '12px' : '4px',
+                touchAction: 'manipulation'
+              }}
+              onClick={() => {
+                if (!item.disabled && item.onClick) {
+                  item.onClick();
+                  onClose();
+                }
+              }}
+            >
+              {item.icon && (
+                <span className="text-center" style={{ width: screenSize.isMobile ? '20px' : '16px' }}>
+                  {item.icon}
+                </span>
+              )}
+              <span className="flex-1">{item.label}</span>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
 
   return (
     <div 
       className="fixed bg-gray-300 border-2 border-gray-400 shadow-lg z-50"
       style={{ 
-        left: position.x, 
-        top: position.y,
+        left: adjustedX, 
+        top: adjustedY,
         borderStyle: 'outset',
         fontSize: screenSize.isMobile ? '14px' : '11px',
         fontFamily: '"MS Sans Serif", sans-serif',
-        minWidth: screenSize.isMobile ? '200px' : '144px',
+        minWidth: menuWidth,
         maxWidth: screenSize.isMobile ? '90vw' : 'auto'
       }}
       onClick={(e) => e.stopPropagation()}

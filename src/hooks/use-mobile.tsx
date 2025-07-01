@@ -50,14 +50,37 @@ export function useScreenSize() {
     isDesktop: boolean
     isLandscape: boolean
     isTouchDevice: boolean
-  }>({
-    width: 0,
-    height: 0,
-    isMobile: false,
-    isTablet: false,
-    isDesktop: false,
-    isLandscape: false,
-    isTouchDevice: false,
+  }>(() => {
+    // Better initial values based on window if available
+    if (typeof window !== 'undefined') {
+      const width = window.innerWidth
+      const height = window.innerHeight
+      const isMobile = width < BREAKPOINTS.mobile
+      const isTablet = width >= BREAKPOINTS.mobile && width < BREAKPOINTS.tablet
+      const isDesktop = width >= BREAKPOINTS.tablet
+      const isLandscape = width > height
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+
+      return {
+        width,
+        height,
+        isMobile,
+        isTablet,
+        isDesktop,
+        isLandscape,
+        isTouchDevice,
+      }
+    }
+    // Fallback for SSR
+    return {
+      width: 1280,
+      height: 720,
+      isMobile: false,
+      isTablet: false,
+      isDesktop: true,
+      isLandscape: true,
+      isTouchDevice: false,
+    }
   })
 
   React.useEffect(() => {
@@ -69,6 +92,10 @@ export function useScreenSize() {
       const isDesktop = width >= BREAKPOINTS.tablet
       const isLandscape = width > height
       const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+
+      console.log('📱 useScreenSize - Update:', {
+        width, height, isMobile, isTablet, isDesktop, isLandscape, isTouchDevice
+      });
 
       setScreenSize({
         width,

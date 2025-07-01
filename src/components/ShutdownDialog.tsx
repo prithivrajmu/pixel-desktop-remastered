@@ -17,6 +17,41 @@ export const ShutdownDialog: React.FC<ShutdownDialogProps> = ({
   const sounds = useSounds();
   const screenSize = useScreenSize();
 
+  // Debug: Log screen size information
+  console.log('🔌 ShutdownDialog Debug - Screen Info:', {
+    width: screenSize.width,
+    height: screenSize.height,
+    isMobile: screenSize.isMobile,
+    isLandscape: screenSize.isLandscape,
+    isTouchDevice: screenSize.isTouchDevice,
+    isOpen: isOpen
+  });
+
+  // Calculate responsive styles
+  const dialogStyles = {
+    width: screenSize.isMobile ? 
+      (screenSize.isLandscape ? '400px' : 'min(90vw, 350px)') : 
+      '400px',
+    maxHeight: screenSize.isMobile && !screenSize.isLandscape ? 
+      'min(90vh, 500px)' : 
+      '90vh',
+    minHeight: screenSize.isMobile && !screenSize.isLandscape ? '300px' : 'auto'
+  };
+
+  // Debug: Log calculated dialog styles
+  console.log('💻 ShutdownDialog Debug - Calculated Styles:', dialogStyles);
+
+  // Debug: Log mobile-specific conditions
+  if (screenSize.isMobile && isOpen) {
+    console.log('📱 ShutdownDialog Debug - Mobile Portrait Mode:', {
+      isPortrait: !screenSize.isLandscape,
+      calculatedWidth: dialogStyles.width,
+      calculatedMaxHeight: dialogStyles.maxHeight,
+      calculatedMinHeight: dialogStyles.minHeight,
+      shouldUseMobileLayout: screenSize.isMobile && !screenSize.isLandscape
+    });
+  }
+
   if (!isOpen) return null;
 
   const handleRadioChange = (action: 'shutdown' | 'restart' | 'msdos' | 'logoff') => {
@@ -40,16 +75,19 @@ export const ShutdownDialog: React.FC<ShutdownDialogProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100]">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4" style={{ zIndex: 9999 }}>
       <div 
         className="bg-[#c0c0c0] border-2 border-[#808080] shadow-lg"
         style={{ 
           borderStyle: 'outset',
-          width: screenSize.isMobile ? '90vw' : '400px',
+          width: dialogStyles.width,
           maxWidth: '95vw',
-          maxHeight: '90vh',
+          maxHeight: dialogStyles.maxHeight,
           overflowY: 'auto',
-          fontFamily: '"MS Sans Serif", "Microsoft Sans Serif", sans-serif'
+          fontFamily: '"MS Sans Serif", "Microsoft Sans Serif", sans-serif',
+          minHeight: dialogStyles.minHeight,
+          position: 'relative',
+          zIndex: 10000
         }}
       >
         {/* Title Bar */}

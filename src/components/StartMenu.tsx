@@ -36,6 +36,44 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
   const sounds = useSounds();
   const screenSize = useScreenSize();
 
+  // Debug: Log screen size information
+  console.log('🖥️ StartMenu Debug - Screen Info:', {
+    width: screenSize.width,
+    height: screenSize.height,
+    isMobile: screenSize.isMobile,
+    isLandscape: screenSize.isLandscape,
+    isTouchDevice: screenSize.isTouchDevice
+  });
+
+  // Calculate responsive styles
+  const menuStyles = {
+    width: screenSize.isMobile ? 
+      (screenSize.isLandscape ? '60vw' : 'min(85vw, 280px)') : 
+      'auto',
+    minWidth: screenSize.isMobile ? 
+      (screenSize.isLandscape ? '200px' : '250px') : 
+      'auto',
+    maxWidth: screenSize.isMobile ? 
+      (screenSize.isLandscape ? '320px' : '300px') : 
+      'auto',
+    maxHeight: screenSize.isMobile ? 
+      (screenSize.isLandscape ? '85vh' : '75vh') : 
+      'auto',
+  };
+
+  // Debug: Log calculated menu styles
+  console.log('📐 StartMenu Debug - Calculated Styles:', menuStyles);
+
+  // Debug: Log mobile-specific conditions
+  if (screenSize.isMobile) {
+    console.log('📱 StartMenu Debug - Mobile Portrait Mode:', {
+      isPortrait: !screenSize.isLandscape,
+      shouldHideVerticalLabel: screenSize.isMobile,
+      calculatedWidth: menuStyles.width,
+      calculatedMaxHeight: menuStyles.maxHeight
+    });
+  }
+
   // Global click listener to close menu if click is outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -278,10 +316,10 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
       }`}
       style={{ 
         borderStyle: 'outset', 
-        width: screenSize.isMobile ? '70vw' : 'auto',
-        minWidth: screenSize.isMobile ? '200px' : 'auto',
-        maxWidth: screenSize.isMobile ? '320px' : 'auto',
-        maxHeight: screenSize.isMobile ? '85vh' : 'auto',
+        width: menuStyles.width,
+        minWidth: menuStyles.minWidth,
+        maxWidth: menuStyles.maxWidth,
+        maxHeight: menuStyles.maxHeight,
         overflow: screenSize.isMobile ? 'hidden' : 'visible',
         bottom: screenSize.isMobile ? '48px' : '28px', // Account for taskbar height
         position: 'fixed',
@@ -352,11 +390,20 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
+                console.log('🔄 StartMenu Debug - Item clicked:', {
+                  itemLabel: item.label,
+                  hasSubmenu: item.hasSubmenu,
+                  isMobile: screenSize.isMobile,
+                  currentActiveSubmenu: activeSubmenu
+                });
+                
                 if (screenSize.isMobile && item.hasSubmenu) {
                   // On mobile, toggle submenu on click instead of hover
                   if (activeSubmenu === item.label) {
+                    console.log('🚫 StartMenu Debug - Closing submenu:', item.label);
                     setActiveSubmenu(null);
                   } else {
+                    console.log('✅ StartMenu Debug - Opening submenu:', item.label);
                     setActiveSubmenu(item.label || '');
                   }
                 } else {
@@ -396,92 +443,105 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
               )}
               
               {/* Submenu rendering */}
-              {activeSubmenu === item.label && item.submenu && (
-                <div className={`absolute z-50 ${
-                  screenSize.isMobile 
-                    ? 'top-full left-0 right-0 bg-gray-200 border-t border-gray-400' 
-                    : 'top-0 left-full'
-                }`}>
-                  {screenSize.isMobile ? (
-                    <div className="bg-gray-200 max-h-64 overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
-                      {item.submenu.map((subItem, subIndex) => {
-                        if (subItem.type === 'separator') {
-                          return <div key={subIndex} className="h-0.5 bg-gray-500 mx-4 my-1" />;
-                        }
-                        return (
-                          <React.Fragment key={subIndex}>
-                            <div
-                              className={`flex items-center px-6 py-3 cursor-pointer text-base text-black hover:bg-blue-600 hover:text-white active:bg-blue-700 border-b border-gray-300 ${subItem.hasSubmenu ? 'justify-between' : ''}`}
-                              style={{ 
-                                touchAction: 'manipulation', 
-                                minHeight: 40,
-                                fontSize: '14px'
-                              }}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                if (subItem.hasSubmenu) {
-                                  // Toggle nested submenu level on mobile
-                                  if (activeMobileNestedSubmenu === subItem.label) {
-                                    setActiveMobileNestedSubmenu(null);
+              {activeSubmenu === item.label && item.submenu && (() => {
+                // Debug logging
+                console.log('🎯 StartMenu Debug - Rendering submenu for:', {
+                  itemLabel: item.label,
+                  isMobile: screenSize.isMobile,
+                  submenuItemCount: item.submenu?.length,
+                  activeSubmenu: activeSubmenu
+                });
+                if (screenSize.isMobile) {
+                  console.log('📱 StartMenu Debug - Rendering MOBILE submenu');
+                }
+                
+                return (
+                  <div className={`absolute z-50 ${
+                    screenSize.isMobile 
+                      ? 'top-full left-0 right-0 bg-gray-200 border-t border-gray-400' 
+                      : 'top-0 left-full'
+                  }`}>
+                    {screenSize.isMobile ? (
+                      <div className="bg-gray-200 max-h-64 overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
+                        {item.submenu.map((subItem, subIndex) => {
+                          if (subItem.type === 'separator') {
+                            return <div key={subIndex} className="h-0.5 bg-gray-500 mx-4 my-1" />;
+                          }
+                          return (
+                            <React.Fragment key={subIndex}>
+                              <div
+                                className={`flex items-center px-6 py-3 cursor-pointer text-base text-black hover:bg-blue-600 hover:text-white active:bg-blue-700 border-b border-gray-300 ${subItem.hasSubmenu ? 'justify-between' : ''}`}
+                                style={{ 
+                                  touchAction: 'manipulation', 
+                                  minHeight: 40,
+                                  fontSize: '14px'
+                                }}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  if (subItem.hasSubmenu) {
+                                    // Toggle nested submenu level on mobile
+                                    if (activeMobileNestedSubmenu === subItem.label) {
+                                      setActiveMobileNestedSubmenu(null);
+                                    } else {
+                                      setActiveMobileNestedSubmenu(subItem.label || null);
+                                    }
                                   } else {
-                                    setActiveMobileNestedSubmenu(subItem.label || null);
+                                    handleItemClick(subItem);
                                   }
-                                } else {
-                                  handleItemClick(subItem);
-                                }
-                              }}
-                            >
-                              <span className="w-8 flex items-center justify-center mr-3">
-                                {subItem.icon && <IconImg src={subItem.icon} alt={subItem.label || ''} />}
-                              </span>
-                              <span className="flex-1">{subItem.label}</span>
-                              {subItem.hasSubmenu && (
-                                <ChevronRight 
-                                  size={14}
-                                  className={`transition-transform ${activeMobileNestedSubmenu === subItem.label ? 'rotate-90 text-[#0066cc]' : ''}`}
-                                />
-                              )}
-                            </div>
-
-                            {/* Nested submenu for mobile */}
-                            {subItem.hasSubmenu && activeMobileNestedSubmenu === subItem.label && subItem.submenu && (
-                              <div className="bg-gray-100 border-t border-gray-400 max-h-64 overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
-                                {subItem.submenu.map((nestedItem, nestedIdx) => {
-                                  if (nestedItem.type === 'separator') {
-                                    return <div key={nestedIdx} className="h-0.5 bg-gray-500 mx-8 my-1" />;
-                                  }
-                                  return (
-                                    <div
-                                      key={nestedIdx}
-                                      className="flex items-center px-10 py-3 cursor-pointer text-base text-black hover:bg-blue-600 hover:text-white active:bg-blue-700 border-b border-gray-300"
-                                      style={{ touchAction: 'manipulation', minHeight: 40, fontSize: '14px' }}
-                                      onClick={(e) => {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        handleItemClick(nestedItem);
-                                        setActiveMobileNestedSubmenu(null);
-                                        setActiveSubmenu(null);
-                                      }}
-                                    >
-                                      <span className="w-8 flex items-center justify-center mr-3">
-                                        {nestedItem.icon && <IconImg src={nestedItem.icon} alt={nestedItem.label || ''} />}
-                                      </span>
-                                      <span className="flex-1">{nestedItem.label}</span>
-                                    </div>
-                                  );
-                                })}
+                                }}
+                              >
+                                <span className="w-8 flex items-center justify-center mr-3">
+                                  {subItem.icon && <IconImg src={subItem.icon} alt={subItem.label || ''} />}
+                                </span>
+                                <span className="flex-1">{subItem.label}</span>
+                                {subItem.hasSubmenu && (
+                                  <ChevronRight 
+                                    size={14}
+                                    className={`transition-transform ${activeMobileNestedSubmenu === subItem.label ? 'rotate-90 text-[#0066cc]' : ''}`}
+                                  />
+                                )}
                               </div>
-                            )}
-                          </React.Fragment>
-                        );
-                      })}
-                    </div>
-                  ) : (
-                    renderSubmenu(item.submenu, 1)
-                  )}
-                </div>
-              )}
+
+                              {/* Nested submenu for mobile */}
+                              {subItem.hasSubmenu && activeMobileNestedSubmenu === subItem.label && subItem.submenu && (
+                                <div className="bg-gray-100 border-t border-gray-400 max-h-64 overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
+                                  {subItem.submenu.map((nestedItem, nestedIdx) => {
+                                    if (nestedItem.type === 'separator') {
+                                      return <div key={nestedIdx} className="h-0.5 bg-gray-500 mx-8 my-1" />;
+                                    }
+                                    return (
+                                      <div
+                                        key={nestedIdx}
+                                        className="flex items-center px-10 py-3 cursor-pointer text-base text-black hover:bg-blue-600 hover:text-white active:bg-blue-700 border-b border-gray-300"
+                                        style={{ touchAction: 'manipulation', minHeight: 40, fontSize: '14px' }}
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          e.stopPropagation();
+                                          handleItemClick(nestedItem);
+                                          setActiveMobileNestedSubmenu(null);
+                                          setActiveSubmenu(null);
+                                        }}
+                                      >
+                                        <span className="w-8 flex items-center justify-center mr-3">
+                                          {nestedItem.icon && <IconImg src={nestedItem.icon} alt={nestedItem.label || ''} />}
+                                        </span>
+                                        <span className="flex-1">{nestedItem.label}</span>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              )}
+                            </React.Fragment>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      renderSubmenu(item.submenu, 1)
+                    )}
+                  </div>
+                );
+              })()}
             </div>
           );
         })}
