@@ -55,20 +55,22 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
   // Calculate responsive styles
   const isMobilePortrait = screenSize.isMobile && !screenSize.isLandscape;
   const isMobileLandscape = screenSize.isMobile && screenSize.isLandscape;
+  const useAccordionStyle = isMobilePortrait; // Only mobile portrait uses accordion
+  const useCascadingStyle = screenSize.isTablet || screenSize.isDesktop; // Tablet and desktop use cascading
   
   const menuStyles = {
     width: screenSize.isMobile ? 
       (isMobileLandscape ? '60vw' : 'min(65vw, 200px)') : 
-      'auto',
+      screenSize.isTablet ? 'auto' : 'auto',
     minWidth: screenSize.isMobile ? 
       (isMobileLandscape ? '200px' : '160px') : 
-      'auto',
+      screenSize.isTablet ? '220px' : 'auto',
     maxWidth: screenSize.isMobile ? 
       (isMobileLandscape ? '320px' : '200px') : 
-      'auto',
+      screenSize.isTablet ? '280px' : 'auto',
     maxHeight: screenSize.isMobile ? 
       (isMobileLandscape ? '80vh' : '60vh') : 
-      'auto',
+      screenSize.isTablet ? '75vh' : 'auto',
   };
 
   // Global click listener to close menu if click is outside
@@ -235,7 +237,13 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
       hasSubmenu: true,
       submenu: [
         { label: 'My Documents', icon: '/icons/Book.ico' },
-        { label: 'Resume.pdf', icon: '/icons/Blank sheet.ico', action: () => handleExternalLink('/resume.pdf') },
+        { label: 'Resume.pdf', icon: '/icons/Blank sheet.ico', action: () => {
+          // Import and use the downloadResume function for better UX
+          import('../utils/downloadUtils').then(({ downloadResume }) => {
+            downloadResume();
+            closeDialog();
+          });
+        }},
       ]
     },
     {
@@ -295,7 +303,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
     <div
       className="absolute left-full top-0 w-48 bg-gray-300 border-2 border-gray-500 shadow-lg z-50"
       style={{ borderStyle: 'outset' }}
-      {...(!screenSize.isMobile && !screenSize.isTouchDevice ? {
+      {...(useCascadingStyle && !screenSize.isTouchDevice ? {
         onMouseEnter: handleSubmenuEnter,
         onMouseLeave: handleSubmenuLeave
       } : {})}
@@ -308,7 +316,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
           <div
             key={index}
             className="flex items-center px-3 py-1 cursor-pointer text-sm relative group text-black hover:bg-blue-600 hover:text-white"
-            {...(!screenSize.isMobile && !screenSize.isTouchDevice ? {
+            {...(useCascadingStyle && !screenSize.isTouchDevice ? {
               onMouseEnter: () => handleSubmenuItemEnter(item.label || '', item.hasSubmenu)
             } : {})}
             onClick={(e) => {
@@ -316,7 +324,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
               e.stopPropagation();
               handleItemClick(item);
             }}
-            {...(!screenSize.isMobile && !screenSize.isTouchDevice ? {
+            {...(useCascadingStyle && !screenSize.isTouchDevice ? {
               onMouseDown: (e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -338,7 +346,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
                     <div
                       className="absolute left-full top-0 w-48 bg-gray-300 border-2 border-gray-500 shadow-lg z-50"
                       style={{ borderStyle: 'outset' }}
-                      {...(!screenSize.isMobile && !screenSize.isTouchDevice ? {
+                      {...(useCascadingStyle && !screenSize.isTouchDevice ? {
                         onMouseEnter: handleNestedSubmenuEnter,
                         onMouseLeave: handleNestedSubmenuLeave
                       } : {})}
@@ -353,7 +361,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
                           <div
                              key={nestedIndex}
                              className="flex items-center px-3 py-1 cursor-pointer text-sm relative group text-black hover:bg-blue-600 hover:text-white"
-                             {...(!screenSize.isMobile && !screenSize.isTouchDevice ? {
+                             {...(useCascadingStyle && !screenSize.isTouchDevice ? {
                                onMouseEnter: handleNestedSubmenuItemEnter
                              } : {})}
                              onClick={(e) => {
@@ -361,7 +369,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
                                e.stopPropagation();
                                handleItemClick(nestedItem);
                              }}
-                             {...(!screenSize.isMobile && !screenSize.isTouchDevice ? {
+                             {...(useCascadingStyle && !screenSize.isTouchDevice ? {
                                onMouseDown: (e) => {
                                  e.preventDefault();
                                  e.stopPropagation();
@@ -492,35 +500,37 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
               <div
                 key={index}
                 className="flex items-center px-3 py-1 cursor-pointer text-black hover:bg-blue-600 hover:text-white active:bg-blue-700 border-b border-gray-400"
-                style={{ 
-                  touchAction: 'manipulation',
-                  minHeight: isMobilePortrait ? 28 : screenSize.isMobile ? 40 : 28,
-                  fontSize: isMobilePortrait ? '12px' : screenSize.isMobile ? '14px' : '14px',
-                  paddingLeft: isMobilePortrait ? '10px' : screenSize.isMobile ? '16px' : '12px',
-                  paddingRight: isMobilePortrait ? '10px' : screenSize.isMobile ? '16px' : '12px',
-                  WebkitTapHighlightColor: 'rgba(0, 102, 204, 0.3)',
-                  userSelect: 'none'
-                }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  
-                  // UPDATED: Accordion handling for mobile portrait
-                  if (isMobilePortrait) {
-                    if (item.hasSubmenu) {
-                      handleToggleAccordion(item, 0);
-                    } else {
-                      handleItemClick(item);
-                      closeDialog();
-                    }
-                  } else if (screenSize.isMobile && item.hasSubmenu && item.submenu) {
-                    // On other mobile orientations, use sliding interface for submenus
-                    navigateToMobileSubmenu(item.submenu, item.label || 'Submenu');
-                  } else if (!item.hasSubmenu) {
-                    // Regular item click for items without submenus
+                              style={{ 
+                touchAction: 'manipulation',
+                minHeight: isMobilePortrait ? 28 : screenSize.isMobile ? 40 : 28,
+                fontSize: isMobilePortrait ? '12px' : screenSize.isMobile ? '14px' : '14px',
+                paddingLeft: isMobilePortrait ? '10px' : screenSize.isMobile ? '16px' : '12px',
+                paddingRight: isMobilePortrait ? '10px' : screenSize.isMobile ? '16px' : '12px',
+                WebkitTapHighlightColor: 'rgba(0, 102, 204, 0.3)',
+                userSelect: 'none'
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Handle different device behaviors for mobile sliding submenu
+                if (useAccordionStyle) {
+                  // Mobile portrait: accordion style
+                  if (item.hasSubmenu) {
+                    handleToggleAccordion(item, 0);
+                  } else {
                     handleItemClick(item);
+                    closeDialog();
                   }
-                }}
+                } else if (isMobileLandscape && item.hasSubmenu && item.submenu) {
+                  // Mobile landscape: sliding interface for submenus
+                  navigateToMobileSubmenu(item.submenu, item.label || 'Submenu');
+                } else if (!item.hasSubmenu) {
+                  // Regular item click for items without submenus (all devices)
+                  handleItemClick(item);
+                }
+                // Note: Cascading devices handle submenus via hover, so no click action needed for submenus
+              }}
               >
                 <span className={`flex items-center justify-center mr-3 ${
                   isMobilePortrait ? 'w-5' : screenSize.isMobile ? 'w-8' : 'w-7'
@@ -558,7 +568,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
           'none',
         overflowY: screenSize.isMobile ? 'visible' : 'visible',
         overflowX: 'visible',
-        bottom: screenSize.isMobile ? '48px' : '28px', // Account for taskbar height
+        bottom: screenSize.isMobile ? '48px' : screenSize.isTablet ? '36px' : '28px', // Account for taskbar height
         position: 'fixed',
       }}
       onClick={(e) => e.stopPropagation()}
@@ -632,7 +642,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
                 } ${screenSize.isMobile ? 'border-b border-gray-400' : ''} ${
                   screenSize.isMobile ? 'transition-colors duration-150' : ''
                 }`}
-                {...(!screenSize.isMobile && !screenSize.isTouchDevice ? {
+                {...(useCascadingStyle && !screenSize.isTouchDevice ? {
                   onMouseEnter: () => handleParentEnter(item.label || '', item.hasSubmenu),
                   onMouseLeave: () => handleParentLeave()
                 } : {})}
@@ -640,24 +650,26 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
                   e.preventDefault();
                   e.stopPropagation();
                   
-                  // UPDATED: Accordion handling for mobile portrait
-                  if (isMobilePortrait) {
+                  // Handle different device behaviors for main menu
+                  if (useAccordionStyle) {
+                    // Mobile portrait: accordion style
                     if (item.hasSubmenu) {
                       handleToggleAccordion(item, 0);
                     } else {
                       handleItemClick(item);
                       closeDialog();
                     }
-                  } else if (screenSize.isMobile && item.hasSubmenu && item.submenu) {
-                    // On other mobile orientations, use sliding interface for submenus
+                  } else if (isMobileLandscape && item.hasSubmenu && item.submenu) {
+                    // Mobile landscape: sliding interface for submenus
                     navigateToMobileSubmenu(item.submenu, item.label || 'Submenu');
                   } else if (!item.hasSubmenu) {
-                    // Regular item click for items without submenus
+                    // Regular item click for items without submenus (all devices)
                     handleItemClick(item);
                   }
+                  // Note: Cascading devices (tablet + desktop) handle submenus via hover
                 }}
 
-                {...(!screenSize.isMobile && !screenSize.isTouchDevice ? {
+                {...(useCascadingStyle && !screenSize.isTouchDevice ? {
                   onMouseDown: (e) => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -687,8 +699,8 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
                   />
                 )}
                 
-                {/* Desktop submenu rendering */}
-                {!screenSize.isMobile && activeSubmenu === item.label && item.submenu && (
+                {/* Cascading submenu rendering for tablet and desktop */}
+                {useCascadingStyle && activeSubmenu === item.label && item.submenu && (
                   <div className="absolute top-0 left-full z-50">
                     {renderSubmenu(item.submenu, 1)}
                   </div>
@@ -706,8 +718,8 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
         })}
       </div>
       
-      {/* Mobile sliding submenu overlay - only render when in non-portrait mobile */}
-      {screenSize.isMobile && !isMobilePortrait && mobileMenuStack.length > 0 && renderMobileSlidingSubmenu()}
+      {/* Mobile sliding submenu overlay - only render when in mobile landscape */}
+      {isMobileLandscape && mobileMenuStack.length > 0 && renderMobileSlidingSubmenu()}
     </div>
   );
 };
