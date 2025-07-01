@@ -19,8 +19,14 @@ interface MenuItem {
 }
 
 // Helper to render .ico icons
-const IconImg = ({ src, alt }: { src: string; alt: string }) => (
-  <img src={src} alt={alt} width={22} height={22} style={{ imageRendering: 'pixelated' }} />
+const IconImg = ({ src, alt, isMobilePortrait }: { src: string; alt: string; isMobilePortrait?: boolean }) => (
+  <img 
+    src={src} 
+    alt={alt} 
+    width={isMobilePortrait ? 14 : 22} 
+    height={isMobilePortrait ? 14 : 22} 
+    style={{ imageRendering: 'pixelated' }} 
+  />
 );
 
 export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
@@ -46,18 +52,21 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
   });
 
   // Calculate responsive styles
+  const isMobilePortrait = screenSize.isMobile && !screenSize.isLandscape;
+  const isMobileLandscape = screenSize.isMobile && screenSize.isLandscape;
+  
   const menuStyles = {
     width: screenSize.isMobile ? 
-      (screenSize.isLandscape ? '60vw' : 'min(85vw, 280px)') : 
+      (isMobileLandscape ? '60vw' : 'min(65vw, 200px)') : 
       'auto',
     minWidth: screenSize.isMobile ? 
-      (screenSize.isLandscape ? '200px' : '250px') : 
+      (isMobileLandscape ? '200px' : '160px') : 
       'auto',
     maxWidth: screenSize.isMobile ? 
-      (screenSize.isLandscape ? '320px' : '300px') : 
+      (isMobileLandscape ? '320px' : '200px') : 
       'auto',
     maxHeight: screenSize.isMobile ? 
-      (screenSize.isLandscape ? '85vh' : '75vh') : 
+      (isMobileLandscape ? '80vh' : '60vh') : 
       'auto',
   };
 
@@ -70,7 +79,9 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
       isPortrait: !screenSize.isLandscape,
       shouldHideVerticalLabel: screenSize.isMobile,
       calculatedWidth: menuStyles.width,
-      calculatedMaxHeight: menuStyles.maxHeight
+      calculatedMaxHeight: menuStyles.maxHeight,
+      isMobilePortrait,
+      isMobileLandscape
     });
   }
 
@@ -260,8 +271,10 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
               handleItemClick(item);
             }}
           >
-            <span className="w-6 text-center mr-3">
-              {item.icon && <IconImg src={item.icon} alt={item.label || ''} />}
+            <span className={`flex items-center justify-center mr-3 ${
+              isMobilePortrait ? 'w-5' : 'w-8'
+            }`}>
+              {item.icon && <IconImg src={item.icon} alt={item.label || ''} isMobilePortrait={isMobilePortrait} />}
             </span>
             <span className="flex-1">{item.label}</span>
             {item.hasSubmenu && (
@@ -277,7 +290,9 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
                     >
                       {item.submenu.map((nestedItem, nestedIndex) => {
                         if (nestedItem.type === 'separator') {
-                          return <div key={nestedIndex} className="h-px bg-gray-500 mx-2 my-1" />;
+                          return <div key={nestedIndex} className={`bg-gray-500 mx-8 my-1 ${
+                            isMobilePortrait ? 'h-px' : 'h-0.5'
+                          }`} />;
                         }
                         return (
                                                      <div
@@ -290,8 +305,10 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
                                handleItemClick(nestedItem);
                              }}
                            >
-                            <span className="w-6 text-center mr-3">
-                              {nestedItem.icon && <IconImg src={nestedItem.icon} alt={nestedItem.label || ''} />}
+                            <span className={`flex items-center justify-center mr-3 ${
+                              isMobilePortrait ? 'w-5' : 'w-8'
+                            }`}>
+                              {nestedItem.icon && <IconImg src={nestedItem.icon} alt={nestedItem.label || ''} isMobilePortrait={isMobilePortrait} />}
                             </span>
                             <span className="flex-1">{nestedItem.label}</span>
                           </div>
@@ -312,14 +329,16 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
     <div 
       ref={menuRootRef}
       className={`absolute bottom-0 left-0 flex bg-gray-300 border-2 border-gray-500 shadow-xl z-40 ${
-        screenSize.isMobile ? 'h-auto max-h-[85vh]' : ''
+        screenSize.isMobile ? 'h-auto max-h-[60vh]' : ''
       }`}
       style={{ 
         borderStyle: 'outset', 
         width: menuStyles.width,
         minWidth: menuStyles.minWidth,
         maxWidth: menuStyles.maxWidth,
-        maxHeight: menuStyles.maxHeight,
+        maxHeight: screenSize.isMobile ? 
+          (isMobilePortrait ? 'calc(58vh - 2px)' : 'calc(80vh - 2px)') : 
+          'auto',
         overflow: screenSize.isMobile ? 'hidden' : 'visible',
         bottom: screenSize.isMobile ? '48px' : '28px', // Account for taskbar height
         position: 'fixed',
@@ -368,14 +387,16 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
           minWidth: screenSize.isMobile ? 'auto' : 210, 
           fontFamily: 'MS Sans Serif, sans-serif',
           WebkitOverflowScrolling: 'touch',
-          maxHeight: screenSize.isMobile ? 'calc(85vh - 2px)' : 'auto'
+          maxHeight: screenSize.isMobile ? 
+            (isMobilePortrait ? 'calc(58vh - 2px)' : 'calc(80vh - 2px)') : 
+            'auto'
         }}
       >
         {menuItems.map((item, index) => {
           if (item.type === 'separator') {
             return (
               <div key={index} className={`bg-gray-500 mx-2 my-1 ${
-                screenSize.isMobile ? 'h-0.5' : 'h-px'
+                isMobilePortrait ? 'h-px' : screenSize.isMobile ? 'h-0.5' : 'h-px'
               }`} />
             );
           }
@@ -418,22 +439,22 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
                 }
               }}
               style={{ 
-                fontSize: screenSize.isMobile ? '14px' : '14px', 
-                minHeight: screenSize.isMobile ? 40 : 28,
+                fontSize: isMobilePortrait ? '12px' : screenSize.isMobile ? '14px' : '14px', 
+                minHeight: isMobilePortrait ? 28 : screenSize.isMobile ? 40 : 28,
                 touchAction: 'manipulation',
-                paddingLeft: screenSize.isMobile ? '16px' : '12px',
-                paddingRight: screenSize.isMobile ? '16px' : '12px'
+                paddingLeft: isMobilePortrait ? '10px' : screenSize.isMobile ? '16px' : '12px',
+                paddingRight: isMobilePortrait ? '10px' : screenSize.isMobile ? '16px' : '12px'
               }}
             >
               <span className={`flex items-center justify-center mr-3 ${
-                screenSize.isMobile ? 'w-8' : 'w-7'
+                isMobilePortrait ? 'w-5' : screenSize.isMobile ? 'w-8' : 'w-7'
               }`}>
-                {item.icon && <IconImg src={item.icon} alt={item.label || ''} />}
+                {item.icon && <IconImg src={item.icon} alt={item.label || ''} isMobilePortrait={isMobilePortrait} />}
               </span>
               <span className="flex-1 text-left" style={{ paddingLeft: 2 }}>{item.label}</span>
               {item.hasSubmenu && (
                 <ChevronRight 
-                  size={screenSize.isMobile ? 16 : 13} 
+                  size={isMobilePortrait ? 10 : screenSize.isMobile ? 16 : 13}
                   className={`ml-2 ${activeSubmenu === item.label && screenSize.isMobile ? 'rotate-90' : ''}`} 
                   style={{ 
                     transition: 'transform 0.2s ease',
@@ -462,10 +483,12 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
                       : 'top-0 left-full'
                   }`}>
                     {screenSize.isMobile ? (
-                      <div className="bg-gray-200 max-h-64 overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
+                      <div className="bg-gray-200 max-h-64 overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch', maxHeight: isMobilePortrait ? '200px' : '256px' }}>
                         {item.submenu.map((subItem, subIndex) => {
                           if (subItem.type === 'separator') {
-                            return <div key={subIndex} className="h-0.5 bg-gray-500 mx-4 my-1" />;
+                            return <div key={subIndex} className={`bg-gray-500 mx-4 my-1 ${
+                              isMobilePortrait ? 'h-px' : 'h-0.5'
+                            }`} />;
                           }
                           return (
                             <React.Fragment key={subIndex}>
@@ -473,8 +496,12 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
                                 className={`flex items-center px-6 py-3 cursor-pointer text-base text-black hover:bg-blue-600 hover:text-white active:bg-blue-700 border-b border-gray-300 ${subItem.hasSubmenu ? 'justify-between' : ''}`}
                                 style={{ 
                                   touchAction: 'manipulation', 
-                                  minHeight: 40,
-                                  fontSize: '14px'
+                                  minHeight: isMobilePortrait ? 28 : 40,
+                                  fontSize: isMobilePortrait ? '11px' : '14px',
+                                  paddingLeft: isMobilePortrait ? '20px' : '40px',
+                                  paddingRight: isMobilePortrait ? '12px' : '40px',
+                                  paddingTop: isMobilePortrait ? '6px' : '12px',
+                                  paddingBottom: isMobilePortrait ? '6px' : '12px'
                                 }}
                                 onClick={(e) => {
                                   e.preventDefault();
@@ -491,13 +518,15 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
                                   }
                                 }}
                               >
-                                <span className="w-8 flex items-center justify-center mr-3">
-                                  {subItem.icon && <IconImg src={subItem.icon} alt={subItem.label || ''} />}
+                                <span className={`flex items-center justify-center mr-3 ${
+                                  isMobilePortrait ? 'w-5' : 'w-8'
+                                }`}>
+                                  {subItem.icon && <IconImg src={subItem.icon} alt={subItem.label || ''} isMobilePortrait={isMobilePortrait} />}
                                 </span>
                                 <span className="flex-1">{subItem.label}</span>
                                 {subItem.hasSubmenu && (
                                   <ChevronRight 
-                                    size={14}
+                                    size={isMobilePortrait ? 10 : 14}
                                     className={`transition-transform ${activeMobileNestedSubmenu === subItem.label ? 'rotate-90 text-[#0066cc]' : ''}`}
                                   />
                                 )}
@@ -505,16 +534,29 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
 
                               {/* Nested submenu for mobile */}
                               {subItem.hasSubmenu && activeMobileNestedSubmenu === subItem.label && subItem.submenu && (
-                                <div className="bg-gray-100 border-t border-gray-400 max-h-64 overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
+                                <div className="bg-gray-100 border-t border-gray-400 max-h-64 overflow-y-auto" style={{ 
+                                  WebkitOverflowScrolling: 'touch',
+                                  maxHeight: isMobilePortrait ? '150px' : '256px'
+                                }}>
                                   {subItem.submenu.map((nestedItem, nestedIdx) => {
                                     if (nestedItem.type === 'separator') {
-                                      return <div key={nestedIdx} className="h-0.5 bg-gray-500 mx-8 my-1" />;
+                                      return <div key={nestedIdx} className={`bg-gray-500 mx-8 my-1 ${
+                                        isMobilePortrait ? 'h-px' : 'h-0.5'
+                                      }`} />;
                                     }
                                     return (
                                       <div
                                         key={nestedIdx}
                                         className="flex items-center px-10 py-3 cursor-pointer text-base text-black hover:bg-blue-600 hover:text-white active:bg-blue-700 border-b border-gray-300"
-                                        style={{ touchAction: 'manipulation', minHeight: 40, fontSize: '14px' }}
+                                        style={{ 
+                                          touchAction: 'manipulation', 
+                                          minHeight: isMobilePortrait ? 32 : 40, 
+                                          fontSize: isMobilePortrait ? '12px' : '14px',
+                                          paddingLeft: isMobilePortrait ? '24px' : '40px',
+                                          paddingRight: isMobilePortrait ? '16px' : '40px',
+                                          paddingTop: isMobilePortrait ? '8px' : '12px',
+                                          paddingBottom: isMobilePortrait ? '8px' : '12px'
+                                        }}
                                         onClick={(e) => {
                                           e.preventDefault();
                                           e.stopPropagation();
@@ -523,8 +565,10 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
                                           setActiveSubmenu(null);
                                         }}
                                       >
-                                        <span className="w-8 flex items-center justify-center mr-3">
-                                          {nestedItem.icon && <IconImg src={nestedItem.icon} alt={nestedItem.label || ''} />}
+                                        <span className={`flex items-center justify-center mr-3 ${
+                                          isMobilePortrait ? 'w-5' : 'w-8'
+                                        }`}>
+                                          {nestedItem.icon && <IconImg src={nestedItem.icon} alt={nestedItem.label || ''} isMobilePortrait={isMobilePortrait} />}
                                         </span>
                                         <span className="flex-1">{nestedItem.label}</span>
                                       </div>

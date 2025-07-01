@@ -474,29 +474,58 @@ export const Desktop: React.FC = () => {
 
         {/* Display Properties Modal Dialog */}
         {isDisplayPropertiesOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100]">
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-4">
             <div 
-              className="bg-[#c0c0c0] border-2 border-gray-400 shadow-lg w-[500px] h-[400px]" 
+              className={`bg-[#c0c0c0] border-2 border-gray-400 shadow-lg ${
+                screenSize.isMobile 
+                  ? (screenSize.isLandscape 
+                    ? 'w-[90vw] max-w-[600px] h-[85vh] max-h-[500px]' 
+                    : 'w-[95vw] max-w-[350px] h-[90vh] max-h-[600px]'
+                  )
+                  : 'w-[500px] h-[400px]'
+              } flex flex-col overflow-hidden`} 
               style={{ 
                 borderStyle: 'outset',
-                fontFamily: '"MS Sans Serif", sans-serif'
+                fontFamily: '"MS Sans Serif", sans-serif',
+                minHeight: screenSize.isMobile && !screenSize.isLandscape ? '400px' : '350px',
+                maxHeight: screenSize.isMobile 
+                  ? (screenSize.isLandscape ? '85vh' : '90vh')
+                  : '90vh'
               }}
             >
               {/* Title Bar */}
-              <div className="bg-[#000080] text-white px-2 py-1 flex items-center justify-between text-xs">
+              <div className="bg-[#000080] text-white px-2 py-1 flex items-center justify-between text-xs flex-shrink-0">
                 <span className="font-bold">Display Properties</span>
                 <div className="flex items-center space-x-1">
                   <button 
-                    className="w-4 h-4 bg-[#c0c0c0] border border-gray-400 flex items-center justify-center text-black text-xs hover:bg-gray-200"
-                    style={{ borderStyle: 'outset' }}
+                    className={`bg-[#c0c0c0] border border-gray-400 flex items-center justify-center text-black hover:bg-gray-200 ${
+                      screenSize.isMobile 
+                        ? (screenSize.isLandscape ? 'w-3 h-3 text-[8px]' : 'w-4 h-3 text-[9px]')
+                        : 'w-4 h-4 text-xs'
+                    }`}
+                    style={{ 
+                      borderStyle: 'outset',
+                      fontSize: screenSize.isMobile 
+                        ? (screenSize.isLandscape ? '7px' : '8px')
+                        : '10px'
+                    }}
                     title="Help"
                     onClick={() => sounds.playClick()}
                   >
                     ?
                   </button>
                   <button
-                    className="w-4 h-4 bg-[#c0c0c0] border border-gray-400 flex items-center justify-center text-black text-xs hover:bg-gray-200"
-                    style={{ borderStyle: 'outset' }}
+                    className={`bg-[#c0c0c0] border border-gray-400 flex items-center justify-center text-black hover:bg-gray-200 font-bold ${
+                      screenSize.isMobile 
+                        ? (screenSize.isLandscape ? 'w-3 h-3 text-[8px]' : 'w-4 h-3 text-[9px]')
+                        : 'w-4 h-4 text-xs'
+                    }`}
+                    style={{ 
+                      borderStyle: 'outset',
+                      fontSize: screenSize.isMobile 
+                        ? (screenSize.isLandscape ? '7px' : '8px')
+                        : '10px'
+                    }}
                     onClick={() => {
                       sounds.playClick();
                       setIsDisplayPropertiesOpen(false);
@@ -508,8 +537,8 @@ export const Desktop: React.FC = () => {
                 </div>
               </div>
               
-              {/* Content */}
-              <div className="h-[calc(100%-24px)]">
+              {/* Content - Scrollable */}
+              <div className="flex-1 overflow-hidden">
                 <DisplayProperties
                   selectedBackground={selectedBackground}
                   onBackgroundChange={setSelectedBackground}

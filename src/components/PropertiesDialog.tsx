@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useSounds } from './SoundManager';
+import { useScreenSize } from '../hooks/use-mobile';
 
 interface PropertiesDialogProps {
   isOpen: boolean;
@@ -26,6 +27,7 @@ export const PropertiesDialog: React.FC<PropertiesDialogProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState('description');
   const sounds = useSounds();
+  const screenSize = useScreenSize();
 
   if (!isOpen) return null;
 
@@ -45,7 +47,7 @@ export const PropertiesDialog: React.FC<PropertiesDialogProps> = ({
         description: "Your gateway to exploring my professional identity! This is where you'll find my skills, experience, and the digital essence of who I am as a tech professional. Think of it as the BIOS of my career - all the essential information you need to understand my capabilities.",
         quote: "\"The computer was born to solve problems that did not exist before.\" - Bill Gates"
       },
-      'inbox': {
+      'my-documents': {
         description: "A curated collection of my professional projects, experiences, and digital artifacts. Like a well-organized filing cabinet, but way cooler and with more pixels! Each folder contains stories of innovation, problem-solving, and the occasional debugging marathon.",
         quote: "\"The best way to predict the future is to create it.\" - Peter Drucker"
       },
@@ -72,9 +74,15 @@ export const PropertiesDialog: React.FC<PropertiesDialogProps> = ({
   const { description, quote } = getIconDescription(iconData.id);
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div 
-        className="bg-[#c0c0c0] border-2 border-gray-400 w-96 shadow-lg"
+        className={`bg-[#c0c0c0] border-2 border-gray-400 shadow-lg ${
+          screenSize.isMobile 
+            ? (screenSize.isLandscape 
+              ? 'w-[85vw] max-w-[500px] max-h-[85vh]' 
+              : 'w-[92vw] max-w-[320px] max-h-[75vh]')
+            : 'w-96'
+        } overflow-y-auto`}
         style={{ 
           borderStyle: 'outset',
           fontFamily: '"MS Sans Serif", sans-serif'
@@ -93,16 +101,34 @@ export const PropertiesDialog: React.FC<PropertiesDialogProps> = ({
           </div>
           <div className="flex items-center space-x-1">
             <button 
-              className="w-4 h-4 bg-[#c0c0c0] border border-gray-400 flex items-center justify-center text-black text-xs hover:bg-gray-200"
-              style={{ borderStyle: 'outset' }}
+              className={`bg-[#c0c0c0] border border-gray-400 flex items-center justify-center text-black hover:bg-gray-200 ${
+                screenSize.isMobile 
+                  ? (screenSize.isLandscape ? 'w-3 h-3 text-[8px]' : 'w-4 h-3 text-[9px]')
+                  : 'w-4 h-4 text-xs'
+              }`}
+              style={{ 
+                borderStyle: 'outset',
+                fontSize: screenSize.isMobile 
+                  ? (screenSize.isLandscape ? '7px' : '8px')
+                  : '10px'
+              }}
               title="Help"
               onClick={() => sounds.playClick()}
             >
               ?
             </button>
             <button 
-              className="w-4 h-4 bg-[#c0c0c0] border border-gray-400 flex items-center justify-center text-black text-xs hover:bg-gray-200"
-              style={{ borderStyle: 'outset' }}
+              className={`bg-[#c0c0c0] border border-gray-400 flex items-center justify-center text-black hover:bg-gray-200 font-bold ${
+                screenSize.isMobile 
+                  ? (screenSize.isLandscape ? 'w-3 h-3 text-[8px]' : 'w-4 h-3 text-[9px]')
+                  : 'w-4 h-4 text-xs'
+              }`}
+              style={{ 
+                borderStyle: 'outset',
+                fontSize: screenSize.isMobile 
+                  ? (screenSize.isLandscape ? '7px' : '8px')
+                  : '10px'
+              }}
               onClick={handleClose}
               title="Close"
             >

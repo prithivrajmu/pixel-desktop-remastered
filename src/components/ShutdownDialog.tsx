@@ -102,8 +102,17 @@ export const ShutdownDialog: React.FC<ShutdownDialogProps> = ({
             <span className="text-white text-xs font-bold">Shut Down Windows</span>
           </div>
           <button
-            className="w-5 h-4 bg-[#c0c0c0] border border-[#808080] flex items-center justify-center hover:bg-[#e0e0e0] text-xs font-bold"
-            style={{ borderStyle: 'outset', fontSize: '10px' }}
+            className={`bg-[#c0c0c0] border border-[#808080] flex items-center justify-center hover:bg-[#e0e0e0] font-bold ${
+              screenSize.isMobile 
+                ? (screenSize.isLandscape ? 'w-3 h-3 text-[8px]' : 'w-4 h-3 text-[9px]')
+                : 'w-5 h-4 text-xs'
+            }`}
+            style={{ 
+              borderStyle: 'outset', 
+              fontSize: screenSize.isMobile 
+                ? (screenSize.isLandscape ? '7px' : '8px')
+                : '10px'
+            }}
             onClick={handleCancel}
           >
             ×
