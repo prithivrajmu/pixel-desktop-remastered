@@ -8,24 +8,8 @@ interface WelcomeProps {
 export const Welcome: React.FC<WelcomeProps> = ({ onClose }) => {
   const screenSize = useScreenSize();
   
-  const shouldShowLandscapeBanner = screenSize.isMobile && !screenSize.isLandscape;
-  
   return (
     <div className="bg-gray-300 h-full p-0 overflow-auto" style={{ fontFamily: '"MS Sans Serif", sans-serif' }}>
-      {/* Landscape Mode Suggestion Banner for Mobile Portrait Users */}
-      {shouldShowLandscapeBanner && (
-        <div className="bg-yellow-100 border-2 border-yellow-400 mx-2 mt-2 p-3 text-center" style={{ borderStyle: 'inset' }}>
-          <div className="flex items-center justify-center space-x-2 mb-2">
-            <span className="text-xl">📱➡️🖥️</span>
-            <strong className="text-sm">Tip!</strong>
-          </div>
-          <p className="text-xs leading-relaxed">
-            This website is optimized for <strong>landscape mode</strong>. 
-            For the best Windows 95 experience, please rotate your device or use a desktop computer.
-          </p>
-        </div>
-      )}
-      
       {/* Welcome Content */}
       <div className={`flex h-full ${screenSize.isMobile && !screenSize.isLandscape ? 'flex-col' : 'flex-row'}`}>
         {/* Left section with "Did you know..." */}
