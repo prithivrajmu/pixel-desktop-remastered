@@ -117,15 +117,15 @@ export const MyDocuments: React.FC = () => {
 
   const documentFiles: DocumentFile[] = [
     {
-      name: 'Resume.odf',
+      name: 'Resume',
       icon: '/icons/Mail text.ico',
-      type: 'OpenDocument Text',
+      type: 'pdf',
       onClick: downloadResume
     },
     {
-      name: 'Portfolio.ppt',
+      name: 'Portfolio',
       icon: '/icons/Constructor.ico',
-      type: 'PowerPoint Presentation',
+      type: 'website',
       onClick: () => setSelectedProject({ 
         name: 'Portfolio', 
         icon: '💻', 

@@ -335,11 +335,17 @@ export const Desktop: React.FC = () => {
             onFocus={() => focusWindow(windowData.id)}
             onMinimize={() => updateWindow(windowData.id, { isMinimized: true })}
             onMaximize={() => {
-              const isMaximized = windowData.size.width === window.innerWidth && windowData.size.height === window.innerHeight - 40;
+              const taskbarHeight = screenSize.isMobile ? 48 : 28;
+              const maxWidth = window.innerWidth;
+              const maxHeight = window.innerHeight - taskbarHeight;
+              
+              // More accurate check for maximized state with a small tolerance
+              const isMaximized = Math.abs(windowData.size.width - maxWidth) < 10 && 
+                               Math.abs(windowData.size.height - maxHeight) < 10 &&
+                               windowData.position.x <= 5 && windowData.position.y <= 5;
+              
               if (!isMaximized) {
                 // Store previous size and position, then maximize
-                const maxWidth = window.innerWidth;
-                const maxHeight = window.innerHeight - 40; // Account for taskbar
                 updateWindow(windowData.id, {
                   prevSize: windowData.size,
                   prevPosition: windowData.position,
@@ -347,10 +353,12 @@ export const Desktop: React.FC = () => {
                   position: { x: 0, y: 0 }
                 });
               } else {
-                // Restore previous size and position if available, else use default
+                // Restore previous size and position if available, else use responsive default
+                const defaultSize = getOptimalWindowSize();
+                const defaultPosition = centerWindow(defaultSize);
                 updateWindow(windowData.id, {
-                  size: windowData.prevSize || { width: 800, height: 600 },
-                  position: windowData.prevPosition || centerWindow({ width: 800, height: 600 })
+                  size: windowData.prevSize || defaultSize,
+                  position: windowData.prevPosition || defaultPosition
                 });
               }
             }}

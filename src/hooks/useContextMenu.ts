@@ -1,5 +1,6 @@
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
+import { useScreenSize } from './use-mobile';
 
 interface ContextMenuState {
   isVisible: boolean;
@@ -9,6 +10,7 @@ interface ContextMenuState {
 }
 
 export const useContextMenu = () => {
+  const screenSize = useScreenSize();
   const [contextMenu, setContextMenu] = useState<ContextMenuState>({
     isVisible: false,
     position: { x: 0, y: 0 },
@@ -17,72 +19,95 @@ export const useContextMenu = () => {
 
   const [selectedIcons, setSelectedIcons] = useState<Set<string>>(new Set());
 
-  const handleDesktopRightClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    // Ensure we close any existing context menu first
+  // Enhanced context menu handler that works with both mouse and touch
+  const showContextMenu = useCallback((
+    event: React.MouseEvent | React.TouchEvent, 
+    type: 'desktop' | 'icon', 
+    iconId?: string
+  ) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const clientX = 'touches' in event ? event.touches[0]?.clientX || event.changedTouches[0]?.clientX : event.clientX;
+    const clientY = 'touches' in event ? event.touches[0]?.clientY || event.changedTouches[0]?.clientY : event.clientY;
+
+    // Adjust position for mobile to ensure menu fits on screen
+    let x = clientX;
+    let y = clientY;
+
+    const menuWidth = screenSize.isMobile ? 180 : 150;
+    const menuHeight = screenSize.isMobile ? 200 : 150;
+
+    if (screenSize.isMobile || screenSize.isTablet) {
+      // Ensure menu doesn't go off screen
+      x = Math.min(clientX, window.innerWidth - menuWidth - 10);
+      y = Math.min(clientY, window.innerHeight - menuHeight - 10);
+      x = Math.max(10, x);
+      y = Math.max(10, y);
+    }
+
+    // Close any existing menu first
     setContextMenu({
       isVisible: false,
       position: { x: 0, y: 0 },
       type: 'desktop'
     });
-    
-    // Then open the new one with a small delay to ensure proper rendering
-    setTimeout(() => {
-      setContextMenu({
-        isVisible: true,
-        position: { x: e.clientX, y: e.clientY },
-        type: 'desktop'
-      });
-    }, 10);
-    
-    setSelectedIcons(new Set());
-  };
 
-  const handleIconRightClick = (e: React.MouseEvent, iconId: string) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    // Ensure we close any existing context menu first
-    setContextMenu({
-      isVisible: false,
-      position: { x: 0, y: 0 },
-      type: 'icon'
-    });
-    
-    // Then open the new one with a small delay to ensure proper rendering
+    // Then open the new one
     setTimeout(() => {
       setContextMenu({
         isVisible: true,
-        position: { x: e.clientX, y: e.clientY },
-        type: 'icon',
+        position: { x, y },
+        type,
         targetId: iconId
       });
     }, 10);
-    
-    setSelectedIcons(new Set([iconId]));
-  };
 
-  const handleIconClick = (iconId: string) => {
-    setSelectedIcons(new Set([iconId]));
-    setContextMenu({ ...contextMenu, isVisible: false });
-  };
+    if (type === 'icon' && iconId) {
+      setSelectedIcons(new Set([iconId]));
+    } else {
+      setSelectedIcons(new Set());
+    }
+  }, [screenSize.isMobile, screenSize.isTablet]);
 
-  const handleDesktopClick = () => {
+  const handleDesktopRightClick = useCallback((e: React.MouseEvent) => {
+    showContextMenu(e, 'desktop');
+  }, [showContextMenu]);
+
+  const handleIconRightClick = useCallback((e: React.MouseEvent, iconId: string) => {
+    showContextMenu(e, 'icon', iconId);
+  }, [showContextMenu]);
+
+  // Touch long press handlers
+  const handleDesktopLongPress = useCallback((e: React.TouchEvent) => {
+    showContextMenu(e, 'desktop');
+  }, [showContextMenu]);
+
+  const handleIconLongPress = useCallback((e: React.TouchEvent, iconId: string) => {
+    showContextMenu(e, 'icon', iconId);
+  }, [showContextMenu]);
+
+  const handleIconClick = useCallback((iconId: string) => {
+    setSelectedIcons(new Set([iconId]));
+    setContextMenu(prev => ({ ...prev, isVisible: false }));
+  }, []);
+
+  const handleDesktopClick = useCallback(() => {
     setSelectedIcons(new Set());
-    setContextMenu({ ...contextMenu, isVisible: false });
-  };
+    setContextMenu(prev => ({ ...prev, isVisible: false }));
+  }, []);
 
-  const closeContextMenu = () => {
-    setContextMenu({ ...contextMenu, isVisible: false });
-  };
+  const closeContextMenu = useCallback(() => {
+    setContextMenu(prev => ({ ...prev, isVisible: false }));
+  }, []);
 
   return {
     contextMenu,
     selectedIcons,
     handleDesktopRightClick,
     handleIconRightClick,
+    handleDesktopLongPress,
+    handleIconLongPress,
     handleIconClick,
     handleDesktopClick,
     closeContextMenu
