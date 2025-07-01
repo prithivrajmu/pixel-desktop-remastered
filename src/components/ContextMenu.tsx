@@ -35,8 +35,9 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
   if (!isVisible) return null;
 
   // Calculate adjusted position to keep menu within screen bounds
-  const menuWidth = screenSize.isMobile ? 200 : 144;
-  const menuHeight = items.length * (screenSize.isMobile ? 48 : 24) + 8; // Approximate height
+  const menuWidth = screenSize.isMobile ? 160 : 144;
+  const itemHeight = screenSize.isMobile ? 36 : 24;
+  const menuHeight = items.length * itemHeight + 8; // Approximate height
   
   let adjustedX = position.x;
   let adjustedY = position.y;
@@ -87,7 +88,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
 
   const renderSubmenu = (submenuItems: any[], parentLabel: string) => {
     // Calculate submenu position
-    const submenuWidth = screenSize.isMobile ? 160 : 144;
+    const submenuWidth = screenSize.isMobile ? 140 : 144;
     let submenuLeft = '100%';
     
     // If submenu would go off-screen, show it on the left instead
@@ -101,7 +102,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
         style={{ 
           left: submenuLeft,
           borderStyle: 'outset',
-          fontSize: screenSize.isMobile ? '14px' : '11px',
+          fontSize: screenSize.isMobile ? '12px' : '11px',
           fontFamily: '"MS Sans Serif", sans-serif',
           width: submenuWidth
         }}
@@ -120,9 +121,9 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
                   : 'hover:bg-blue-600 hover:text-white'
               }`}
               style={{
-                minHeight: screenSize.isMobile ? '44px' : '24px',
-                paddingTop: screenSize.isMobile ? '12px' : '4px',
-                paddingBottom: screenSize.isMobile ? '12px' : '4px',
+                minHeight: itemHeight - 4, // Slightly smaller than main menu items
+                paddingTop: screenSize.isMobile ? '8px' : '4px',
+                paddingBottom: screenSize.isMobile ? '8px' : '4px',
                 touchAction: 'manipulation'
               }}
               onClick={() => {
@@ -152,7 +153,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
         left: adjustedX, 
         top: adjustedY,
         borderStyle: 'outset',
-        fontSize: screenSize.isMobile ? '14px' : '11px',
+        fontSize: screenSize.isMobile ? '12px' : '11px',
         fontFamily: '"MS Sans Serif", sans-serif',
         minWidth: menuWidth,
         maxWidth: screenSize.isMobile ? '90vw' : 'auto'
@@ -173,11 +174,11 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
                 : 'hover:bg-blue-600 hover:text-white'
             } ${screenSize.isTouchDevice ? 'active:bg-blue-700' : ''}`}
             style={{
-              minHeight: screenSize.isMobile ? '48px' : '24px',
-              paddingTop: screenSize.isMobile ? '12px' : '4px',
-              paddingBottom: screenSize.isMobile ? '12px' : '4px',
+              minHeight: itemHeight,
+              paddingTop: screenSize.isMobile ? '8px' : '4px',
+              paddingBottom: screenSize.isMobile ? '8px' : '4px',
               touchAction: 'manipulation',
-              fontSize: screenSize.isMobile ? '14px' : '11px'
+              fontSize: screenSize.isMobile ? '12px' : '11px'
             }}
             onMouseEnter={() => handleItemHover(item.label || '', item.hasSubmenu)}
             onClick={() => handleItemClick(item)}

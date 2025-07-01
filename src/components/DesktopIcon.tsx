@@ -68,11 +68,72 @@ export const DesktopIcon: React.FC<DesktopIconProps> = ({
     setMousePosition({ x: e.clientX, y: e.clientY });
   };
 
-  // Responsive sizing
-  const iconSize = screenSize.isMobile ? 'w-12 h-12' : 'w-8 h-8';
-  const iconTextSize = screenSize.isMobile ? 'text-4xl' : 'text-2xl';
-  const containerWidth = screenSize.isMobile ? '80px' : '64px';
-  const textSize = screenSize.isMobile ? 'text-sm' : 'text-xs';
+  // Comprehensive responsive sizing based on screen dimensions
+  const getResponsiveSizes = () => {
+    const { width, height, isMobile, isTablet, isLandscape } = screenSize;
+    
+    // Base calculations
+    const screenArea = width * height;
+    const isSmallScreen = screenArea < 600000; // Very small screens
+    const isMediumScreen = screenArea < 1200000; // Medium screens
+    
+    // Container size calculation
+    let containerSize;
+    if (isMobile) {
+      containerSize = isSmallScreen ? 50 : 60;
+    } else if (isTablet) {
+      containerSize = isLandscape ? 68 : 76;
+    } else {
+      containerSize = isSmallScreen ? 56 : isMediumScreen ? 64 : 72;
+    }
+    
+    // Icon size calculation
+    let iconClass, iconTextClass;
+    if (isMobile) {
+      iconClass = isSmallScreen ? 'w-7 h-7' : 'w-9 h-9';
+      iconTextClass = isSmallScreen ? 'text-2xl' : 'text-3xl';
+    } else if (isTablet) {
+      iconClass = isLandscape ? 'w-9 h-9' : 'w-10 h-10';
+      iconTextClass = isLandscape ? 'text-3xl' : 'text-3xl';
+    } else {
+      iconClass = isSmallScreen ? 'w-7 h-7' : isMediumScreen ? 'w-8 h-8' : 'w-10 h-10';
+      iconTextClass = isSmallScreen ? 'text-2xl' : isMediumScreen ? 'text-2xl' : 'text-3xl';
+    }
+    
+    // Text size calculation
+    let textClass;
+    if (isMobile) {
+      textClass = isSmallScreen ? 'text-xs' : 'text-xs';
+    } else if (isTablet) {
+      textClass = 'text-sm';
+    } else {
+      textClass = isSmallScreen ? 'text-xs' : 'text-sm';
+    }
+    
+    // Text height calculation
+    let textHeight;
+    if (isMobile) {
+      textHeight = isSmallScreen ? '16px' : '18px';
+    } else if (isTablet) {
+      textHeight = '20px';
+    } else {
+      textHeight = isSmallScreen ? '16px' : '18px';
+    }
+    
+    return {
+      containerSize,
+      iconClass,
+      iconTextClass,
+      textClass,
+      textHeight
+    };
+  };
+
+  const sizes = getResponsiveSizes();
+  const iconContainerSize = sizes.containerSize;
+  const iconSize = sizes.iconClass;
+  const iconTextSize = sizes.iconTextClass;
+  const textSize = sizes.textClass;
 
   return (
     <div
@@ -83,7 +144,7 @@ export const DesktopIcon: React.FC<DesktopIconProps> = ({
       style={{ 
         left: position.x, 
         top: position.y, 
-        width: containerWidth,
+        width: `${iconContainerSize}px`,
         touchAction: 'manipulation',
         transition: 'opacity 0.2s, transform 0.2s'
       }}
@@ -104,8 +165,6 @@ export const DesktopIcon: React.FC<DesktopIconProps> = ({
           isSelected ? 'bg-blue-600' : ''
         } ${longPressHandlers.isLongPressing ? 'bg-blue-300 border-2 border-blue-500' : ''}`}
         style={{
-          minHeight: screenSize.isMobile ? '48px' : '32px',
-          minWidth: screenSize.isMobile ? '48px' : '32px',
           borderRadius: longPressHandlers.isLongPressing ? '6px' : '0px',
           transition: 'all 0.2s ease',
           transform: longPressHandlers.isLongPressing ? 'scale(1.05)' : 'scale(1)'
@@ -124,8 +183,8 @@ export const DesktopIcon: React.FC<DesktopIconProps> = ({
         style={{ 
           textShadow: (isSelected || longPressHandlers.isLongPressing) ? 'none' : '1px 1px 1px rgba(0,0,0,0.8)',
           wordWrap: 'normal',
-          maxWidth: containerWidth,
-          minHeight: screenSize.isMobile ? '24px' : '16px',
+          maxWidth: `${iconContainerSize}px`,
+          minHeight: sizes.textHeight,
           borderRadius: longPressHandlers.isLongPressing ? '4px' : '0px',
           transition: 'all 0.2s ease'
         }}

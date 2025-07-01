@@ -21,7 +21,7 @@ import { useGlobalDialog } from '../hooks/useGlobalDialog';
 import { useSmartPreloader } from '../hooks/useComponentPreloader';
 import { usePerformanceMonitor } from '../hooks/usePerformanceMonitor';
 import { useScreenSize } from '../hooks/use-mobile';
-import { desktopIcons, welcomeWindow } from '../config/desktopIcons';
+import { desktopIcons, getDesktopIcons, welcomeWindow } from '../config/desktopIcons';
 
 export interface WindowData {
   id: string;
@@ -220,7 +220,7 @@ export const Desktop: React.FC = () => {
   };
 
   const handleIconProperties = () => {
-    const icon = desktopIcons.find(i => i.id === contextMenu.targetId);
+    const icon = getDesktopIcons(screenSize).find(i => i.id === contextMenu.targetId);
     if (icon) {
       setSelectedIconForProperties(icon);
       setIsPropertiesDialogOpen(true);
@@ -245,7 +245,7 @@ export const Desktop: React.FC = () => {
 
   const iconContextItems = [
     { label: 'Open', onClick: () => {
-      const icon = desktopIcons.find(i => i.id === contextMenu.targetId);
+      const icon = getDesktopIcons(screenSize).find(i => i.id === contextMenu.targetId);
       if (icon) handleOpenWindow(icon.windowConfig);
     }},
     { separator: true },
@@ -339,26 +339,44 @@ export const Desktop: React.FC = () => {
           className="z-0" 
         />
 
-        {desktopIcons.map((icon, idx) => (
-          <DesktopIcon
-            key={icon.id}
-            name={icon.name}
-            icon={
-              <IconManager 
-                iconId={icon.id} 
-                fallback={icon.icon} 
-                size={32}
-              />
+        {getDesktopIcons(screenSize).map((icon, idx) => {
+          // Calculate responsive icon size
+          const getIconSize = () => {
+            const { width, height, isMobile, isTablet, isLandscape } = screenSize;
+            const screenArea = width * height;
+            const isSmallScreen = screenArea < 600000;
+            const isMediumScreen = screenArea < 1200000;
+            
+            if (isMobile) {
+              return isSmallScreen ? 24 : 30;
+            } else if (isTablet) {
+              return isLandscape ? 32 : 36;
+            } else {
+              return isSmallScreen ? 28 : isMediumScreen ? 32 : 40;
             }
-            position={getIconPosition(idx)}
-            isSelected={selectedIcons.has(icon.id)}
-            onDoubleClick={() => handleOpenWindow(icon.windowConfig)}
-            onClick={() => handleIconClick(icon.id)}
-            onRightClick={(e) => handleIconRightClick(e, icon.id)}
-            onLongPress={(e) => handleIconLongPress(e, icon.id)}
-            tooltip={icon.tooltip}
-          />
-        ))}
+          };
+          
+          return (
+            <DesktopIcon
+              key={icon.id}
+              name={icon.name}
+              icon={
+                <IconManager 
+                  iconId={icon.id} 
+                  fallback={icon.icon} 
+                  size={getIconSize()}
+                />
+              }
+              position={icon.position}
+              isSelected={selectedIcons.has(icon.id)}
+              onDoubleClick={() => handleOpenWindow(icon.windowConfig)}
+              onClick={() => handleIconClick(icon.id)}
+              onRightClick={(e) => handleIconRightClick(e, icon.id)}
+              onLongPress={(e) => handleIconLongPress(e, icon.id)}
+              tooltip={icon.tooltip}
+            />
+          );
+        })}
 
         {windows.map(windowData => (
           <Window
@@ -484,7 +502,7 @@ export const Desktop: React.FC = () => {
                     ? 'w-[90vw] max-w-[600px] h-[85vh] max-h-[500px]' 
                     : 'w-[95vw] max-w-[350px] h-[90vh] max-h-[600px]'
                   )
-                  : 'w-[500px] h-[400px]'
+                  : 'w-[700px] h-[600px] max-w-[85vw] max-h-[85vh]'
               } flex flex-col overflow-hidden`} 
               style={{ 
                 borderStyle: 'outset',

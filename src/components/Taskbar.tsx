@@ -23,8 +23,9 @@ export const Taskbar: React.FC<TaskbarProps> = ({
   const sounds = useSounds();
   const screenSize = useScreenSize();
   
-  const taskbarHeight = screenSize.isMobile ? 48 : 28;
-  const startButtonMinWidth = screenSize.isMobile ? 80 : screenSize.isTablet ? 64 : 60;
+  const taskbarHeight = screenSize.isMobile ? 48 : screenSize.isTablet ? 36 : 28;
+  const startButtonMinWidth = screenSize.isMobile ? 80 : (screenSize.isTablet && !screenSize.isLandscape) ? 55 : 60;
+  const startButtonMaxWidth = screenSize.isMobile ? 90 : (screenSize.isTablet && !screenSize.isLandscape) ? 75 : 90;
   const windowButtonMinWidth = screenSize.isMobile ? 100 : 80;
   const windowButtonMaxWidth = screenSize.isMobile ? 200 : 150;
   
@@ -43,15 +44,15 @@ export const Taskbar: React.FC<TaskbarProps> = ({
     >
       {/* Start Button */}
       <button
-        className={`px-2 mx-1 bg-gray-300 border border-gray-400 flex items-center space-x-1 font-bold text-xs hover:bg-gray-200 ${
+        className={`${(screenSize.isTablet && !screenSize.isLandscape) ? 'px-1 mx-1' : 'px-2 mx-1'} bg-gray-300 border border-gray-400 flex items-center space-x-1 font-bold text-xs hover:bg-gray-200 ${
           isStartMenuOpen ? 'pressed' : ''
         } ${screenSize.isTouchDevice ? 'active:bg-gray-400' : ''}`}
         style={{ 
           borderStyle: isStartMenuOpen ? 'inset' : 'outset',
-          fontSize: screenSize.isMobile ? '12px' : screenSize.isTablet ? '11px' : '11px',
+          fontSize: screenSize.isMobile ? '12px' : screenSize.isTablet ? '14px' : '11px',
           height: `${taskbarHeight - 4}px`,
           minWidth: `${startButtonMinWidth}px`,
-          maxWidth: '90px',
+          maxWidth: `${startButtonMaxWidth}px`,
           flexShrink: 0,
           touchAction: 'manipulation'
         }}

@@ -72,45 +72,43 @@ export const PropertiesDialog: React.FC<PropertiesDialogProps> = ({
   };
 
   const { description, quote } = getIconDescription(iconData.id);
+  const isMobileLandscape = screenSize.isMobile && screenSize.isLandscape;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div 
         className={`bg-[#c0c0c0] border-2 border-gray-400 shadow-lg ${
-          screenSize.isMobile 
-            ? (screenSize.isLandscape 
-              ? 'w-[85vw] max-w-[500px] max-h-[85vh]' 
-              : 'w-[92vw] max-w-[320px] max-h-[75vh]')
-            : 'w-96'
-        } overflow-y-auto`}
+          isMobileLandscape
+            ? 'w-[90vw] max-w-[550px] h-[90vh] max-h-[380px]'
+            : screenSize.isMobile
+              ? 'w-[88vw] max-w-[300px] max-h-[70vh]'
+              : 'w-96'
+        } flex flex-col`}
         style={{ 
           borderStyle: 'outset',
           fontFamily: '"MS Sans Serif", sans-serif'
         }}
       >
         {/* Title Bar */}
-        <div className="bg-[#000080] text-white px-2 py-1 flex items-center justify-between text-xs">
+        <div className="bg-[#000080] text-white px-2 py-0.5 flex items-center justify-between flex-shrink-0" style={{ fontSize: screenSize.isMobile ? '11px' : '12px' }}>
           <div className="flex items-center space-x-1">
             <img 
               src={iconData.icon} 
               alt="" 
-              className="w-4 h-4"
+              className={screenSize.isMobile ? "w-3 h-3" : "w-4 h-4"}
               style={{ imageRendering: 'pixelated' }}
             />
-            <span>{iconData.name} Properties</span>
+            <span className="font-normal">{iconData.name} Properties</span>
           </div>
           <div className="flex items-center space-x-1">
             <button 
-              className={`bg-[#c0c0c0] border border-gray-400 flex items-center justify-center text-black hover:bg-gray-200 ${
-                screenSize.isMobile 
-                  ? (screenSize.isLandscape ? 'w-3 h-3 text-[8px]' : 'w-4 h-3 text-[9px]')
-                  : 'w-4 h-4 text-xs'
+              className={`bg-[#c0c0c0] border border-gray-400 flex items-center justify-center text-black hover:bg-gray-200 active:bg-gray-300 ${
+                screenSize.isMobile ? 'w-3 h-3' : 'w-4 h-4'
               }`}
               style={{ 
                 borderStyle: 'outset',
-                fontSize: screenSize.isMobile 
-                  ? (screenSize.isLandscape ? '7px' : '8px')
-                  : '10px'
+                fontSize: screenSize.isMobile ? '8px' : '9px',
+                lineHeight: '1'
               }}
               title="Help"
               onClick={() => sounds.playClick()}
@@ -118,16 +116,13 @@ export const PropertiesDialog: React.FC<PropertiesDialogProps> = ({
               ?
             </button>
             <button 
-              className={`bg-[#c0c0c0] border border-gray-400 flex items-center justify-center text-black hover:bg-gray-200 font-bold ${
-                screenSize.isMobile 
-                  ? (screenSize.isLandscape ? 'w-3 h-3 text-[8px]' : 'w-4 h-3 text-[9px]')
-                  : 'w-4 h-4 text-xs'
+              className={`bg-[#c0c0c0] border border-gray-400 flex items-center justify-center text-black hover:bg-gray-200 active:bg-gray-300 font-bold ${
+                screenSize.isMobile ? 'w-3 h-3' : 'w-4 h-4'
               }`}
               style={{ 
                 borderStyle: 'outset',
-                fontSize: screenSize.isMobile 
-                  ? (screenSize.isLandscape ? '7px' : '8px')
-                  : '10px'
+                fontSize: screenSize.isMobile ? '9px' : '10px',
+                lineHeight: '1'
               }}
               onClick={handleClose}
               title="Close"
@@ -138,17 +133,18 @@ export const PropertiesDialog: React.FC<PropertiesDialogProps> = ({
         </div>
 
         {/* Tab Navigation */}
-        <div className="bg-[#c0c0c0] px-2 pt-2">
+        <div className="bg-[#c0c0c0] px-2 pt-2 flex-shrink-0">
           <div className="flex">
             <button
-              className={`px-4 py-1 text-xs border-2 ${
+              className={`${screenSize.isMobile ? 'px-3 py-1' : 'px-4 py-1'} border-2 ${
                 activeTab === 'description' 
                   ? 'bg-[#c0c0c0] border-gray-400 border-b-[#c0c0c0] -mb-px' 
                   : 'bg-gray-300 border-gray-500'
               }`}
               style={{ 
                 borderStyle: activeTab === 'description' ? 'outset' : 'outset',
-                borderBottomStyle: activeTab === 'description' ? 'none' : 'outset'
+                borderBottomStyle: activeTab === 'description' ? 'none' : 'outset',
+                fontSize: screenSize.isMobile ? '11px' : '12px'
               }}
               onClick={() => handleTabClick('description')}
             >
@@ -157,92 +153,114 @@ export const PropertiesDialog: React.FC<PropertiesDialogProps> = ({
           </div>
         </div>
 
-        {/* Tab Content */}
-        <div className="bg-[#c0c0c0] p-4 border-t-2 border-gray-400" style={{ borderTopStyle: 'inset' }}>
-          {activeTab === 'description' && (
-            <div className="space-y-4">
-              {/* Icon and Basic Info */}
-              <div className="flex items-start space-x-3">
-                <img 
-                  src={iconData.icon} 
-                  alt={iconData.name}
-                  className="w-8 h-8"
-                  style={{ imageRendering: 'pixelated' }}
-                />
-                <div className="flex-1">
-                  <div className="text-sm font-bold mb-1">{iconData.name}</div>
-                  <div className="text-xs text-gray-600">{iconData.tooltip}</div>
-                </div>
-              </div>
-
-              {/* Separator */}
-              <div className="border-t border-gray-400" style={{ borderTopStyle: 'inset' }}></div>
-
-              {/* Description */}
-              <div>
-                <div className="text-xs font-bold mb-2">Description:</div>
-                <div className="text-xs leading-relaxed mb-3 p-2 bg-white border border-gray-400" style={{ borderStyle: 'inset' }}>
-                  {description}
-                </div>
-              </div>
-
-              {/* Quote */}
-              <div>
-                <div className="text-xs font-bold mb-2">Inspirational Quote:</div>
-                <div className="text-xs italic text-gray-700 p-2 bg-gray-100 border border-gray-400" style={{ borderStyle: 'inset' }}>
-                  {quote}
-                </div>
-              </div>
-
-              {/* Properties */}
-              <div>
-                <div className="text-xs font-bold mb-2">Properties:</div>
-                <div className="space-y-1 text-xs">
-                  <div className="flex">
-                    <span className="w-16 text-gray-600">Type:</span>
-                    <span>Desktop Icon</span>
+        {/* Tab Content - Scrollable */}
+        <div className="bg-[#c0c0c0] border-t-2 border-gray-400 flex-1 overflow-y-auto" style={{ borderTopStyle: 'inset' }}>
+          <div className={`h-full ${screenSize.isMobile ? 'p-3' : 'p-4'}`}>
+            {activeTab === 'description' && (
+              <div className={`h-full flex ${isMobileLandscape ? 'flex-row space-x-3' : 'flex-col space-y-3'}`}>
+                {/* Left Column (or full width on portrait) */}
+                <div className={`${isMobileLandscape ? 'w-1/2' : 'w-full'} flex flex-col space-y-3`}>
+                  {/* Icon and Basic Info */}
+                  <div className="flex items-start space-x-3">
+                    <img 
+                      src={iconData.icon} 
+                      alt={iconData.name}
+                      className={screenSize.isMobile ? "w-7 h-7" : "w-8 h-8"}
+                      style={{ imageRendering: 'pixelated' }}
+                    />
+                    <div className="flex-1">
+                      <div className="font-bold mb-1" style={{ fontSize: screenSize.isMobile ? '12px' : '13px' }}>{iconData.name}</div>
+                      <div className="text-gray-600" style={{ fontSize: screenSize.isMobile ? '10px' : '11px' }}>{iconData.tooltip}</div>
+                    </div>
                   </div>
-                  <div className="flex">
-                    <span className="w-16 text-gray-600">Location:</span>
-                    <span>Desktop</span>
-                  </div>
-                  <div className="flex">
-                    <span className="w-16 text-gray-600">Size:</span>
-                    <span>32x32 pixels</span>
-                  </div>
-                  <div className="flex">
-                    <span className="w-16 text-gray-600">Created:</span>
-                    <span>Windows 95 Era</span>
+                  
+                  {isMobileLandscape && <div className="border-t border-gray-400" style={{ borderTopStyle: 'inset' }}></div>}
+
+                  {/* Description */}
+                  <div className={isMobileLandscape ? 'flex-1 flex flex-col' : ''}>
+                    <div className="font-bold mb-2" style={{ fontSize: screenSize.isMobile ? '10px' : '11px' }}>Description:</div>
+                    <div className={`${isMobileLandscape ? 'flex-1 overflow-y-auto' : ''} leading-relaxed bg-white border border-gray-400 p-2`} style={{ borderStyle: 'inset', fontSize: screenSize.isMobile ? '10px' : '11px' }}>
+                      {description}
+                    </div>
                   </div>
                 </div>
+                
+                {/* Separator for portrait mode */}
+                {!isMobileLandscape && <div className="border-t border-gray-400" style={{ borderTopStyle: 'inset' }}></div>}
+
+                {/* Right Column (or full width on portrait) */}
+                <div className={`${isMobileLandscape ? 'w-1/2' : 'w-full'} flex flex-col space-y-3`}>
+                  {/* Quote */}
+                  <div className={isMobileLandscape ? 'flex-1 flex flex-col' : ''}>
+                    <div className="font-bold mb-2" style={{ fontSize: screenSize.isMobile ? '10px' : '11px' }}>Inspirational Quote:</div>
+                    <div className={`${isMobileLandscape ? 'flex-1 overflow-y-auto' : ''} italic text-gray-700 bg-gray-100 border border-gray-400 p-2`} style={{ borderStyle: 'inset', fontSize: screenSize.isMobile ? '10px' : '11px' }}>
+                      {quote}
+                    </div>
+                  </div>
+                  
+                  {isMobileLandscape && <div className="border-t border-gray-400" style={{ borderTopStyle: 'inset' }}></div>}
+
+                  {/* Properties */}
+                  <div>
+                    <div className="font-bold mb-2" style={{ fontSize: screenSize.isMobile ? '10px' : '11px' }}>Properties:</div>
+                    <div className="space-y-1" style={{ fontSize: screenSize.isMobile ? '10px' : '11px' }}>
+                      <div className="flex">
+                        <span className={`${screenSize.isMobile ? 'w-14' : 'w-16'} text-gray-600`}>Type:</span>
+                        <span>Desktop Icon</span>
+                      </div>
+                      <div className="flex">
+                        <span className={`${screenSize.isMobile ? 'w-14' : 'w-16'} text-gray-600`}>Location:</span>
+                        <span>Desktop</span>
+                      </div>
+                      <div className="flex">
+                        <span className={`${screenSize.isMobile ? 'w-14' : 'w-16'} text-gray-600`}>Size:</span>
+                        <span>32x32 pixels</span>
+                      </div>
+                      <div className="flex">
+                        <span className={`${screenSize.isMobile ? 'w-14' : 'w-16'} text-gray-600`}>Created:</span>
+                        <span>Windows 95 Era</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="bg-[#c0c0c0] p-3 flex justify-end space-x-2">
+        <div className={`bg-[#c0c0c0] ${screenSize.isMobile ? 'p-2' : 'p-3'} flex justify-end space-x-2 flex-shrink-0`}>
           <button 
-            className="px-4 py-1 bg-[#c0c0c0] border-2 border-gray-400 text-xs hover:bg-gray-200"
+            className={`${screenSize.isMobile ? 'px-3 py-1' : 'px-4 py-1'} bg-[#c0c0c0] border-2 border-gray-400 hover:bg-gray-200 active:bg-gray-300`}
             style={{ 
               borderStyle: 'outset',
               borderColor: '#000000 #c0c0c0 #c0c0c0 #000000',
-              borderWidth: '2px'
+              borderWidth: '2px',
+              minHeight: screenSize.isMobile ? '28px' : '32px',
+              fontSize: screenSize.isMobile ? '11px' : '12px'
             }}
             onClick={handleClose}
           >
             <u>O</u>K
           </button>
           <button 
-            className="px-4 py-1 bg-[#c0c0c0] border-2 border-gray-400 text-xs hover:bg-gray-200"
-            style={{ borderStyle: 'outset' }}
+            className={`${screenSize.isMobile ? 'px-3 py-1' : 'px-4 py-1'} bg-[#c0c0c0] border-2 border-gray-400 hover:bg-gray-200 active:bg-gray-300`}
+            style={{ 
+              borderStyle: 'outset',
+              minHeight: screenSize.isMobile ? '28px' : '32px',
+              fontSize: screenSize.isMobile ? '11px' : '12px'
+            }}
             onClick={handleClose}
           >
             <u>C</u>ancel
           </button>
           <button 
-            className="px-4 py-1 bg-gray-300 border-2 border-gray-500 text-xs text-gray-500 cursor-not-allowed"
-            style={{ borderStyle: 'inset' }}
+            className={`${screenSize.isMobile ? 'px-3 py-1' : 'px-4 py-1'} bg-gray-300 border-2 border-gray-500 text-gray-500 cursor-not-allowed`}
+            style={{ 
+              borderStyle: 'inset',
+              minHeight: screenSize.isMobile ? '28px' : '32px',
+              fontSize: screenSize.isMobile ? '11px' : '12px'
+            }}
             disabled
           >
             <u>A</u>pply

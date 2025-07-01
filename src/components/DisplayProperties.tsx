@@ -30,6 +30,8 @@ export const DisplayProperties: React.FC<DisplayPropertiesProps> = ({
   // Helper flags for responsive layouts
   const isMobilePortrait = screenSize.isMobile && !screenSize.isLandscape;
   const isMobileLandscape = screenSize.isMobile && screenSize.isLandscape;
+  const isLargeScreen = window.innerWidth >= 1024; // lg breakpoint
+  const isExtraLargeScreen = window.innerWidth >= 1280; // xl breakpoint
 
   const backgrounds = getAvailableBackgrounds();
   const videoOptions = ['(None)', ...Object.values(videoAssets.backgrounds).map(v => v.name)];
@@ -181,9 +183,11 @@ export const DisplayProperties: React.FC<DisplayPropertiesProps> = ({
             style={{
               borderStyle: 'outset',
               borderBottomStyle: activeTab === tab ? 'none' : 'outset',
-              fontSize: isMobilePortrait ? '9px' : screenSize.isMobile ? '10px' : '11px',
-              minWidth: screenSize.isMobile ? 'auto' : '60px',
-              minHeight: screenSize.isTouchDevice ? '32px' : 'auto'
+              fontSize: isMobilePortrait ? '9px' : 
+                        screenSize.isMobile ? '10px' : 
+                        isLargeScreen ? '13px' : '11px',
+              minWidth: screenSize.isMobile ? 'auto' : isLargeScreen ? '80px' : '60px',
+              minHeight: screenSize.isTouchDevice ? '32px' : isLargeScreen ? '36px' : 'auto'
             }}
             onClick={() => handleTabClick(tab)}
           >
@@ -193,19 +197,23 @@ export const DisplayProperties: React.FC<DisplayPropertiesProps> = ({
       </div>
 
       {/* Tab Content Area - Scrollable */}
-      <div className="flex-1 bg-[#c0c0c0] border-t-2 border-gray-400 p-2 overflow-y-auto" style={{ borderTopStyle: 'inset' }}>
+      <div className={`flex-1 bg-[#c0c0c0] border-t-2 border-gray-400 overflow-y-auto ${
+        isLargeScreen ? 'p-4' : 'p-2'
+      }`} style={{ borderTopStyle: 'inset' }}>
         {activeTab === 'Background' && (
           <div className="h-full flex flex-col min-h-0">
             {/* Monitor Preview - Responsive */}
             <div className={`flex justify-center flex-shrink-0 ${
-              isMobilePortrait ? 'mb-1' : screenSize.isMobile ? 'mb-2' : 'mb-4'
+              isMobilePortrait ? 'mb-1' : screenSize.isMobile ? 'mb-2' : isLargeScreen ? 'mb-6' : 'mb-4'
             }`}>
               <div className="relative">
-                {/* CRT Monitor - Smaller on mobile */}
+                {/* CRT Monitor - Scales with screen size */}
                 <div 
                   className={`bg-[#c0c0c0] border-2 border-gray-600 rounded-sm relative ${
                     isMobilePortrait ? 'w-28 h-20' :
-                    screenSize.isMobile ? 'w-32 h-24' : 'w-48 h-36'
+                    screenSize.isMobile ? 'w-32 h-24' :
+                    isExtraLargeScreen ? 'w-80 h-56' :
+                    isLargeScreen ? 'w-72 h-48' : 'w-60 h-40'
                   }`}
                   style={{ 
                     borderStyle: 'outset',
@@ -244,21 +252,33 @@ export const DisplayProperties: React.FC<DisplayPropertiesProps> = ({
                   
                   {/* Brand label */}
                   <div className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 text-gray-600 ${
-                    isMobilePortrait ? 'text-[3px]' : screenSize.isMobile ? 'text-[4px]' : 'text-[6px]'
+                    isMobilePortrait ? 'text-[3px]' : 
+                    screenSize.isMobile ? 'text-[4px]' :
+                    isExtraLargeScreen ? 'text-xs' :
+                    isLargeScreen ? 'text-[10px]' : 'text-[8px]'
                   }`}>
                     MONITOR
                   </div>
                 </div>
                 
-                {/* Monitor stand - Smaller on mobile */}
+                {/* Monitor stand - Scales with monitor */}
                 <div className={`bg-[#c0c0c0] mx-auto border border-gray-500 ${
-                  isMobilePortrait ? 'w-2 h-2' : screenSize.isMobile ? 'w-3 h-3' : 'w-4 h-5'
+                  isMobilePortrait ? 'w-2 h-2' : 
+                  screenSize.isMobile ? 'w-3 h-3' :
+                  isExtraLargeScreen ? 'w-8 h-8' :
+                  isLargeScreen ? 'w-6 h-7' : 'w-5 h-6'
                 }`} style={{ borderStyle: 'outset' }}></div>
                 <div className={`bg-[#c0c0c0] mx-auto border border-gray-500 ${
-                  isMobilePortrait ? 'w-16 h-1.5' : screenSize.isMobile ? 'w-20 h-2' : 'w-32 h-3'
+                  isMobilePortrait ? 'w-16 h-1.5' : 
+                  screenSize.isMobile ? 'w-20 h-2' :
+                  isExtraLargeScreen ? 'w-64 h-5' :
+                  isLargeScreen ? 'w-56 h-4' : 'w-48 h-3'
                 }`} style={{ borderStyle: 'outset' }}>
                   <div className={`bg-gray-400 mx-auto mt-1 ${
-                    isMobilePortrait ? 'w-8 h-px' : screenSize.isMobile ? 'w-12 h-px' : 'w-20 h-1'
+                    isMobilePortrait ? 'w-8 h-px' : 
+                    screenSize.isMobile ? 'w-12 h-px' :
+                    isExtraLargeScreen ? 'w-40 h-2' :
+                    isLargeScreen ? 'w-32 h-1.5' : 'w-24 h-1'
                   }`}></div>
                 </div>
               </div>
@@ -266,17 +286,26 @@ export const DisplayProperties: React.FC<DisplayPropertiesProps> = ({
 
             {/* Main Content - Responsive Layout with scroll */}
             <div className={`flex-1 flex min-h-0 ${
-              isMobilePortrait ? 'flex-col space-y-2' : screenSize.isMobile ? 'flex-col space-y-3' : 'space-x-4'
+              isMobilePortrait ? 'flex-col space-y-2' : 
+              screenSize.isMobile ? 'flex-col space-y-3' : 
+              isLargeScreen ? 'space-x-6' : 'space-x-4'
             }`}>
               {/* Video Section */}
               <div className="flex-1">
-                <div className="border-2 border-gray-400 p-2" style={{ borderStyle: 'outset' }}>
-                  <div className={`font-bold mb-2 ${
-                    isMobilePortrait ? 'text-[11px]' : screenSize.isMobile ? 'text-xs' : 'text-xs'
+                <div className={`border-2 border-gray-400 ${
+                  isLargeScreen ? 'p-4' : 'p-2'
+                }`} style={{ borderStyle: 'outset' }}>
+                  <div className={`font-bold ${
+                    isMobilePortrait ? 'mb-2 text-[11px]' : 
+                    screenSize.isMobile ? 'mb-2 text-xs' : 
+                    isLargeScreen ? 'mb-3 text-sm' : 'mb-2 text-xs'
                   }`}>Video</div>
                   <div 
                     className={`bg-white border-2 border-gray-400 overflow-y-auto focus:outline-dotted focus:outline-1 focus:outline-black ${
-                      isMobilePortrait ? 'h-20' : screenSize.isMobile ? 'h-16' : 'h-24'
+                      isMobilePortrait ? 'h-20' : 
+                      screenSize.isMobile ? 'h-16' :
+                      isExtraLargeScreen ? 'h-64' :
+                      isLargeScreen ? 'h-48' : 'h-32'
                     }`}
                     style={{ borderStyle: 'inset' }}
                     tabIndex={0}
@@ -289,7 +318,9 @@ export const DisplayProperties: React.FC<DisplayPropertiesProps> = ({
                             ? 'bg-[#0000ff] text-white' 
                             : 'hover:bg-gray-100'
                         } ${
-                          isMobilePortrait ? 'text-[11px]' : screenSize.isMobile ? 'text-[10px]' : 'text-xs'
+                          isMobilePortrait ? 'text-[11px]' : 
+                          screenSize.isMobile ? 'text-[10px]' :
+                          isLargeScreen ? 'text-sm' : 'text-xs'
                         }`}
                         style={{ 
                           minHeight: screenSize.isTouchDevice ? '28px' : 'auto',
@@ -303,9 +334,10 @@ export const DisplayProperties: React.FC<DisplayPropertiesProps> = ({
                     ))}
                   </div>
                   <button 
-                    className={`mt-2 bg-gray-300 border-2 border-gray-500 text-gray-500 cursor-not-allowed ${
-                      isMobilePortrait ? 'px-2 py-1 text-[10px] w-full' : 
-                      screenSize.isMobile ? 'px-2 py-1 text-[10px]' : 'px-2 py-1 text-xs'
+                    className={`bg-gray-300 border-2 border-gray-500 text-gray-500 cursor-not-allowed ${
+                      isMobilePortrait ? 'mt-2 px-2 py-1 text-[10px] w-full' : 
+                      screenSize.isMobile ? 'mt-2 px-2 py-1 text-[10px]' : 
+                      isLargeScreen ? 'mt-4 px-4 py-2 text-sm' : 'mt-2 px-2 py-1 text-xs'
                     }`}
                     style={{ 
                       borderStyle: 'inset',
@@ -320,13 +352,20 @@ export const DisplayProperties: React.FC<DisplayPropertiesProps> = ({
 
               {/* Wallpaper Section */}
               <div className="flex-1">
-                <div className="border-2 border-gray-400 p-2" style={{ borderStyle: 'outset' }}>
-                  <div className={`font-bold mb-2 ${
-                    isMobilePortrait ? 'text-[11px]' : screenSize.isMobile ? 'text-xs' : 'text-xs'
+                <div className={`border-2 border-gray-400 ${
+                  isLargeScreen ? 'p-4' : 'p-2'
+                }`} style={{ borderStyle: 'outset' }}>
+                  <div className={`font-bold ${
+                    isMobilePortrait ? 'mb-2 text-[11px]' : 
+                    screenSize.isMobile ? 'mb-2 text-xs' : 
+                    isLargeScreen ? 'mb-3 text-sm' : 'mb-2 text-xs'
                   }`}>Wallpaper</div>
                   <div 
                     className={`bg-white border-2 border-gray-400 overflow-y-auto ${
-                      isMobilePortrait ? 'h-20' : screenSize.isMobile ? 'h-16' : 'h-24'
+                      isMobilePortrait ? 'h-20' : 
+                      screenSize.isMobile ? 'h-16' :
+                      isExtraLargeScreen ? 'h-64' :
+                      isLargeScreen ? 'h-48' : 'h-32'
                     }`}
                     style={{ borderStyle: 'inset' }}
                   >
@@ -338,7 +377,9 @@ export const DisplayProperties: React.FC<DisplayPropertiesProps> = ({
                             ? 'bg-[#0000ff] text-white' 
                             : 'hover:bg-gray-100'
                         } ${
-                          isMobilePortrait ? 'text-[11px]' : screenSize.isMobile ? 'text-[10px]' : 'text-xs'
+                          isMobilePortrait ? 'text-[11px]' : 
+                          screenSize.isMobile ? 'text-[10px]' :
+                          isLargeScreen ? 'text-sm' : 'text-xs'
                         }`}
                         style={{ 
                           minHeight: screenSize.isTouchDevice ? '28px' : 'auto',
@@ -352,9 +393,10 @@ export const DisplayProperties: React.FC<DisplayPropertiesProps> = ({
                     ))}
                   </div>
                   <button 
-                    className={`mt-2 bg-[#c0c0c0] border-2 border-gray-400 hover:bg-gray-200 ${
-                      isMobilePortrait ? 'px-2 py-1 text-[10px] w-full' : 
-                      screenSize.isMobile ? 'px-2 py-1 text-[10px]' : 'px-2 py-1 text-xs'
+                    className={`bg-[#c0c0c0] border-2 border-gray-400 hover:bg-gray-200 ${
+                      isMobilePortrait ? 'mt-2 px-2 py-1 text-[10px] w-full' : 
+                      screenSize.isMobile ? 'mt-2 px-2 py-1 text-[10px]' : 
+                      isLargeScreen ? 'mt-4 px-4 py-2 text-sm' : 'mt-2 px-2 py-1 text-xs'
                     }`}
                     style={{ 
                       borderStyle: 'outset',
@@ -367,33 +409,39 @@ export const DisplayProperties: React.FC<DisplayPropertiesProps> = ({
                   
                   {/* Display Options - Hidden on mobile portrait, simplified on mobile landscape */}
                   {!isMobilePortrait && !screenSize.isMobile && (
-                    <div className="mt-3">
-                      <div className="text-xs mb-1">Display:</div>
-                      <div className="space-y-1">
-                        <label className="flex items-center text-xs cursor-pointer">
-                          <div className="relative mr-2">
-                            <input 
-                              type="radio" 
-                              name="display" 
-                              value="Tile"
-                              checked={displayMode === 'Tile'}
-                              onChange={() => handleDisplayModeChange('Tile')}
-                              className="sr-only"
-                            />
-                            <div 
-                              className={`w-3 h-3 rounded-full border-2 border-gray-600 bg-white flex items-center justify-center ${
-                                displayMode === 'Tile' ? 'border-black' : ''
-                              }`}
-                              style={{ borderStyle: 'inset' }}
-                            >
-                              {displayMode === 'Tile' && (
-                                <div className="w-1 h-1 bg-black rounded-full"></div>
-                              )}
+                    <div className={isLargeScreen ? 'mt-6' : 'mt-3'}>
+                                            <div className={`${
+                        isLargeScreen ? 'mb-2 text-sm' : 'mb-1 text-xs'
+                      }`}>Display:</div>
+                      <div className={isLargeScreen ? 'space-y-2' : 'space-y-1'}>
+                          <label className={`flex items-center cursor-pointer ${
+                            isLargeScreen ? 'text-sm' : 'text-xs'
+                          }`}>
+                            <div className="relative mr-2">
+                              <input 
+                                type="radio" 
+                                name="display" 
+                                value="Tile"
+                                checked={displayMode === 'Tile'}
+                                onChange={() => handleDisplayModeChange('Tile')}
+                                className="sr-only"
+                              />
+                              <div 
+                                className={`w-3 h-3 rounded-full border-2 border-gray-600 bg-white flex items-center justify-center ${
+                                  displayMode === 'Tile' ? 'border-black' : ''
+                                }`}
+                                style={{ borderStyle: 'inset' }}
+                              >
+                                {displayMode === 'Tile' && (
+                                  <div className="w-1 h-1 bg-black rounded-full"></div>
+                                )}
+                              </div>
                             </div>
-                          </div>
-                          Tile
-                        </label>
-                        <label className="flex items-center text-xs cursor-pointer">
+                            Tile
+                          </label>
+                          <label className={`flex items-center cursor-pointer ${
+                            isLargeScreen ? 'text-sm' : 'text-xs'
+                          }`}>
                           <div className="relative mr-2">
                             <input 
                               type="radio" 
@@ -443,7 +491,8 @@ export const DisplayProperties: React.FC<DisplayPropertiesProps> = ({
         <button 
           className={`bg-[#c0c0c0] border-2 border-gray-400 hover:bg-gray-200 ${
             isMobilePortrait ? 'px-2 py-1 text-[11px] flex-1 min-w-0' :
-            screenSize.isMobile ? 'px-3 py-1 text-[10px]' : 'px-6 py-1 text-xs'
+            screenSize.isMobile ? 'px-3 py-1 text-[10px]' : 
+            isLargeScreen ? 'px-8 py-2 text-sm' : 'px-6 py-1 text-xs'
           }`}
           style={{ 
             borderStyle: 'outset',
@@ -459,7 +508,8 @@ export const DisplayProperties: React.FC<DisplayPropertiesProps> = ({
         <button 
           className={`bg-[#c0c0c0] border-2 border-gray-400 hover:bg-gray-200 ${
             isMobilePortrait ? 'px-2 py-1 text-[11px] flex-1 min-w-0' :
-            screenSize.isMobile ? 'px-3 py-1 text-[10px]' : 'px-6 py-1 text-xs'
+            screenSize.isMobile ? 'px-3 py-1 text-[10px]' : 
+            isLargeScreen ? 'px-8 py-2 text-sm' : 'px-6 py-1 text-xs'
           }`}
           style={{ 
             borderStyle: 'outset',
@@ -477,7 +527,8 @@ export const DisplayProperties: React.FC<DisplayPropertiesProps> = ({
               : 'bg-gray-300 border-2 border-gray-500 text-gray-500 cursor-not-allowed'
           } ${
             isMobilePortrait ? 'px-2 py-1 text-[11px] flex-1 min-w-0' :
-            screenSize.isMobile ? 'px-3 py-1 text-[10px]' : 'px-6 py-1 text-xs'
+            screenSize.isMobile ? 'px-3 py-1 text-[10px]' : 
+            isLargeScreen ? 'px-8 py-2 text-sm' : 'px-6 py-1 text-xs'
           }`}
           style={{ 
             borderStyle: hasChanges ? 'outset' : 'inset',

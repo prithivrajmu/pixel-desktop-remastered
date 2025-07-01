@@ -27,14 +27,14 @@ export function useIsTablet() {
   const [isTablet, setIsTablet] = React.useState<boolean | undefined>(undefined)
 
   React.useEffect(() => {
-    const mql = window.matchMedia(`(min-width: ${BREAKPOINTS.mobile}px) and (max-width: ${BREAKPOINTS.tablet - 1}px)`)
+    const mql = window.matchMedia(`(min-width: ${BREAKPOINTS.mobile}px) and (max-width: ${BREAKPOINTS.tablet}px)`)
     const onChange = () => {
       const width = window.innerWidth
-      setIsTablet(width >= BREAKPOINTS.mobile && width < BREAKPOINTS.tablet)
+      setIsTablet(width >= BREAKPOINTS.mobile && width <= BREAKPOINTS.tablet)
     }
     mql.addEventListener("change", onChange)
     const width = window.innerWidth
-    setIsTablet(width >= BREAKPOINTS.mobile && width < BREAKPOINTS.tablet)
+    setIsTablet(width >= BREAKPOINTS.mobile && width <= BREAKPOINTS.tablet)
     return () => mql.removeEventListener("change", onChange)
   }, [])
 
@@ -56,8 +56,8 @@ export function useScreenSize() {
       const width = window.innerWidth
       const height = window.innerHeight
       const isMobile = width < BREAKPOINTS.mobile
-      const isTablet = width >= BREAKPOINTS.mobile && width < BREAKPOINTS.tablet
-      const isDesktop = width >= BREAKPOINTS.tablet
+      const isTablet = width >= BREAKPOINTS.mobile && width <= BREAKPOINTS.tablet
+      const isDesktop = width > BREAKPOINTS.tablet
       const isLandscape = width > height
       const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0
 
@@ -88,8 +88,8 @@ export function useScreenSize() {
       const width = window.innerWidth
       const height = window.innerHeight
       const isMobile = width < BREAKPOINTS.mobile
-      const isTablet = width >= BREAKPOINTS.mobile && width < BREAKPOINTS.tablet
-      const isDesktop = width >= BREAKPOINTS.tablet
+      const isTablet = width >= BREAKPOINTS.mobile && width <= BREAKPOINTS.tablet
+      const isDesktop = width > BREAKPOINTS.tablet
       const isLandscape = width > height
       const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0
 
