@@ -34,30 +34,12 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
 
   if (!isVisible) return null;
 
-  // Debug: Log screen size and position information
-  console.log('🎯 ContextMenu Debug - Screen & Position Info:', {
-    screenWidth: screenSize.width,
-    screenHeight: screenSize.height,
-    isMobile: screenSize.isMobile,
-    isLandscape: screenSize.isLandscape,
-    originalPosition: position,
-    isVisible: isVisible
-  });
-
   // Calculate adjusted position to keep menu within screen bounds
   const menuWidth = screenSize.isMobile ? 200 : 144;
   const menuHeight = items.length * (screenSize.isMobile ? 48 : 24) + 8; // Approximate height
   
   let adjustedX = position.x;
   let adjustedY = position.y;
-  
-  // Debug: Log initial calculations
-  console.log('📏 ContextMenu Debug - Initial Calculations:', {
-    menuWidth,
-    menuHeight,
-    originalX: position.x,
-    originalY: position.y
-  });
   
   // Adjust horizontal position
   if (adjustedX + menuWidth > screenSize.width) {
@@ -74,18 +56,6 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
   if (adjustedY < 10) {
     adjustedY = 10;
   }
-
-  // Debug: Log final positioning adjustments
-  console.log('🎯 ContextMenu Debug - Position Adjustments:', {
-    adjustedX,
-    adjustedY,
-    wasAdjustedHorizontally: adjustedX !== position.x,
-    wasAdjustedVertically: adjustedY !== position.y,
-    willFitOnScreen: {
-      horizontally: adjustedX + menuWidth <= screenSize.width,
-      vertically: adjustedY + menuHeight <= screenSize.height
-    }
-  });
 
   // Touch-friendly item handling
   const handleItemClick = (item: any) => {

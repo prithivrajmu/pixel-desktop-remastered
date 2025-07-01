@@ -443,7 +443,9 @@ export const Desktop: React.FC = () => {
         <ShutdownDialog
           isOpen={isShutdownDialogOpen}
           onConfirm={confirmShutdown}
-          onCancel={() => setIsShutdownDialogOpen(false)}
+          onCancel={() => {
+            setIsShutdownDialogOpen(false);
+          }}
         />
 
         <ShutdownScreen

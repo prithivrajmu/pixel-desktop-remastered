@@ -27,29 +27,13 @@ export const DisplayProperties: React.FC<DisplayPropertiesProps> = ({
   const sounds = useSounds();
   const screenSize = useScreenSize();
 
-  // Debug: Log screen size information for DisplayProperties
-  console.log('🎨 DisplayProperties Debug - Screen Info:', {
-    width: screenSize.width,
-    height: screenSize.height,
-    isMobile: screenSize.isMobile,
-    isLandscape: screenSize.isLandscape,
-    isTouchDevice: screenSize.isTouchDevice,
-    isPortrait: !screenSize.isLandscape
-  });
+  // Helper flags for responsive layouts
+  const isMobilePortrait = screenSize.isMobile && !screenSize.isLandscape;
+  const isMobileLandscape = screenSize.isMobile && screenSize.isLandscape;
 
   const backgrounds = getAvailableBackgrounds();
   const videoOptions = ['(None)', ...Object.values(videoAssets.backgrounds).map(v => v.name)];
   const tabs = ['Background', 'Screen Saver', 'Appearance', 'Settings'];
-
-  // Calculate responsive dimensions
-  const isMobilePortrait = screenSize.isMobile && !screenSize.isLandscape;
-  const isMobileLandscape = screenSize.isMobile && screenSize.isLandscape;
-  
-  console.log('📱 DisplayProperties Debug - Layout Mode:', {
-    isMobilePortrait,
-    isMobileLandscape,
-    shouldUseCompactLayout: isMobilePortrait
-  });
 
   // Initialize state based on current background
   useEffect(() => {

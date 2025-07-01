@@ -8,20 +8,7 @@ interface WelcomeProps {
 export const Welcome: React.FC<WelcomeProps> = ({ onClose }) => {
   const screenSize = useScreenSize();
   
-  // Debug: Log screen size and banner visibility
-  console.log('👋 Welcome Debug - Screen Info:', {
-    width: screenSize.width,
-    height: screenSize.height,
-    isMobile: screenSize.isMobile,
-    isLandscape: screenSize.isLandscape,
-    shouldShowLandscapeBanner: screenSize.isMobile && !screenSize.isLandscape
-  });
-
-  // Debug: Check if landscape banner should be visible
   const shouldShowLandscapeBanner = screenSize.isMobile && !screenSize.isLandscape;
-  if (shouldShowLandscapeBanner) {
-    console.log('🎯 Welcome Debug - Landscape banner is now visible!');
-  }
   
   return (
     <div className="bg-gray-300 h-full p-0 overflow-auto" style={{ fontFamily: '"MS Sans Serif", sans-serif' }}>

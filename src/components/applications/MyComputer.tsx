@@ -78,7 +78,7 @@ export const MyComputer: React.FC = () => {
   };
 
   const handleItemDoubleClick = (itemId: string) => {
-    console.log(`Opening ${itemId}`);
+    // console.log(`Opening ${itemId}`);
   };
 
   const handleDownloadResume = () => {

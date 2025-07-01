@@ -93,10 +93,6 @@ export function useScreenSize() {
       const isLandscape = width > height
       const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0
 
-      console.log('📱 useScreenSize - Update:', {
-        width, height, isMobile, isTablet, isDesktop, isLandscape, isTouchDevice
-      });
-
       setScreenSize({
         width,
         height,

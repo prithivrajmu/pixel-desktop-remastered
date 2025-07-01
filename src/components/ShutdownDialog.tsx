@@ -17,42 +17,9 @@ export const ShutdownDialog: React.FC<ShutdownDialogProps> = ({
   const sounds = useSounds();
   const screenSize = useScreenSize();
 
-  // Debug: Log screen size information
-  console.log('🔌 ShutdownDialog Debug - Screen Info:', {
-    width: screenSize.width,
-    height: screenSize.height,
-    isMobile: screenSize.isMobile,
-    isLandscape: screenSize.isLandscape,
-    isTouchDevice: screenSize.isTouchDevice,
-    isOpen: isOpen
-  });
-
-  // Calculate responsive styles
-  const dialogStyles = {
-    width: screenSize.isMobile ? 
-      (screenSize.isLandscape ? '400px' : 'min(90vw, 350px)') : 
-      '400px',
-    maxHeight: screenSize.isMobile && !screenSize.isLandscape ? 
-      'min(90vh, 500px)' : 
-      '90vh',
-    minHeight: screenSize.isMobile && !screenSize.isLandscape ? '300px' : 'auto'
-  };
-
-  // Debug: Log calculated dialog styles
-  console.log('💻 ShutdownDialog Debug - Calculated Styles:', dialogStyles);
-
-  // Debug: Log mobile-specific conditions
-  if (screenSize.isMobile && isOpen) {
-    console.log('📱 ShutdownDialog Debug - Mobile Portrait Mode:', {
-      isPortrait: !screenSize.isLandscape,
-      calculatedWidth: dialogStyles.width,
-      calculatedMaxHeight: dialogStyles.maxHeight,
-      calculatedMinHeight: dialogStyles.minHeight,
-      shouldUseMobileLayout: screenSize.isMobile && !screenSize.isLandscape
-    });
+  if (!isOpen) {
+    return null;
   }
-
-  if (!isOpen) return null;
 
   const handleRadioChange = (action: 'shutdown' | 'restart' | 'msdos' | 'logoff') => {
     sounds.playClick();
@@ -75,23 +42,27 @@ export const ShutdownDialog: React.FC<ShutdownDialogProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4" style={{ zIndex: 9999 }}>
+    <div 
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-4"
+    >
       <div 
-        className="bg-[#c0c0c0] border-2 border-[#808080] shadow-lg"
+        className={`bg-[#c0c0c0] border-2 border-gray-400 shadow-lg ${
+          screenSize.isMobile 
+            ? (screenSize.isLandscape 
+              ? 'w-[85vw] max-w-[450px] max-h-[85vh]' 
+              : 'w-[92vw] max-w-[400px] max-h-[75vh]')
+            : 'w-96'
+        } overflow-y-auto`}
         style={{ 
           borderStyle: 'outset',
-          width: dialogStyles.width,
-          maxWidth: '95vw',
-          maxHeight: dialogStyles.maxHeight,
-          overflowY: 'auto',
-          fontFamily: '"MS Sans Serif", "Microsoft Sans Serif", sans-serif',
-          minHeight: dialogStyles.minHeight,
-          position: 'relative',
-          zIndex: 10000
+          fontFamily: '"MS Sans Serif", "Microsoft Sans Serif", sans-serif'
+        }}
+        onClick={(e) => {
+          e.stopPropagation();
         }}
       >
         {/* Title Bar */}
-        <div className="bg-[#000080] h-6 px-2 flex items-center justify-between" style={{ minHeight: screenSize.isMobile ? 28 : 24 }}>
+        <div className="bg-[#000080] text-white px-2 py-1 flex items-center justify-between text-xs">
           <div className="flex items-center space-x-1">
             <img 
               src="/icons/Turn Off Computer (display only).ico" 
@@ -99,16 +70,16 @@ export const ShutdownDialog: React.FC<ShutdownDialogProps> = ({
               className="w-4 h-4"
               style={{ imageRendering: 'pixelated' }}
             />
-            <span className="text-white text-xs font-bold">Shut Down Windows</span>
+            <span>Shut Down Windows</span>
           </div>
           <button
-            className={`bg-[#c0c0c0] border border-[#808080] flex items-center justify-center hover:bg-[#e0e0e0] font-bold ${
+            className={`bg-[#c0c0c0] border border-gray-400 flex items-center justify-center text-black hover:bg-gray-200 font-bold ${
               screenSize.isMobile 
                 ? (screenSize.isLandscape ? 'w-3 h-3 text-[8px]' : 'w-4 h-3 text-[9px]')
-                : 'w-5 h-4 text-xs'
+                : 'w-4 h-4 text-xs'
             }`}
             style={{ 
-              borderStyle: 'outset', 
+              borderStyle: 'outset',
               fontSize: screenSize.isMobile 
                 ? (screenSize.isLandscape ? '7px' : '8px')
                 : '10px'
@@ -136,9 +107,9 @@ export const ShutdownDialog: React.FC<ShutdownDialogProps> = ({
             <div className="flex-1">
               <div className="text-sm mb-4">Are you sure you want to:</div>
               
-              {/* Radio Button Options */}
+                            {/* Radio Button Options */}
               <div className="space-y-2">
-                                 {/* Shutdown option with focus rectangle */}
+                 {/* Shutdown option with focus rectangle */}
                  <label className="flex items-center space-x-2 text-sm cursor-pointer">
                    <div className="relative">
                      <div 
@@ -184,7 +155,7 @@ export const ShutdownDialog: React.FC<ShutdownDialogProps> = ({
                    </span>
                  </label>
 
-                                 <label className="flex items-center space-x-2 text-sm cursor-pointer">
+                 <label className="flex items-center space-x-2 text-sm cursor-pointer">
                    <div className="relative">
                      <div 
                        className="w-3 h-3 border border-[#808080] bg-white flex items-center justify-center rounded-full"
@@ -200,7 +171,7 @@ export const ShutdownDialog: React.FC<ShutdownDialogProps> = ({
                    </span>
                  </label>
 
-                                 <label className="flex items-center space-x-2 text-sm cursor-pointer">
+                 <label className="flex items-center space-x-2 text-sm cursor-pointer">
                    <div className="relative">
                      <div 
                        className="w-3 h-3 border border-[#808080] bg-white flex items-center justify-center rounded-full"

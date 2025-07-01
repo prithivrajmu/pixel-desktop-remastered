@@ -20,9 +20,7 @@ class WindowsSounds {
     try {
       await Tone.start();
       this.isInitialized = true;
-      if (localStorage.getItem('debug.sounds') === 'true') {
-      console.log('Windows sounds initialized');
-    }
+      // Optional debug flag was previously used to log initialization to the console.
     } catch (error) {
       console.error('Failed to initialize audio:', error);
     }
