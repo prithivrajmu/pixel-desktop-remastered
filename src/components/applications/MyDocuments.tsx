@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { downloadResume } from '../../utils/downloadUtils';
+import { useScreenSize } from '../../hooks/use-mobile';
 
 interface Project {
   name: string;
@@ -23,6 +24,7 @@ interface DocumentFile {
 
 export const MyDocuments: React.FC = () => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const screenSize = useScreenSize();
 
   const projects: Project[] = [
     {
@@ -215,11 +217,19 @@ export const MyDocuments: React.FC = () => {
 
         {/* Toolbar */}
         <div className="bg-[#c0c0c0] border-b border-[#808080] p-1">
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 overflow-x-auto">
             <button 
               onClick={handleBackClick}
-              className="w-6 h-6 bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0]"
-              style={{ borderStyle: 'outset' }}
+              className={`bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0] flex-shrink-0 ${
+                screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
+              }`}
+              style={{ 
+                borderStyle: 'outset',
+                width: screenSize.isMobile ? '36px' : screenSize.isTablet ? '28px' : '24px',
+                height: screenSize.isMobile ? '36px' : screenSize.isTablet ? '28px' : '24px',
+                touchAction: 'manipulation',
+                fontSize: screenSize.isMobile ? '14px' : '12px'
+              }}
               title="Back to My Documents"
             >
               ←
@@ -306,68 +316,136 @@ export const MyDocuments: React.FC = () => {
 
       {/* Toolbar */}
       <div className="bg-[#c0c0c0] border-b border-[#808080] p-1">
-        <div className="flex items-center gap-1 mb-1">
+        <div className="flex items-center gap-1 mb-1 overflow-x-auto">
           {/* Navigation Buttons */}
           <button 
-            className="w-6 h-6 bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0]"
-            style={{ borderStyle: 'outset' }}
-            title="Back"
+            className={`bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0] flex-shrink-0 ${
+              screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
+            }`}
+            style={{ 
+              borderStyle: 'outset',
+              width: screenSize.isMobile ? '36px' : screenSize.isTablet ? '28px' : '24px',
+              height: screenSize.isMobile ? '36px' : screenSize.isTablet ? '28px' : '24px',
+              touchAction: 'manipulation',
+              fontSize: screenSize.isMobile ? '14px' : '12px'
+            }}
+            title="Back to My Documents"
           >
             ←
           </button>
           <button 
-            className="w-6 h-6 bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0]"
-            style={{ borderStyle: 'outset' }}
+            className={`bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0] flex-shrink-0 ${
+              screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
+            }`}
+            style={{ 
+              borderStyle: 'outset',
+              width: screenSize.isMobile ? '36px' : screenSize.isTablet ? '28px' : '24px',
+              height: screenSize.isMobile ? '36px' : screenSize.isTablet ? '28px' : '24px',
+              touchAction: 'manipulation',
+              fontSize: screenSize.isMobile ? '14px' : '12px'
+            }}
             title="Forward"
           >
             →
           </button>
           <button 
-            className="w-6 h-6 bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0]"
-            style={{ borderStyle: 'outset' }}
+            className={`bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0] flex-shrink-0 ${
+              screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
+            }`}
+            style={{ 
+              borderStyle: 'outset',
+              width: screenSize.isMobile ? '36px' : screenSize.isTablet ? '28px' : '24px',
+              height: screenSize.isMobile ? '36px' : screenSize.isTablet ? '28px' : '24px',
+              touchAction: 'manipulation',
+              fontSize: screenSize.isMobile ? '14px' : '12px'
+            }}
             title="Up"
           >
             ↑
           </button>
           
-          <div className="w-px h-6 bg-[#808080] mx-1"></div>
+          <div className={`bg-[#808080] mx-1 ${
+            screenSize.isMobile ? 'w-px h-8' : 'w-px h-6'
+          }`}></div>
           
           {/* Action Buttons */}
           <button 
-            className="w-6 h-6 bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0]"
-            style={{ borderStyle: 'outset' }}
+            className={`bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0] flex-shrink-0 ${
+              screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
+            }`}
+            style={{ 
+              borderStyle: 'outset',
+              width: screenSize.isMobile ? '36px' : screenSize.isTablet ? '28px' : '24px',
+              height: screenSize.isMobile ? '36px' : screenSize.isTablet ? '28px' : '24px',
+              touchAction: 'manipulation',
+              fontSize: screenSize.isMobile ? '12px' : '10px'
+            }}
             title="Cut"
           >
             ✂
           </button>
           <button 
-            className="w-6 h-6 bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0]"
-            style={{ borderStyle: 'outset' }}
+            className={`bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0] flex-shrink-0 ${
+              screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
+            }`}
+            style={{ 
+              borderStyle: 'outset',
+              width: screenSize.isMobile ? '36px' : screenSize.isTablet ? '28px' : '24px',
+              height: screenSize.isMobile ? '36px' : screenSize.isTablet ? '28px' : '24px',
+              touchAction: 'manipulation',
+              fontSize: screenSize.isMobile ? '12px' : '10px'
+            }}
             title="Copy"
           >
             📋
           </button>
           <button 
-            className="w-6 h-6 bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0]"
-            style={{ borderStyle: 'outset' }}
+            className={`bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0] flex-shrink-0 ${
+              screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
+            }`}
+            style={{ 
+              borderStyle: 'outset',
+              width: screenSize.isMobile ? '36px' : screenSize.isTablet ? '28px' : '24px',
+              height: screenSize.isMobile ? '36px' : screenSize.isTablet ? '28px' : '24px',
+              touchAction: 'manipulation',
+              fontSize: screenSize.isMobile ? '12px' : '10px'
+            }}
             title="Paste"
           >
             📄
           </button>
           
-          <div className="w-px h-6 bg-[#808080] mx-1"></div>
+          <div className={`bg-[#808080] mx-1 ${
+            screenSize.isMobile ? 'w-px h-8' : 'w-px h-6'
+          }`}></div>
           
           {/* View Buttons */}
           <button 
-            className="w-6 h-6 bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0]"
-            style={{ borderStyle: 'outset' }}
+            className={`bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0] flex-shrink-0 ${
+              screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
+            }`}
+            style={{ 
+              borderStyle: 'outset',
+              width: screenSize.isMobile ? '36px' : screenSize.isTablet ? '28px' : '24px',
+              height: screenSize.isMobile ? '36px' : screenSize.isTablet ? '28px' : '24px',
+              touchAction: 'manipulation',
+              fontSize: screenSize.isMobile ? '14px' : '12px'
+            }}
             title="Large Icons"
           >
             ⊞
           </button>
           <button 
-            className="w-6 h-6 bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0]"
-            style={{ borderStyle: 'outset' }}
+            className={`bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0] flex-shrink-0 ${
+              screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
+            }`}
+            style={{ 
+              borderStyle: 'outset',
+              width: screenSize.isMobile ? '36px' : screenSize.isTablet ? '28px' : '24px',
+              height: screenSize.isMobile ? '36px' : screenSize.isTablet ? '28px' : '24px',
+              touchAction: 'manipulation',
+              fontSize: screenSize.isMobile ? '14px' : '12px'
+            }}
             title="Details"
           >
             ⋮
@@ -376,9 +454,15 @@ export const MyDocuments: React.FC = () => {
         
         {/* Address Bar */}
         <div className="flex items-center gap-1">
-          <span className="text-xs">Address:</span>
-          <div className="flex-1 flex items-center bg-white border border-[#808080] px-2 py-0.5 text-xs" style={{ borderStyle: 'inset' }}>
-            <img src="/icons/Documents Folder.ico" alt="My Documents" className="w-4 h-4 mr-1" />
+          <span className={screenSize.isMobile ? 'text-xs' : 'text-xs'}>Address:</span>
+          <div className={`flex-1 flex items-center bg-white border border-[#808080] px-2 py-0.5 ${
+            screenSize.isMobile ? 'text-xs' : 'text-xs'
+          }`} style={{ borderStyle: 'inset' }}>
+            <img 
+              src="/icons/Documents Folder.ico" 
+              alt="My Documents" 
+              className={screenSize.isMobile ? 'w-4 h-4 mr-1' : 'w-4 h-4 mr-1'} 
+            />
             <span>My Documents</span>
           </div>
         </div>

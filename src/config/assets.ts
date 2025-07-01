@@ -18,9 +18,9 @@ export const iconAssets: Record<string, AssetConfig> = {
     type: 'icon',
     category: 'icon'
   },
-  'inbox': {
-    id: 'inbox',
-    name: 'Inbox',
+  'my-documents': {
+    id: 'my-documents',
+    name: 'My Documents',
     path: '/icons/Desktop.ico',
     type: 'icon',
     category: 'icon'

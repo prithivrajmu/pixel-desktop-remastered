@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useScreenSize } from '../hooks/use-mobile';
+import { useLongPress } from '../hooks/useLongPress';
 
 interface DesktopIconProps {
   name: string;
@@ -9,6 +10,7 @@ interface DesktopIconProps {
   onDoubleClick: () => void;
   onClick?: () => void;
   onRightClick?: (e: React.MouseEvent) => void;
+  onLongPress?: (e: React.TouchEvent) => void;
   tooltip?: string;
 }
 
@@ -20,15 +22,35 @@ export const DesktopIcon: React.FC<DesktopIconProps> = ({
   onDoubleClick,
   onClick,
   onRightClick,
+  onLongPress,
   tooltip
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const screenSize = useScreenSize();
 
+  // Long press functionality for touch devices
+  const longPressHandlers = useLongPress({
+    onLongPress: (event) => {
+      if ('touches' in event && onLongPress) {
+        onLongPress(event as React.TouchEvent);
+      }
+    },
+    onPress: (event) => {
+      if ('touches' in event && onClick) {
+        // Handle regular tap on touch devices
+        onClick();
+      }
+    },
+    delay: 500,
+    threshold: 10
+  });
+
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (onClick) onClick();
+    if (onClick && !screenSize.isTouchDevice) {
+      onClick();
+    }
   };
 
   const handleDoubleClick = (e: React.MouseEvent) => {
@@ -54,12 +76,16 @@ export const DesktopIcon: React.FC<DesktopIconProps> = ({
 
   return (
     <div
-      className="absolute flex flex-col items-center cursor-pointer group"
+      className={`absolute flex flex-col items-center cursor-pointer group ${
+        longPressHandlers.isLongPressing ? 'opacity-75 scale-95' : ''
+      }`}
+      data-icon-element="true"
       style={{ 
         left: position.x, 
         top: position.y, 
         width: containerWidth,
-        touchAction: 'manipulation'
+        touchAction: 'manipulation',
+        transition: 'opacity 0.2s, transform 0.2s'
       }}
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}
@@ -67,14 +93,22 @@ export const DesktopIcon: React.FC<DesktopIconProps> = ({
       onMouseEnter={() => !screenSize.isTouchDevice && setShowTooltip(true)}
       onMouseLeave={() => !screenSize.isTouchDevice && setShowTooltip(false)}
       onMouseMove={handleMouseMove}
+      {...(screenSize.isTouchDevice ? {
+        onTouchStart: longPressHandlers.onTouchStart,
+        onTouchEnd: longPressHandlers.onTouchEnd,
+        onTouchMove: longPressHandlers.onTouchMove
+      } : {})}
     >
       <div 
         className={`${iconSize} flex items-center justify-center ${iconTextSize} mb-1 ${
           isSelected ? 'bg-blue-600' : ''
-        }`}
+        } ${longPressHandlers.isLongPressing ? 'bg-blue-300 border-2 border-blue-500' : ''}`}
         style={{
           minHeight: screenSize.isMobile ? '48px' : '32px',
-          minWidth: screenSize.isMobile ? '48px' : '32px'
+          minWidth: screenSize.isMobile ? '48px' : '32px',
+          borderRadius: longPressHandlers.isLongPressing ? '6px' : '0px',
+          transition: 'all 0.2s ease',
+          transform: longPressHandlers.isLongPressing ? 'scale(1.05)' : 'scale(1)'
         }}
       >
         {icon}
@@ -83,13 +117,17 @@ export const DesktopIcon: React.FC<DesktopIconProps> = ({
         className={`${textSize} text-center leading-tight px-1 py-0.5 ${
           isSelected 
             ? 'bg-blue-600 text-white' 
-            : 'text-white drop-shadow-sm'
+            : longPressHandlers.isLongPressing 
+              ? 'bg-blue-300 text-black font-semibold'
+              : 'text-white drop-shadow-sm'
         }`}
         style={{ 
-          textShadow: isSelected ? 'none' : '1px 1px 1px rgba(0,0,0,0.8)',
+          textShadow: (isSelected || longPressHandlers.isLongPressing) ? 'none' : '1px 1px 1px rgba(0,0,0,0.8)',
           wordWrap: 'normal',
           maxWidth: containerWidth,
-          minHeight: screenSize.isMobile ? '24px' : '16px'
+          minHeight: screenSize.isMobile ? '24px' : '16px',
+          borderRadius: longPressHandlers.isLongPressing ? '4px' : '0px',
+          transition: 'all 0.2s ease'
         }}
       >
         {name}

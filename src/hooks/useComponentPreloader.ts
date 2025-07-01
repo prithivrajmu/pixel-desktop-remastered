@@ -4,7 +4,10 @@ import { useEffect, useCallback } from 'react';
 export const useComponentPreloader = () => {
   const preloadComponent = useCallback((componentPath: string) => {
     // Use dynamic import with prefetch
-    import(/* webpackPrefetch: true */ componentPath).catch((error) => {
+    import(
+      /* @vite-ignore */
+      componentPath
+    ).catch((error) => {
       // Only log errors in development for debugging
       if (process.env.NODE_ENV === 'development') {
         console.warn(`Failed to preload component: ${componentPath}`, error);

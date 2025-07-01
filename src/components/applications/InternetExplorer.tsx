@@ -74,18 +74,18 @@ export const InternetExplorer: React.FC = () => {
 
       {/* Toolbar */}
       <div className="bg-[#c0c0c0] border-b border-[#808080] p-1">
-        <div className="flex items-center gap-1 mb-1">
+        <div className="flex items-center gap-1 mb-1 overflow-x-auto">
           {/* Navigation Buttons */}
           <button 
-            className={`bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0] ${
+            className={`bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0] flex-shrink-0 ${
               screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
             }`}
             style={{ 
               borderStyle: 'outset',
-              width: screenSize.isMobile ? '32px' : '24px',
-              height: screenSize.isMobile ? '32px' : '24px',
-              minWidth: screenSize.isMobile ? '32px' : 'auto',
-              touchAction: 'manipulation'
+              width: screenSize.isMobile ? '36px' : screenSize.isTablet ? '28px' : '24px',
+              height: screenSize.isMobile ? '36px' : screenSize.isTablet ? '28px' : '24px',
+              touchAction: 'manipulation',
+              fontSize: screenSize.isMobile ? '14px' : '12px'
             }}
             title="Back"
             onClick={() => {
@@ -98,60 +98,60 @@ export const InternetExplorer: React.FC = () => {
             ←
           </button>
           <button 
-            className={`bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0] ${
+            className={`bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0] flex-shrink-0 ${
               screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
             }`}
             style={{ 
               borderStyle: 'outset',
-              width: screenSize.isMobile ? '32px' : '24px',
-              height: screenSize.isMobile ? '32px' : '24px',
-              minWidth: screenSize.isMobile ? '32px' : 'auto',
-              touchAction: 'manipulation'
+              width: screenSize.isMobile ? '36px' : screenSize.isTablet ? '28px' : '24px',
+              height: screenSize.isMobile ? '36px' : screenSize.isTablet ? '28px' : '24px',
+              touchAction: 'manipulation',
+              fontSize: screenSize.isMobile ? '14px' : '12px'
             }}
             title="Forward"
           >
             →
           </button>
           <button 
-            className={`bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0] ${
+            className={`bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0] flex-shrink-0 ${
               screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
             }`}
             style={{ 
               borderStyle: 'outset',
-              width: screenSize.isMobile ? '32px' : '24px',
-              height: screenSize.isMobile ? '32px' : '24px',
-              minWidth: screenSize.isMobile ? '32px' : 'auto',
-              touchAction: 'manipulation'
+              width: screenSize.isMobile ? '36px' : screenSize.isTablet ? '28px' : '24px',
+              height: screenSize.isMobile ? '36px' : screenSize.isTablet ? '28px' : '24px',
+              touchAction: 'manipulation',
+              fontSize: screenSize.isMobile ? '14px' : '12px'
             }}
             title="Stop"
           >
             ⊠
           </button>
           <button 
-            className={`bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0] ${
+            className={`bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0] flex-shrink-0 ${
               screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
             }`}
             style={{ 
               borderStyle: 'outset',
-              width: screenSize.isMobile ? '32px' : '24px',
-              height: screenSize.isMobile ? '32px' : '24px',
-              minWidth: screenSize.isMobile ? '32px' : 'auto',
-              touchAction: 'manipulation'
+              width: screenSize.isMobile ? '36px' : screenSize.isTablet ? '28px' : '24px',
+              height: screenSize.isMobile ? '36px' : screenSize.isTablet ? '28px' : '24px',
+              touchAction: 'manipulation',
+              fontSize: screenSize.isMobile ? '14px' : '12px'
             }}
             title="Refresh"
           >
             ↻
           </button>
           <button 
-            className={`bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0] ${
+            className={`bg-[#c0c0c0] border border-[#808080] flex items-center justify-center text-xs hover:bg-[#e0e0e0] flex-shrink-0 ${
               screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
             }`}
             style={{ 
               borderStyle: 'outset',
-              width: screenSize.isMobile ? '32px' : '24px',
-              height: screenSize.isMobile ? '32px' : '24px',
-              minWidth: screenSize.isMobile ? '32px' : 'auto',
-              touchAction: 'manipulation'
+              width: screenSize.isMobile ? '36px' : screenSize.isTablet ? '28px' : '24px',
+              height: screenSize.isMobile ? '36px' : screenSize.isTablet ? '28px' : '24px',
+              touchAction: 'manipulation',
+              fontSize: screenSize.isMobile ? '14px' : '12px'
             }}
             title="Home"
             onClick={() => {
@@ -165,17 +165,19 @@ export const InternetExplorer: React.FC = () => {
         
         {/* Address Bar */}
         <div className="flex items-center gap-1">
-          <span className="text-xs">Address:</span>
-          <div className="flex-1 flex items-center bg-white border border-[#808080] px-2 py-0.5 text-xs" style={{ borderStyle: 'inset' }}>
+          <span className={screenSize.isMobile ? 'text-xs' : 'text-xs'}>Address:</span>
+          <div className={`flex-1 flex items-center bg-white border border-[#808080] px-2 py-0.5 ${
+            screenSize.isMobile ? 'text-xs' : 'text-xs'
+          }`} style={{ borderStyle: 'inset' }}>
             <span className="text-blue-600">http://prithivraj.portfolio/blog{currentPage !== 'home' ? `/${currentPage}` : ''}</span>
           </div>
           <button 
-            className={`px-2 py-0.5 bg-[#c0c0c0] border border-[#808080] text-xs hover:bg-[#e0e0e0] ${
+            className={`px-2 py-0.5 bg-[#c0c0c0] border border-[#808080] text-xs hover:bg-[#e0e0e0] flex-shrink-0 ${
               screenSize.isTouchDevice ? 'active:bg-gray-400' : ''
             }`} 
             style={{ 
               borderStyle: 'outset',
-              minHeight: screenSize.isMobile ? '32px' : 'auto',
+              minHeight: screenSize.isMobile ? '36px' : 'auto',
               touchAction: 'manipulation'
             }}
           >

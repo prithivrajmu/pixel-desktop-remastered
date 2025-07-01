@@ -24,13 +24,13 @@ export const desktopIcons = [
     }
   },
   { 
-    id: 'inbox', 
+    id: 'my-documents', 
     name: 'My Documents', 
     position: { x: 20, y: 100 },
     tooltip: 'My Projects and Experiences',
     icon: '/icons/Documents Folder.ico',
     windowConfig: {
-      title: 'Inbox',
+      title: 'My Documents',
       icon: '/icons/Documents Folder.ico',
       component: MyDocuments,
       isMinimized: false,
@@ -58,7 +58,7 @@ export const desktopIcons = [
     tooltip: 'My Writings and Blog',
     icon: '/icons/SMALL.ico',
     windowConfig: {
-      title: 'The Internet',
+      title: 'Internet Explorer',
       icon: '/icons/SMALL.ico',
       component: InternetExplorer,
       isMinimized: false,

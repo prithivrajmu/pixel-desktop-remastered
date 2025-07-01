@@ -9,7 +9,7 @@ export const Welcome: React.FC<WelcomeProps> = ({ onClose }) => {
   const screenSize = useScreenSize();
   
   return (
-    <div className="bg-gray-300 h-full p-0 overflow-hidden" style={{ fontFamily: '"MS Sans Serif", sans-serif' }}>
+    <div className="bg-gray-300 h-full p-0 overflow-auto" style={{ fontFamily: '"MS Sans Serif", sans-serif' }}>
       {/* Welcome Content */}
       <div className="flex h-full">
         {/* Left section with "Did you know..." */}

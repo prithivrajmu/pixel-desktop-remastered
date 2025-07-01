@@ -353,7 +353,7 @@ export const MyComputer: React.FC = () => {
         
         <div className="border-2 border-gray-400 p-3 mb-4" style={{ borderStyle: 'inset' }}>
           <h3 className="font-bold mb-2">Skills & Technologies</h3>
-          <div className="grid grid-cols-2 gap-2 text-xs">
+          <div className="grid grid-cols-2 gap-2 text-xs ">
             <div>
               <p><strong>Languages:</strong></p>
               <p>• Python (NumPy, Pandas, SciPy, PyTorch)</p>

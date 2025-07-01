@@ -293,11 +293,12 @@ export const Window: React.FC<WindowProps> = memo(({
       {/* Resize Handle - Only show on desktop/tablet as mobile windows are typically fullscreen */}
       {!screenSize.isMobile && (
         <div
-          className={`absolute bottom-0 right-0 cursor-nw-resize ${
-            screenSize.isTablet ? 'w-4 h-4' : 'w-3 h-3'
+          className={`absolute bottom-0 right-0 ${
+            screenSize.isTablet ? 'w-5 h-5' : 'w-4 h-4'
           }`}
           onMouseDown={handleResizeMouseDown}
           style={{
+            cursor: 'nwse-resize',
             background: `repeating-linear-gradient(
               -45deg,
               #c0c0c0,

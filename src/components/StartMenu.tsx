@@ -26,6 +26,7 @@ const IconImg = ({ src, alt }: { src: string; alt: string }) => (
 export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
   const [activeNestedSubmenu, setActiveNestedSubmenu] = useState<string | null>(null);
+  const [activeMobileNestedSubmenu, setActiveMobileNestedSubmenu] = useState<string | null>(null);
   const [submenuTimeout, setSubmenuTimeout] = useState<NodeJS.Timeout | null>(null);
   const submenuHoverRef = useRef(false);
   const nestedSubmenuHoverRef = useRef(false);
@@ -273,17 +274,21 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
     <div 
       ref={menuRootRef}
       className={`absolute bottom-0 left-0 flex bg-gray-300 border-2 border-gray-500 shadow-xl z-40 ${
-        screenSize.isMobile ? 'w-full' : ''
+        screenSize.isMobile ? 'h-auto max-h-[85vh]' : ''
       }`}
       style={{ 
         borderStyle: 'outset', 
-        minWidth: screenSize.isMobile ? '100%' : 270,
-        maxHeight: screenSize.isMobile ? '70vh' : 'auto',
-    overflow: screenSize.isMobile ? 'auto' : 'visible'
+        width: screenSize.isMobile ? '70vw' : 'auto',
+        minWidth: screenSize.isMobile ? '200px' : 'auto',
+        maxWidth: screenSize.isMobile ? '320px' : 'auto',
+        maxHeight: screenSize.isMobile ? '85vh' : 'auto',
+        overflow: screenSize.isMobile ? 'hidden' : 'visible',
+        bottom: screenSize.isMobile ? '48px' : '28px', // Account for taskbar height
+        position: 'fixed',
       }}
       onClick={(e) => e.stopPropagation()}
     >
-      {/* Vertical Windows95 label */}
+      {/* Vertical Windows95 label - Hidden on mobile for space */}
       <div
         className={`flex flex-col items-center justify-center bg-gray-200 border-r-2 border-gray-500 select-none ${
           screenSize.isMobile ? 'hidden' : ''
@@ -293,7 +298,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
           borderStyle: 'outset',
           fontFamily: 'MS Sans Serif, sans-serif',
           position: 'relative',
-          minHeight: 270,
+          minHeight: 'auto',
         }}
       >
         <span
@@ -314,22 +319,26 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
             whiteSpace: 'nowrap',
           }}
         >
-          Prithiv95
+          Windows 95
         </span>
       </div>
+      
       {/* Menu Items */}
       <div 
         className={`py-1 relative flex-1 ${screenSize.isMobile ? 'overflow-y-auto' : ''}`}
         style={{ 
           minWidth: screenSize.isMobile ? 'auto' : 210, 
           fontFamily: 'MS Sans Serif, sans-serif',
-          WebkitOverflowScrolling: 'touch'
+          WebkitOverflowScrolling: 'touch',
+          maxHeight: screenSize.isMobile ? 'calc(85vh - 2px)' : 'auto'
         }}
       >
         {menuItems.map((item, index) => {
           if (item.type === 'separator') {
             return (
-              <div key={index} className="h-px bg-gray-500 mx-2 my-1" />
+              <div key={index} className={`bg-gray-500 mx-2 my-1 ${
+                screenSize.isMobile ? 'h-0.5' : 'h-px'
+              }`} />
             );
           }
           return (
@@ -337,7 +346,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
               key={index}
               className={`flex items-center px-3 py-1 hover:bg-blue-600 hover:text-white cursor-pointer group relative ${
                 screenSize.isTouchDevice ? 'active:bg-blue-700' : ''
-              }`}
+              } ${screenSize.isMobile ? 'border-b border-gray-400' : ''}`}
               onMouseEnter={() => !screenSize.isMobile && handleParentEnter(item.label || '', item.hasSubmenu)}
               onMouseLeave={() => !screenSize.isMobile && handleParentLeave()}
               onClick={(e) => {
@@ -362,44 +371,109 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
                 }
               }}
               style={{ 
-                fontSize: screenSize.isMobile ? '16px' : '14px', 
-                minHeight: screenSize.isMobile ? 44 : 28,
-                touchAction: 'manipulation'
+                fontSize: screenSize.isMobile ? '14px' : '14px', 
+                minHeight: screenSize.isMobile ? 40 : 28,
+                touchAction: 'manipulation',
+                paddingLeft: screenSize.isMobile ? '16px' : '12px',
+                paddingRight: screenSize.isMobile ? '16px' : '12px'
               }}
             >
-              <span className="w-7 flex items-center justify-center mr-3">
+              <span className={`flex items-center justify-center mr-3 ${
+                screenSize.isMobile ? 'w-8' : 'w-7'
+              }`}>
                 {item.icon && <IconImg src={item.icon} alt={item.label || ''} />}
               </span>
               <span className="flex-1 text-left" style={{ paddingLeft: 2 }}>{item.label}</span>
-              {item.hasSubmenu && <ChevronRight size={13} className="ml-2" />}
+              {item.hasSubmenu && (
+                <ChevronRight 
+                  size={screenSize.isMobile ? 16 : 13} 
+                  className={`ml-2 ${activeSubmenu === item.label && screenSize.isMobile ? 'rotate-90' : ''}`} 
+                  style={{ 
+                    transition: 'transform 0.2s ease',
+                    color: activeSubmenu === item.label && screenSize.isMobile ? '#0066cc' : 'inherit'
+                  }}
+                />
+              )}
+              
+              {/* Submenu rendering */}
               {activeSubmenu === item.label && item.submenu && (
                 <div className={`absolute z-50 ${
                   screenSize.isMobile 
-                    ? 'top-full left-0 right-0' 
+                    ? 'top-full left-0 right-0 bg-gray-200 border-t border-gray-400' 
                     : 'top-0 left-full'
                 }`}>
                   {screenSize.isMobile ? (
-                    <div className="bg-gray-300 border-2 border-gray-500 shadow-lg">
+                    <div className="bg-gray-200 max-h-64 overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
                       {item.submenu.map((subItem, subIndex) => {
                         if (subItem.type === 'separator') {
-                          return <div key={subIndex} className="h-px bg-gray-500 mx-2 my-1" />;
+                          return <div key={subIndex} className="h-0.5 bg-gray-500 mx-4 my-1" />;
                         }
                         return (
-                          <div
-                            key={subIndex}
-                            className="flex items-center px-4 py-3 cursor-pointer text-base text-black hover:bg-blue-600 hover:text-white active:bg-blue-700"
-                            style={{ touchAction: 'manipulation', minHeight: 44 }}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              handleItemClick(subItem);
-                            }}
-                          >
-                            <span className="w-7 flex items-center justify-center mr-3">
-                              {subItem.icon && <IconImg src={subItem.icon} alt={subItem.label || ''} />}
-                            </span>
-                            <span className="flex-1">{subItem.label}</span>
-                          </div>
+                          <React.Fragment key={subIndex}>
+                            <div
+                              className={`flex items-center px-6 py-3 cursor-pointer text-base text-black hover:bg-blue-600 hover:text-white active:bg-blue-700 border-b border-gray-300 ${subItem.hasSubmenu ? 'justify-between' : ''}`}
+                              style={{ 
+                                touchAction: 'manipulation', 
+                                minHeight: 40,
+                                fontSize: '14px'
+                              }}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                if (subItem.hasSubmenu) {
+                                  // Toggle nested submenu level on mobile
+                                  if (activeMobileNestedSubmenu === subItem.label) {
+                                    setActiveMobileNestedSubmenu(null);
+                                  } else {
+                                    setActiveMobileNestedSubmenu(subItem.label || null);
+                                  }
+                                } else {
+                                  handleItemClick(subItem);
+                                }
+                              }}
+                            >
+                              <span className="w-8 flex items-center justify-center mr-3">
+                                {subItem.icon && <IconImg src={subItem.icon} alt={subItem.label || ''} />}
+                              </span>
+                              <span className="flex-1">{subItem.label}</span>
+                              {subItem.hasSubmenu && (
+                                <ChevronRight 
+                                  size={14}
+                                  className={`transition-transform ${activeMobileNestedSubmenu === subItem.label ? 'rotate-90 text-[#0066cc]' : ''}`}
+                                />
+                              )}
+                            </div>
+
+                            {/* Nested submenu for mobile */}
+                            {subItem.hasSubmenu && activeMobileNestedSubmenu === subItem.label && subItem.submenu && (
+                              <div className="bg-gray-100 border-t border-gray-400 max-h-64 overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
+                                {subItem.submenu.map((nestedItem, nestedIdx) => {
+                                  if (nestedItem.type === 'separator') {
+                                    return <div key={nestedIdx} className="h-0.5 bg-gray-500 mx-8 my-1" />;
+                                  }
+                                  return (
+                                    <div
+                                      key={nestedIdx}
+                                      className="flex items-center px-10 py-3 cursor-pointer text-base text-black hover:bg-blue-600 hover:text-white active:bg-blue-700 border-b border-gray-300"
+                                      style={{ touchAction: 'manipulation', minHeight: 40, fontSize: '14px' }}
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        handleItemClick(nestedItem);
+                                        setActiveMobileNestedSubmenu(null);
+                                        setActiveSubmenu(null);
+                                      }}
+                                    >
+                                      <span className="w-8 flex items-center justify-center mr-3">
+                                        {nestedItem.icon && <IconImg src={nestedItem.icon} alt={nestedItem.label || ''} />}
+                                      </span>
+                                      <span className="flex-1">{nestedItem.label}</span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            )}
+                          </React.Fragment>
                         );
                       })}
                     </div>

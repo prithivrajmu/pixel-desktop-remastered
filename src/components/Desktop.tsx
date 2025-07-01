@@ -58,6 +58,8 @@ export const Desktop: React.FC = () => {
     selectedIcons,
     handleDesktopRightClick,
     handleIconRightClick,
+    handleIconLongPress,
+    handleDesktopLongPress,
     handleIconClick,
     handleDesktopClick,
     closeContextMenu
@@ -88,10 +90,14 @@ export const Desktop: React.FC = () => {
     const padding = isMobile ? 16 : 16; // More padding on mobile for better UX
     
     if (isMobile) {
-      // On mobile, windows should be nearly fullscreen with proper spacing
+      // On mobile, windows should take the full width (minus small padding)
+      // and the full available height above the taskbar/title-bar so users can
+      // always scroll inside the window if its content is tall.
+      const availableHeight = height - taskbarHeight - titleBarHeight - padding;
       return {
         width: Math.max(320, width - padding),
-        height: Math.max(400, height - taskbarHeight - titleBarHeight - padding)
+        // Always stay within the viewport – no hard minimum that would overflow.
+        height: availableHeight,
       };
     } else if (isTablet) {
       // On tablet, use 85% of screen with minimum sizes
@@ -124,74 +130,42 @@ export const Desktop: React.FC = () => {
     }
   }, [screenSize]);
 
-  // Handle window resize for maximized windows and responsive updates
+  // Preserve manual window sizes/positions while still ensuring they remain on-screen.
+  // We only adjust a window when it would overflow the visible viewport *or* when we
+  // transition between break-points (mobile → tablet → desktop and vice-versa).
   useEffect(() => {
-    const handleWindowResize = () => {
-      const taskbarHeight = screenSize.isMobile ? 48 : 28;
-      
-      windows.forEach(windowData => {
-        const isMaximized = windowData.size.width >= window.innerWidth - 20 && 
-                          windowData.size.height >= window.innerHeight - taskbarHeight - 20;
-        
-        if (isMaximized || screenSize.isMobile) {
-          // Update maximized windows or force mobile windows to optimal size
-          const optimalSize = getOptimalWindowSize();
-          const centeredPosition = centerWindow(optimalSize);
-          
-          updateWindow(windowData.id, {
-            size: optimalSize,
-            position: centeredPosition
-          });
-        } else if (screenSize.isTablet) {
-          // Ensure tablet windows fit within screen bounds
-          const maxWidth = window.innerWidth - 32;
-          const maxHeight = window.innerHeight - taskbarHeight - 32;
-          
-          if (windowData.size.width > maxWidth || windowData.size.height > maxHeight) {
-            updateWindow(windowData.id, {
-              size: {
-                width: Math.min(windowData.size.width, maxWidth),
-                height: Math.min(windowData.size.height, maxHeight)
-              },
-              position: {
-                x: Math.min(windowData.position.x, maxWidth - windowData.size.width),
-                y: Math.min(windowData.position.y, maxHeight - windowData.size.height)
-              }
-            });
-          }
-        }
-      });
-    };
+    if (windows.length === 0) return;
 
-    window.addEventListener('resize', handleWindowResize);
-    window.addEventListener('orientationchange', handleWindowResize);
-    return () => {
-      window.removeEventListener('resize', handleWindowResize);
-      window.removeEventListener('orientationchange', handleWindowResize);
-    };
-  }, [windows, updateWindow, screenSize, getOptimalWindowSize, centerWindow]);
+    const { width: viewportW, height: viewportH, isMobile, isTablet } = screenSize;
+    const taskbarHeight = isMobile ? 48 : 28;
 
-  // Immediately resize all windows when screen size detection changes
-  useEffect(() => {
-    if (screenSize.width > 0 && windows.length > 0) {
-      windows.forEach(windowData => {
+    windows.forEach(windowData => {
+      const overflowsX = windowData.position.x + windowData.size.width > viewportW;
+      const overflowsY = windowData.position.y + windowData.size.height > viewportH - taskbarHeight;
+
+      // Determine if we just crossed a responsive breakpoint (mobile ⇄ tablet ⇄ desktop)
+      const breakpointKey = isMobile ? 'mobile' : isTablet ? 'tablet' : 'desktop';
+      // Store the last evaluated breakpoint in a global variable (typed as any to avoid TS complaints).
+      if (!(window as any).__lastBreakpoint) {
+        (window as any).__lastBreakpoint = breakpointKey;
+      }
+
+      const breakpointChanged = (window as any).__lastBreakpoint !== breakpointKey;
+
+      if (overflowsX || overflowsY || breakpointChanged) {
         const optimalSize = getOptimalWindowSize();
         const optimalPosition = centerWindow(optimalSize);
-        
-        // Only update if the size or position would change significantly
-        const sizeDiff = Math.abs(windowData.size.width - optimalSize.width) > 50 || 
-                         Math.abs(windowData.size.height - optimalSize.height) > 50;
-        const posDiff = screenSize.isMobile && (windowData.position.x > 20 || windowData.position.y > 20);
-        
-        if (sizeDiff || posDiff) {
-          updateWindow(windowData.id, {
-            size: optimalSize,
-            position: optimalPosition
-          });
-        }
-      });
-    }
-  }, [screenSize.isMobile, screenSize.isTablet, screenSize.width, screenSize.height, windows, getOptimalWindowSize, centerWindow, updateWindow]);
+
+        updateWindow(windowData.id, {
+          size: optimalSize,
+          position: optimalPosition,
+        });
+      }
+    });
+
+    // Update stored breakpoint after processing.
+    (window as any).__lastBreakpoint = isMobile ? 'mobile' : isTablet ? 'tablet' : 'desktop';
+  }, [screenSize.isMobile, screenSize.isTablet, windows, getOptimalWindowSize, centerWindow, updateWindow, screenSize.width, screenSize.height]);
 
   // Show welcome screen on startup
   useEffect(() => {
@@ -285,6 +259,40 @@ export const Desktop: React.FC = () => {
     { label: 'Properties', onClick: handleIconProperties }
   ];
 
+  /* ---------------- ICON LAYOUT ---------------- */
+  // Compute a tidy grid-style layout for desktop icons that adapts to the
+  // current viewport height. Icons will fill a column top-to-bottom and
+  // then start a new column, similar to the classic Windows desktop.
+  const getIconPosition = useCallback(
+    (index: number) => {
+      const margin = 20; // distance from screen edge & between columns
+      // Estimated full icon "block" height (icon + label + spacing)
+      const iconBlockHeight = screenSize.isMobile
+        ? 100
+        : screenSize.isTablet
+          ? 90
+          : 80;
+      const iconBlockWidth = screenSize.isMobile
+        ? 80
+        : screenSize.isTablet
+          ? 72
+          : 64;
+
+      const taskbarHeight = screenSize.isMobile ? 48 : 28;
+      const usableHeight = Math.max(100, screenSize.height - taskbarHeight - margin * 2);
+
+      const iconsPerColumn = Math.max(1, Math.floor(usableHeight / iconBlockHeight));
+      const column = Math.floor(index / iconsPerColumn);
+      const row = index % iconsPerColumn;
+
+      return {
+        x: margin + column * (iconBlockWidth + margin),
+        y: margin + row * iconBlockHeight,
+      } as const;
+    },
+    [screenSize]
+  );
+
   return (
     <>
       <SoundManager />
@@ -295,13 +303,43 @@ export const Desktop: React.FC = () => {
         }}
         onClick={handleDesktopClick}
         onContextMenu={handleDesktopRightClick}
+        onTouchStart={(e) => {
+          if (screenSize.isTouchDevice && e.touches.length === 1) {
+            // Check if the touch target is within an icon element
+            const target = e.target as HTMLElement;
+            const isIconElement = target.closest('[data-icon-element]');
+            
+            // Only handle desktop long press if not touching an icon
+            if (!isIconElement) {
+              // Simple long press detection for desktop background
+              const timer = setTimeout(() => {
+                handleDesktopLongPress(e);
+              }, 500);
+              
+              const handleTouchEnd = () => {
+                clearTimeout(timer);
+                document.removeEventListener('touchend', handleTouchEnd);
+                document.removeEventListener('touchmove', handleTouchMove);
+              };
+              
+              const handleTouchMove = () => {
+                clearTimeout(timer);
+                document.removeEventListener('touchend', handleTouchEnd);
+                document.removeEventListener('touchmove', handleTouchMove);
+              };
+              
+              document.addEventListener('touchend', handleTouchEnd);
+              document.addEventListener('touchmove', handleTouchMove);
+            }
+          }
+        }}
       >
         <BackgroundManager 
           selectedBackground={selectedBackground}
           className="z-0" 
         />
 
-        {desktopIcons.map(icon => (
+        {desktopIcons.map((icon, idx) => (
           <DesktopIcon
             key={icon.id}
             name={icon.name}
@@ -312,12 +350,13 @@ export const Desktop: React.FC = () => {
                 size={32}
               />
             }
-            position={icon.position}
+            position={getIconPosition(idx)}
             isSelected={selectedIcons.has(icon.id)}
-            tooltip={icon.tooltip}
             onDoubleClick={() => handleOpenWindow(icon.windowConfig)}
             onClick={() => handleIconClick(icon.id)}
             onRightClick={(e) => handleIconRightClick(e, icon.id)}
+            onLongPress={(e) => handleIconLongPress(e, icon.id)}
+            tooltip={icon.tooltip}
           />
         ))}
 
@@ -339,28 +378,35 @@ export const Desktop: React.FC = () => {
               const maxWidth = window.innerWidth;
               const maxHeight = window.innerHeight - taskbarHeight;
               
-              // More accurate check for maximized state with a small tolerance
-              const isMaximized = Math.abs(windowData.size.width - maxWidth) < 10 && 
-                               Math.abs(windowData.size.height - maxHeight) < 10 &&
-                               windowData.position.x <= 5 && windowData.position.y <= 5;
+              // More accurate check for maximized state with proper tolerance
+              const isMaximized = 
+                Math.abs(windowData.size.width - maxWidth) <= 5 && 
+                Math.abs(windowData.size.height - maxHeight) <= 5 &&
+                windowData.position.x <= 5 && windowData.position.y <= 5;
               
-              if (!isMaximized) {
-                // Store previous size and position, then maximize
-                updateWindow(windowData.id, {
-                  prevSize: windowData.size,
-                  prevPosition: windowData.position,
-                  size: { width: maxWidth, height: maxHeight },
-                  position: { x: 0, y: 0 }
-                });
-              } else {
-                // Restore previous size and position if available, else use responsive default
-                const defaultSize = getOptimalWindowSize();
-                const defaultPosition = centerWindow(defaultSize);
-                updateWindow(windowData.id, {
-                  size: windowData.prevSize || defaultSize,
-                  position: windowData.prevPosition || defaultPosition
-                });
-              }
+              // Prevent rapid fire maximize calls
+              setTimeout(() => {
+                if (!isMaximized) {
+                  // Store previous size and position, then maximize
+                  updateWindow(windowData.id, {
+                    prevSize: windowData.size,
+                    prevPosition: windowData.position,
+                    size: { width: maxWidth, height: maxHeight },
+                    position: { x: 0, y: 0 }
+                  });
+                } else {
+                  // Restore previous size and position if available, else use responsive default
+                  const defaultSize = getOptimalWindowSize();
+                  const defaultPosition = centerWindow(defaultSize);
+                  updateWindow(windowData.id, {
+                    size: windowData.prevSize || defaultSize,
+                    position: windowData.prevPosition || defaultPosition,
+                    // Clear the stored previous values after restoring
+                    prevSize: undefined,
+                    prevPosition: undefined
+                  });
+                }
+              }, 50); // Small delay to prevent flickering
             }}
             onUpdatePosition={(position) => updateWindow(windowData.id, { position })}
             onUpdateSize={(size) => updateWindow(windowData.id, { size })}

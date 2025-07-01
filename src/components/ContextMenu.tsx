@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { useScreenSize } from '../hooks/use-mobile';
@@ -120,7 +119,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
         borderStyle: 'outset',
         fontSize: screenSize.isMobile ? '14px' : '11px',
         fontFamily: '"MS Sans Serif", sans-serif',
-        minWidth: screenSize.isMobile ? '180px' : '144px',
+        minWidth: screenSize.isMobile ? '200px' : '144px',
         maxWidth: screenSize.isMobile ? '90vw' : 'auto'
       }}
       onClick={(e) => e.stopPropagation()}
@@ -137,25 +136,26 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({
               item.disabled 
                 ? 'text-gray-500 cursor-not-allowed' 
                 : 'hover:bg-blue-600 hover:text-white'
-            }`}
+            } ${screenSize.isTouchDevice ? 'active:bg-blue-700' : ''}`}
             style={{
-              minHeight: screenSize.isMobile ? '44px' : '24px',
+              minHeight: screenSize.isMobile ? '48px' : '24px',
               paddingTop: screenSize.isMobile ? '12px' : '4px',
               paddingBottom: screenSize.isMobile ? '12px' : '4px',
-              touchAction: 'manipulation'
+              touchAction: 'manipulation',
+              fontSize: screenSize.isMobile ? '14px' : '11px'
             }}
             onMouseEnter={() => handleItemHover(item.label || '', item.hasSubmenu)}
             onClick={() => handleItemClick(item)}
           >
             {item.icon && (
-              <span className="text-center" style={{ width: screenSize.isMobile ? '20px' : '16px' }}>
+              <span className="text-center" style={{ width: screenSize.isMobile ? '24px' : '16px' }}>
                 {item.icon}
               </span>
             )}
             <span className="flex-1">{item.label}</span>
             {item.hasSubmenu && (
               <>
-                <ChevronRight size={screenSize.isMobile ? 12 : 8} className="ml-1" />
+                <ChevronRight size={screenSize.isMobile ? 14 : 8} className="ml-1" />
                 {activeSubmenu === item.label && item.submenu && (
                   <div className={screenSize.isTouchDevice ? 'block' : 'group-hover:block'}>
                     {renderSubmenu(item.submenu, item.label || '')}

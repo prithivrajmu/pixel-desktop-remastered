@@ -24,7 +24,7 @@ export const Taskbar: React.FC<TaskbarProps> = ({
   const screenSize = useScreenSize();
   
   const taskbarHeight = screenSize.isMobile ? 48 : 28;
-  const startButtonMinWidth = screenSize.isMobile ? 80 : 60;
+  const startButtonMinWidth = screenSize.isMobile ? 80 : screenSize.isTablet ? 64 : 60;
   const windowButtonMinWidth = screenSize.isMobile ? 100 : 80;
   const windowButtonMaxWidth = screenSize.isMobile ? 200 : 150;
   
@@ -43,14 +43,16 @@ export const Taskbar: React.FC<TaskbarProps> = ({
     >
       {/* Start Button */}
       <button
-        className={`px-2 mx-1 bg-gray-300 border border-gray-400 flex items-center space-x-1 font-bold text-xs hover:bg-gray-200 flex-shrink-0 ${
+        className={`px-2 mx-1 bg-gray-300 border border-gray-400 flex items-center space-x-1 font-bold text-xs hover:bg-gray-200 ${
           isStartMenuOpen ? 'pressed' : ''
         } ${screenSize.isTouchDevice ? 'active:bg-gray-400' : ''}`}
         style={{ 
           borderStyle: isStartMenuOpen ? 'inset' : 'outset',
-          fontSize: screenSize.isMobile ? '12px' : '11px',
+          fontSize: screenSize.isMobile ? '12px' : screenSize.isTablet ? '11px' : '11px',
           height: `${taskbarHeight - 4}px`,
           minWidth: `${startButtonMinWidth}px`,
+          maxWidth: '90px',
+          flexShrink: screenSize.isTablet ? 1 : 0,
           touchAction: 'manipulation'
         }}
         onClick={onStartClick}
@@ -58,8 +60,8 @@ export const Taskbar: React.FC<TaskbarProps> = ({
         <img
           src="/icons/Windows logo (without text).ico"
           alt="Start"
-          width={screenSize.isMobile ? 20 : 18}
-          height={screenSize.isMobile ? 20 : 18}
+          width={screenSize.isMobile ? 20 : screenSize.isTablet ? 18 : 18}
+          height={screenSize.isMobile ? 20 : screenSize.isTablet ? 18 : 18}
           style={{ imageRendering: 'pixelated', marginRight: 4 }}
         />
         <span>Start</span>

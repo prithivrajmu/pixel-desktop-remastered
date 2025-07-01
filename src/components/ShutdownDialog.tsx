@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useSounds } from './SoundManager';
+import { useScreenSize } from '../hooks/use-mobile';
 
 interface ShutdownDialogProps {
   isOpen: boolean;
@@ -14,6 +15,7 @@ export const ShutdownDialog: React.FC<ShutdownDialogProps> = ({
 }) => {
   const [selectedAction, setSelectedAction] = useState<'shutdown' | 'restart' | 'msdos' | 'logoff'>('shutdown');
   const sounds = useSounds();
+  const screenSize = useScreenSize();
 
   if (!isOpen) return null;
 
@@ -43,12 +45,15 @@ export const ShutdownDialog: React.FC<ShutdownDialogProps> = ({
         className="bg-[#c0c0c0] border-2 border-[#808080] shadow-lg"
         style={{ 
           borderStyle: 'outset',
-          width: '400px',
+          width: screenSize.isMobile ? '90vw' : '400px',
+          maxWidth: '95vw',
+          maxHeight: '90vh',
+          overflowY: 'auto',
           fontFamily: '"MS Sans Serif", "Microsoft Sans Serif", sans-serif'
         }}
       >
         {/* Title Bar */}
-        <div className="bg-[#000080] h-6 px-2 flex items-center justify-between">
+        <div className="bg-[#000080] h-6 px-2 flex items-center justify-between" style={{ minHeight: screenSize.isMobile ? 28 : 24 }}>
           <div className="flex items-center space-x-1">
             <img 
               src="/icons/Turn Off Computer (display only).ico" 
@@ -59,8 +64,8 @@ export const ShutdownDialog: React.FC<ShutdownDialogProps> = ({
             <span className="text-white text-xs font-bold">Shut Down Windows</span>
           </div>
           <button
-            className="w-4 h-3 bg-[#c0c0c0] border border-[#808080] flex items-center justify-center hover:bg-[#e0e0e0] text-xs font-bold"
-            style={{ borderStyle: 'outset', fontSize: '8px' }}
+            className="w-5 h-4 bg-[#c0c0c0] border border-[#808080] flex items-center justify-center hover:bg-[#e0e0e0] text-xs font-bold"
+            style={{ borderStyle: 'outset', fontSize: '10px' }}
             onClick={handleCancel}
           >
             ×
