@@ -73,17 +73,18 @@ export const PropertiesDialog: React.FC<PropertiesDialogProps> = ({
 
   const { description, quote } = getIconDescription(iconData.id);
   const isMobileLandscape = screenSize.isMobile && screenSize.isLandscape;
+  const isMobilePortrait = screenSize.isMobile && !screenSize.isLandscape;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div 
-        className={`bg-[#c0c0c0] border-2 border-gray-400 shadow-lg ${
+        className={`bg-[#c0c0c0] border-2 border-gray-400 shadow-lg flex flex-col ${
           isMobileLandscape
-            ? 'w-[90vw] max-w-[550px] h-[90vh] max-h-[380px]'
+            ? 'w-[95vw] max-w-[600px] h-[95vh] max-h-[420px]'
             : screenSize.isMobile
-              ? 'w-[88vw] max-w-[300px] max-h-[70vh]'
-              : 'w-96'
-        } flex flex-col`}
+              ? 'w-[90vw] max-w-[320px] h-[85vh] max-h-[500px]'
+              : 'w-96 max-h-[80vh]'
+        }`}
         style={{ 
           borderStyle: 'outset',
           fontFamily: '"MS Sans Serif", sans-serif'
@@ -153,85 +154,106 @@ export const PropertiesDialog: React.FC<PropertiesDialogProps> = ({
           </div>
         </div>
 
-        {/* Tab Content - Scrollable */}
-        <div className="bg-[#c0c0c0] border-t-2 border-gray-400 flex-1 overflow-y-auto" style={{ borderTopStyle: 'inset' }}>
-          <div className={`h-full ${screenSize.isMobile ? 'p-3' : 'p-4'}`}>
-            {activeTab === 'description' && (
-              <div className={`h-full flex ${isMobileLandscape ? 'flex-row space-x-3' : 'flex-col space-y-3'}`}>
-                {/* Left Column (or full width on portrait) */}
-                <div className={`${isMobileLandscape ? 'w-1/2' : 'w-full'} flex flex-col space-y-3`}>
-                  {/* Icon and Basic Info */}
-                  <div className="flex items-start space-x-3">
-                    <img 
-                      src={iconData.icon} 
-                      alt={iconData.name}
-                      className={screenSize.isMobile ? "w-7 h-7" : "w-8 h-8"}
-                      style={{ imageRendering: 'pixelated' }}
-                    />
-                    <div className="flex-1">
-                      <div className="font-bold mb-1" style={{ fontSize: screenSize.isMobile ? '12px' : '13px' }}>{iconData.name}</div>
-                      <div className="text-gray-600" style={{ fontSize: screenSize.isMobile ? '10px' : '11px' }}>{iconData.tooltip}</div>
+        {/* Scrollable Content Area */}
+        <div className="flex-1 min-h-0 overflow-y-auto">
+          {/* Tab Content */}
+          <div className="bg-[#c0c0c0] border-t-2 border-gray-400" style={{ borderTopStyle: 'inset' }}>
+            <div className={`${screenSize.isMobile ? 'p-3' : 'p-4'}`}>
+              {activeTab === 'description' && (
+                <div className={`flex ${isMobileLandscape ? 'flex-row space-x-3' : 'flex-col space-y-3'}`}>
+                  {/* Left Column (or full width on portrait) */}
+                  <div className={`${isMobileLandscape ? 'w-1/2' : 'w-full'} flex flex-col space-y-3`}>
+                    {/* Icon and Basic Info */}
+                    <div className="flex items-start space-x-3 flex-shrink-0">
+                      <img 
+                        src={iconData.icon} 
+                        alt={iconData.name}
+                        className={screenSize.isMobile ? "w-7 h-7" : "w-8 h-8"}
+                        style={{ imageRendering: 'pixelated' }}
+                      />
+                      <div className="flex-1">
+                        <div className="font-bold mb-1" style={{ fontSize: screenSize.isMobile ? '12px' : '13px' }}>{iconData.name}</div>
+                        <div className="text-gray-600" style={{ fontSize: screenSize.isMobile ? '10px' : '11px' }}>{iconData.tooltip}</div>
+                      </div>
+                    </div>
+                    
+                    {isMobileLandscape && <div className="border-t border-gray-400 flex-shrink-0" style={{ borderTopStyle: 'inset' }}></div>}
+
+                    {/* Description */}
+                    <div className={`flex flex-col ${isMobileLandscape ? 'flex-1 min-h-0' : ''}`}>
+                      <div className="font-bold mb-2 flex-shrink-0" style={{ fontSize: screenSize.isMobile ? '10px' : '11px' }}>Description:</div>
+                      <div className={`leading-relaxed bg-white border border-gray-400 p-2 ${
+                        isMobileLandscape 
+                          ? 'flex-1 min-h-0 overflow-y-auto min-h-[80px]' 
+                          : isMobilePortrait 
+                          ? 'min-h-[100px]' 
+                          : ''
+                      }`} style={{ borderStyle: 'inset', fontSize: screenSize.isMobile ? '10px' : '11px' }}>
+                        {description}
+                      </div>
                     </div>
                   </div>
                   
-                  {isMobileLandscape && <div className="border-t border-gray-400" style={{ borderTopStyle: 'inset' }}></div>}
+                  {/* Separator for portrait mode */}
+                  {!isMobileLandscape && <div className="border-t border-gray-400 flex-shrink-0" style={{ borderTopStyle: 'inset' }}></div>}
 
-                  {/* Description */}
-                  <div className={isMobileLandscape ? 'flex-1 flex flex-col' : ''}>
-                    <div className="font-bold mb-2" style={{ fontSize: screenSize.isMobile ? '10px' : '11px' }}>Description:</div>
-                    <div className={`${isMobileLandscape ? 'flex-1 overflow-y-auto' : ''} leading-relaxed bg-white border border-gray-400 p-2`} style={{ borderStyle: 'inset', fontSize: screenSize.isMobile ? '10px' : '11px' }}>
-                      {description}
+                  {/* Right Column (or full width on portrait) */}
+                  <div className={`${isMobileLandscape ? 'w-1/2' : 'w-full'} flex flex-col space-y-3`}>
+                    {/* Quote */}
+                    <div className={`flex flex-col ${isMobileLandscape ? 'flex-1 min-h-0' : ''}`}>
+                      <div className="font-bold mb-2 flex-shrink-0" style={{ fontSize: screenSize.isMobile ? '10px' : '11px' }}>Inspirational Quote:</div>
+                      <div className={`italic text-gray-700 bg-gray-100 border border-gray-400 p-2 ${
+                        isMobileLandscape 
+                          ? 'flex-1 min-h-0 overflow-y-auto min-h-[60px]' 
+                          : isMobilePortrait 
+                          ? 'min-h-[80px]' 
+                          : ''
+                      }`} style={{ borderStyle: 'inset', fontSize: screenSize.isMobile ? '10px' : '11px' }}>
+                        {quote}
+                      </div>
                     </div>
-                  </div>
-                </div>
-                
-                {/* Separator for portrait mode */}
-                {!isMobileLandscape && <div className="border-t border-gray-400" style={{ borderTopStyle: 'inset' }}></div>}
+                    
+                    {isMobileLandscape && <div className="border-t border-gray-400 flex-shrink-0" style={{ borderTopStyle: 'inset' }}></div>}
 
-                {/* Right Column (or full width on portrait) */}
-                <div className={`${isMobileLandscape ? 'w-1/2' : 'w-full'} flex flex-col space-y-3`}>
-                  {/* Quote */}
-                  <div className={isMobileLandscape ? 'flex-1 flex flex-col' : ''}>
-                    <div className="font-bold mb-2" style={{ fontSize: screenSize.isMobile ? '10px' : '11px' }}>Inspirational Quote:</div>
-                    <div className={`${isMobileLandscape ? 'flex-1 overflow-y-auto' : ''} italic text-gray-700 bg-gray-100 border border-gray-400 p-2`} style={{ borderStyle: 'inset', fontSize: screenSize.isMobile ? '10px' : '11px' }}>
-                      {quote}
-                    </div>
-                  </div>
-                  
-                  {isMobileLandscape && <div className="border-t border-gray-400" style={{ borderTopStyle: 'inset' }}></div>}
-
-                  {/* Properties */}
-                  <div>
-                    <div className="font-bold mb-2" style={{ fontSize: screenSize.isMobile ? '10px' : '11px' }}>Properties:</div>
-                    <div className="space-y-1" style={{ fontSize: screenSize.isMobile ? '10px' : '11px' }}>
-                      <div className="flex">
-                        <span className={`${screenSize.isMobile ? 'w-14' : 'w-16'} text-gray-600`}>Type:</span>
-                        <span>Desktop Icon</span>
-                      </div>
-                      <div className="flex">
-                        <span className={`${screenSize.isMobile ? 'w-14' : 'w-16'} text-gray-600`}>Location:</span>
-                        <span>Desktop</span>
-                      </div>
-                      <div className="flex">
-                        <span className={`${screenSize.isMobile ? 'w-14' : 'w-16'} text-gray-600`}>Size:</span>
-                        <span>32x32 pixels</span>
-                      </div>
-                      <div className="flex">
-                        <span className={`${screenSize.isMobile ? 'w-14' : 'w-16'} text-gray-600`}>Created:</span>
-                        <span>Windows 95 Era</span>
+                    {/* Properties */}
+                    <div className="flex-shrink-0">
+                      <div className="font-bold mb-2" style={{ fontSize: screenSize.isMobile ? '10px' : '11px' }}>Properties:</div>
+                      <div className="space-y-1" style={{ fontSize: screenSize.isMobile ? '10px' : '11px' }}>
+                        <div className="flex">
+                          <span className={`${screenSize.isMobile ? 'w-14' : 'w-16'} text-gray-600`}>Type:</span>
+                          <span>Desktop Icon</span>
+                        </div>
+                        <div className="flex">
+                          <span className={`${screenSize.isMobile ? 'w-14' : 'w-16'} text-gray-600`}>Location:</span>
+                          <span>Desktop</span>
+                        </div>
+                        <div className="flex">
+                          <span className={`${screenSize.isMobile ? 'w-14' : 'w-16'} text-gray-600`}>Size:</span>
+                          <span>32x32 pixels</span>
+                        </div>
+                        <div className="flex">
+                          <span className={`${screenSize.isMobile ? 'w-14' : 'w-16'} text-gray-600`}>Created:</span>
+                          <span>Windows 95 Era</span>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className={`bg-[#c0c0c0] ${screenSize.isMobile ? 'p-2' : 'p-3'} flex justify-end space-x-2 flex-shrink-0`}>
+        {/* Action Buttons - Fixed Footer */}
+        <div className={`bg-[#c0c0c0] flex justify-end border-t border-gray-400 flex-shrink-0 ${
+          isMobilePortrait ? 'p-2 space-x-1 flex-wrap gap-1' :
+          screenSize.isMobile ? 'p-2 space-x-2' : 'p-3 space-x-2'
+        }`}>
           <button 
-            className={`${screenSize.isMobile ? 'px-3 py-1' : 'px-4 py-1'} bg-[#c0c0c0] border-2 border-gray-400 hover:bg-gray-200 active:bg-gray-300`}
+            className={`bg-[#c0c0c0] border-2 border-gray-400 hover:bg-gray-200 active:bg-gray-300 ${
+              isMobilePortrait ? 'px-2 py-1 flex-1 min-w-0' :
+              screenSize.isMobile ? 'px-3 py-1' : 'px-4 py-1'
+            }`}
             style={{ 
               borderStyle: 'outset',
               borderColor: '#000000 #c0c0c0 #c0c0c0 #000000',
@@ -244,7 +266,10 @@ export const PropertiesDialog: React.FC<PropertiesDialogProps> = ({
             <u>O</u>K
           </button>
           <button 
-            className={`${screenSize.isMobile ? 'px-3 py-1' : 'px-4 py-1'} bg-[#c0c0c0] border-2 border-gray-400 hover:bg-gray-200 active:bg-gray-300`}
+            className={`bg-[#c0c0c0] border-2 border-gray-400 hover:bg-gray-200 active:bg-gray-300 ${
+              isMobilePortrait ? 'px-2 py-1 flex-1 min-w-0' :
+              screenSize.isMobile ? 'px-3 py-1' : 'px-4 py-1'
+            }`}
             style={{ 
               borderStyle: 'outset',
               minHeight: screenSize.isMobile ? '28px' : '32px',
@@ -255,7 +280,10 @@ export const PropertiesDialog: React.FC<PropertiesDialogProps> = ({
             <u>C</u>ancel
           </button>
           <button 
-            className={`${screenSize.isMobile ? 'px-3 py-1' : 'px-4 py-1'} bg-gray-300 border-2 border-gray-500 text-gray-500 cursor-not-allowed`}
+            className={`bg-gray-300 border-2 border-gray-500 text-gray-500 cursor-not-allowed ${
+              isMobilePortrait ? 'px-2 py-1 flex-1 min-w-0' :
+              screenSize.isMobile ? 'px-3 py-1' : 'px-4 py-1'
+            }`}
             style={{ 
               borderStyle: 'inset',
               minHeight: screenSize.isMobile ? '28px' : '32px',
