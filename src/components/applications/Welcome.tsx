@@ -51,19 +51,20 @@ export const Welcome: React.FC<WelcomeProps> = ({ onClose }) => {
           </div>
           
           {/* 3D Computer Icon */}
-          <div className="flex justify-center mt-2">
-            <div className="relative" style={{ 
+          <div className="flex justify-center mt-1 px-2 mb-2">
+            <div className="relative max-w-full flex justify-center" style={{ 
               maxWidth: '100%',
-              transform: screenSize.isMobile && screenSize.isLandscape ? 'scale(0.8)' : 'scale(1)',
-              transformOrigin: 'center'
+              maxHeight: '60px',
+              transform: screenSize.isMobile && screenSize.isLandscape ? 'scale(0.7)' : 'scale(0.9)',
+              transformOrigin: 'center center'
             }}>
               <img 
                 src="/icons/3D computer.ico"
                 alt="3D Computer"
-                className={`${
+                className={`max-w-full max-h-full object-contain ${
                   screenSize.isMobile 
-                    ? (screenSize.isLandscape ? 'w-16 h-16' : 'w-20 h-20') 
-                    : 'w-24 h-24'
+                    ? (screenSize.isLandscape ? 'w-10 h-10' : 'w-12 h-12') 
+                    : 'w-16 h-16'
                 }`}
                 style={{ 
                   imageRendering: 'pixelated',

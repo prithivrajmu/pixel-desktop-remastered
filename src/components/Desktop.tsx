@@ -499,7 +499,7 @@ export const Desktop: React.FC = () => {
               className={`bg-[#c0c0c0] border-2 border-gray-400 shadow-lg ${
                 screenSize.isMobile 
                   ? (screenSize.isLandscape 
-                    ? 'w-[90vw] max-w-[600px] h-[85vh] max-h-[500px]' 
+                    ? 'w-[95vw] max-w-[700px] h-[90vh] max-h-[600px]' 
                     : 'w-[95vw] max-w-[350px] h-[90vh] max-h-[600px]'
                   )
                   : 'w-[700px] h-[600px] max-w-[85vw] max-h-[85vh]'
@@ -507,9 +507,10 @@ export const Desktop: React.FC = () => {
               style={{ 
                 borderStyle: 'outset',
                 fontFamily: '"MS Sans Serif", sans-serif',
-                minHeight: screenSize.isMobile && !screenSize.isLandscape ? '400px' : '350px',
+                minHeight: screenSize.isMobile && !screenSize.isLandscape ? '400px' : 
+                          screenSize.isMobile && screenSize.isLandscape ? '450px' : '350px',
                 maxHeight: screenSize.isMobile 
-                  ? (screenSize.isLandscape ? '85vh' : '90vh')
+                  ? (screenSize.isLandscape ? '90vh' : '90vh')
                   : '90vh'
               }}
             >
@@ -557,8 +558,10 @@ export const Desktop: React.FC = () => {
                 </div>
               </div>
               
-              {/* Content - Scrollable */}
-              <div className="flex-1 overflow-hidden">
+              {/* Content - Scrollable for Mobile Landscape */}
+              <div className={`flex-1 ${
+                screenSize.isMobile && screenSize.isLandscape ? 'overflow-y-auto' : 'overflow-hidden'
+              }`}>
                 <DisplayProperties
                   selectedBackground={selectedBackground}
                   onBackgroundChange={setSelectedBackground}

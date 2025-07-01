@@ -30,8 +30,10 @@ export const DisplayProperties: React.FC<DisplayPropertiesProps> = ({
   // Helper flags for responsive layouts
   const isMobilePortrait = screenSize.isMobile && !screenSize.isLandscape;
   const isMobileLandscape = screenSize.isMobile && screenSize.isLandscape;
+  const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024; // md to lg
   const isLargeScreen = window.innerWidth >= 1024; // lg breakpoint
   const isExtraLargeScreen = window.innerWidth >= 1280; // xl breakpoint
+  const isLargeOrTablet = isTablet || isLargeScreen || isExtraLargeScreen;
 
   const backgrounds = getAvailableBackgrounds();
   const videoOptions = ['(None)', ...Object.values(videoAssets.backgrounds).map(v => v.name)];
@@ -159,8 +161,11 @@ export const DisplayProperties: React.FC<DisplayPropertiesProps> = ({
 
   return (
     <div 
-      className="w-full h-full bg-[#c0c0c0] flex flex-col overflow-hidden"
-      style={{ fontFamily: '"MS Sans Serif", sans-serif' }}
+      className="w-full h-full bg-[#c0c0c0] flex flex-col"
+      style={{ 
+        fontFamily: '"MS Sans Serif", sans-serif',
+        maxHeight: '100vh' // Ensure we don't exceed viewport height
+      }}
     >
       {/* Tab Navigation */}
       <div className={`flex bg-[#c0c0c0] px-2 pt-2 flex-shrink-0 ${
@@ -187,7 +192,9 @@ export const DisplayProperties: React.FC<DisplayPropertiesProps> = ({
                         screenSize.isMobile ? '10px' : 
                         isLargeScreen ? '13px' : '11px',
               minWidth: screenSize.isMobile ? 'auto' : isLargeScreen ? '80px' : '60px',
-              minHeight: screenSize.isTouchDevice ? '32px' : isLargeScreen ? '36px' : 'auto'
+              minHeight: screenSize.isTouchDevice ? 
+                        (isMobileLandscape ? '28px' : '32px') : 
+                        isLargeScreen ? '36px' : 'auto'
             }}
             onClick={() => handleTabClick(tab)}
           >
@@ -196,301 +203,281 @@ export const DisplayProperties: React.FC<DisplayPropertiesProps> = ({
         ))}
       </div>
 
-      {/* Tab Content Area - Scrollable */}
-      <div className={`flex-1 bg-[#c0c0c0] border-t-2 border-gray-400 overflow-y-auto ${
-        isLargeScreen ? 'p-4' : 'p-2'
-      }`} style={{ borderTopStyle: 'inset' }}>
-        {activeTab === 'Background' && (
-          <div className="h-full flex flex-col min-h-0">
-            {/* Monitor Preview - Responsive */}
-            <div className={`flex justify-center flex-shrink-0 ${
-              isMobilePortrait ? 'mb-1' : screenSize.isMobile ? 'mb-2' : isLargeScreen ? 'mb-6' : 'mb-4'
-            }`}>
-              <div className="relative">
-                {/* CRT Monitor - Scales with screen size */}
-                <div 
-                  className={`bg-[#c0c0c0] border-2 border-gray-600 rounded-sm relative ${
-                    isMobilePortrait ? 'w-28 h-20' :
-                    screenSize.isMobile ? 'w-32 h-24' :
-                    isExtraLargeScreen ? 'w-80 h-56' :
-                    isLargeScreen ? 'w-72 h-48' : 'w-60 h-40'
-                  }`}
-                  style={{ 
-                    borderStyle: 'outset',
-                    background: 'linear-gradient(135deg, #c0c0c0 0%, #808080 100%)'
-                  }}
-                >
-                  {/* Screen bezel - outer */}
-                  <div className="absolute inset-2 bg-gray-800 border border-gray-500" style={{ borderStyle: 'inset' }}>
-                    {/* Screen bezel - inner */}
-                    <div className="absolute inset-1 bg-black border border-gray-600" style={{ borderStyle: 'inset' }}>
-                      {/* Screen content - shows selected background */}
-                      <div 
-                        className="absolute inset-1 flex items-center justify-center"
-                        style={{ 
-                          backgroundColor: 
-                            tempVideo !== '(None)' ? '#000000' : // Black for video preview
-                            tempBackground === 'default' || !tempBackground ? '#008080' : 
-                            tempBackground === 'windows_95_os' ? '#c0c0c0' :
-                            tempBackground === 'windows_95_os_2' ? '#000080' :
-                            tempBackground === 'windows_95_logo' ? '#000080' : '#008080'
-                        }}
-                      >
-                        {(tempVideo !== '(None)' || tempBackground !== 'default') && (
-                          <div className={`text-white text-center opacity-80 ${
-                            isMobilePortrait ? 'text-[3px]' : screenSize.isMobile ? 'text-[4px]' : 'text-[6px]'
-                          }`}>
-                            {tempVideo !== '(None)' ? 'Video' : 'Preview'}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Power LED */}
-                  <div className="absolute bottom-2 right-3 w-1 h-1 bg-green-400 rounded-full"></div>
-                  
-                  {/* Brand label */}
-                  <div className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 text-gray-600 ${
-                    isMobilePortrait ? 'text-[3px]' : 
-                    screenSize.isMobile ? 'text-[4px]' :
-                    isExtraLargeScreen ? 'text-xs' :
-                    isLargeScreen ? 'text-[10px]' : 'text-[8px]'
-                  }`}>
-                    MONITOR
-                  </div>
-                </div>
-                
-                {/* Monitor stand - Scales with monitor */}
-                <div className={`bg-[#c0c0c0] mx-auto border border-gray-500 ${
-                  isMobilePortrait ? 'w-2 h-2' : 
-                  screenSize.isMobile ? 'w-3 h-3' :
-                  isExtraLargeScreen ? 'w-8 h-8' :
-                  isLargeScreen ? 'w-6 h-7' : 'w-5 h-6'
-                }`} style={{ borderStyle: 'outset' }}></div>
-                <div className={`bg-[#c0c0c0] mx-auto border border-gray-500 ${
-                  isMobilePortrait ? 'w-16 h-1.5' : 
-                  screenSize.isMobile ? 'w-20 h-2' :
-                  isExtraLargeScreen ? 'w-64 h-5' :
-                  isLargeScreen ? 'w-56 h-4' : 'w-48 h-3'
-                }`} style={{ borderStyle: 'outset' }}>
-                  <div className={`bg-gray-400 mx-auto mt-1 ${
-                    isMobilePortrait ? 'w-8 h-px' : 
-                    screenSize.isMobile ? 'w-12 h-px' :
-                    isExtraLargeScreen ? 'w-40 h-2' :
-                    isLargeScreen ? 'w-32 h-1.5' : 'w-24 h-1'
-                  }`}></div>
-                </div>
-              </div>
-            </div>
-
-            {/* Main Content - Responsive Layout with scroll */}
-            <div className={`flex-1 flex min-h-0 ${
-              isMobilePortrait ? 'flex-col space-y-2' : 
-              screenSize.isMobile ? 'flex-col space-y-3' : 
-              isLargeScreen ? 'space-x-6' : 'space-x-4'
-            }`}>
-              {/* Video Section */}
-              <div className="flex-1">
-                <div className={`border-2 border-gray-400 ${
-                  isLargeScreen ? 'p-4' : 'p-2'
-                }`} style={{ borderStyle: 'outset' }}>
-                  <div className={`font-bold ${
-                    isMobilePortrait ? 'mb-2 text-[11px]' : 
-                    screenSize.isMobile ? 'mb-2 text-xs' : 
-                    isLargeScreen ? 'mb-3 text-sm' : 'mb-2 text-xs'
-                  }`}>Video</div>
-                  <div 
-                    className={`bg-white border-2 border-gray-400 overflow-y-auto focus:outline-dotted focus:outline-1 focus:outline-black ${
-                      isMobilePortrait ? 'h-20' : 
-                      screenSize.isMobile ? 'h-16' :
-                      isExtraLargeScreen ? 'h-64' :
-                      isLargeScreen ? 'h-48' : 'h-32'
+      {/* Scrollable Content Area */}
+      <div className="flex-1 min-h-0 overflow-y-auto">
+        {/* Tab Content Area - Smart Responsive Layout with proper scrolling */}
+        <div className={`bg-[#c0c0c0] border-t-2 border-gray-400 flex flex-col min-h-0 ${
+          isLargeScreen ? 'p-4' : 
+          isMobileLandscape ? 'p-1' : 'p-2'
+        }`} style={{ borderTopStyle: 'inset' }}>
+          {activeTab === 'Background' && (
+            <div className="flex flex-col min-h-0 flex-1">
+              {/* Icon Preview - Direct Display */}
+              <div className={`flex justify-center flex-shrink-0 ${
+                isMobilePortrait ? 'mb-2' : 
+                isMobileLandscape ? 'mb-1' :
+                screenSize.isMobile ? 'mb-2' : 
+                isLargeScreen ? 'mb-4' : 'mb-3'
+              }`}>
+                {tempVideo !== '(None)' ? (
+                  <img 
+                    src="/icons/Beizer.ico" 
+                    alt="Video Preview"
+                    className={`${
+                      isMobilePortrait ? 'w-8 h-8' : 
+                      screenSize.isMobile ? 'w-10 h-10' :
+                      isExtraLargeScreen ? 'w-20 h-20' :
+                      isLargeScreen ? 'w-16 h-16' : 'w-12 h-12'
                     }`}
-                    style={{ borderStyle: 'inset' }}
-                    tabIndex={0}
-                  >
-                    {videoOptions.map((video, index) => (
-                      <div
-                        key={video}
-                        className={`px-2 py-0.5 cursor-pointer ${
-                          selectedVideo === video 
-                            ? 'bg-[#0000ff] text-white' 
-                            : 'hover:bg-gray-100'
-                        } ${
-                          isMobilePortrait ? 'text-[11px]' : 
-                          screenSize.isMobile ? 'text-[10px]' :
-                          isLargeScreen ? 'text-sm' : 'text-xs'
-                        }`}
-                        style={{ 
-                          minHeight: screenSize.isTouchDevice ? '28px' : 'auto',
-                          touchAction: 'manipulation' 
-                        }}
-                        onClick={() => handleVideoSelect(video)}
-                        onDoubleClick={() => handleVideoDoubleClick(video)}
-                      >
-                        {video}
-                      </div>
-                    ))}
-                  </div>
-                  <button 
-                    className={`bg-gray-300 border-2 border-gray-500 text-gray-500 cursor-not-allowed ${
-                      isMobilePortrait ? 'mt-2 px-2 py-1 text-[10px] w-full' : 
-                      screenSize.isMobile ? 'mt-2 px-2 py-1 text-[10px]' : 
-                      isLargeScreen ? 'mt-4 px-4 py-2 text-sm' : 'mt-2 px-2 py-1 text-xs'
+                    style={{ imageRendering: 'pixelated' }}
+                  />
+                ) : tempBackground !== 'default' && tempBackground ? (
+                  <img 
+                    src="/icons/3D Text.ico" 
+                    alt="Wallpaper Preview"
+                    className={`${
+                      isMobilePortrait ? 'w-8 h-8' : 
+                      screenSize.isMobile ? 'w-10 h-10' :
+                      isExtraLargeScreen ? 'w-20 h-20' :
+                      isLargeScreen ? 'w-16 h-16' : 'w-12 h-12'
                     }`}
-                    style={{ 
-                      borderStyle: 'inset',
-                      minHeight: screenSize.isTouchDevice ? '32px' : 'auto'
-                    }}
-                    disabled
-                  >
-                    Edit Video...
-                  </button>
-                </div>
+                    style={{ imageRendering: 'pixelated' }}
+                  />
+                ) : (
+                  <div className={`flex items-center justify-center bg-gray-200 border-2 border-gray-400 ${
+                    isMobilePortrait ? 'w-8 h-8' : 
+                    screenSize.isMobile ? 'w-10 h-10' :
+                    isExtraLargeScreen ? 'w-20 h-20' :
+                    isLargeScreen ? 'w-16 h-16' : 'w-12 h-12'
+                  }`} style={{ borderStyle: 'inset' }}>
+                    <span className={`text-gray-600 ${
+                      isMobilePortrait ? 'text-[6px]' : 
+                      screenSize.isMobile ? 'text-[8px]' :
+                      isExtraLargeScreen ? 'text-sm' :
+                      isLargeScreen ? 'text-xs' : 'text-[10px]'
+                    }`}>None</span>
+                  </div>
+                )}
               </div>
 
-              {/* Wallpaper Section */}
-              <div className="flex-1">
-                <div className={`border-2 border-gray-400 ${
-                  isLargeScreen ? 'p-4' : 'p-2'
-                }`} style={{ borderStyle: 'outset' }}>
-                  <div className={`font-bold ${
-                    isMobilePortrait ? 'mb-2 text-[11px]' : 
-                    screenSize.isMobile ? 'mb-2 text-xs' : 
-                    isLargeScreen ? 'mb-3 text-sm' : 'mb-2 text-xs'
-                  }`}>Wallpaper</div>
-                  <div 
-                    className={`bg-white border-2 border-gray-400 overflow-y-auto ${
-                      isMobilePortrait ? 'h-20' : 
-                      screenSize.isMobile ? 'h-16' :
-                      isExtraLargeScreen ? 'h-64' :
-                      isLargeScreen ? 'h-48' : 'h-32'
-                    }`}
-                    style={{ borderStyle: 'inset' }}
-                  >
-                    {backgrounds.map((bg) => (
-                      <div
-                        key={bg.id}
-                        className={`px-2 py-0.5 cursor-pointer ${
-                          tempBackground === bg.id && tempVideo === '(None)'
-                            ? 'bg-[#0000ff] text-white' 
-                            : 'hover:bg-gray-100'
-                        } ${
-                          isMobilePortrait ? 'text-[11px]' : 
-                          screenSize.isMobile ? 'text-[10px]' :
-                          isLargeScreen ? 'text-sm' : 'text-xs'
-                        }`}
-                        style={{ 
-                          minHeight: screenSize.isTouchDevice ? '28px' : 'auto',
-                          touchAction: 'manipulation' 
-                        }}
-                        onClick={() => handleWallpaperSelect(bg.id)}
-                        onDoubleClick={() => handleWallpaperDoubleClick(bg.id)}
-                      >
-                        {bg.name}
-                      </div>
-                    ))}
-                  </div>
-                  <button 
-                    className={`bg-[#c0c0c0] border-2 border-gray-400 hover:bg-gray-200 ${
-                      isMobilePortrait ? 'mt-2 px-2 py-1 text-[10px] w-full' : 
-                      screenSize.isMobile ? 'mt-2 px-2 py-1 text-[10px]' : 
-                      isLargeScreen ? 'mt-4 px-4 py-2 text-sm' : 'mt-2 px-2 py-1 text-xs'
-                    }`}
-                    style={{ 
-                      borderStyle: 'outset',
-                      minHeight: screenSize.isTouchDevice ? '32px' : 'auto'
-                    }}
-                    onClick={() => sounds.playClick()}
-                  >
-                    Browse...
-                  </button>
-                  
-                  {/* Display Options - Hidden on mobile portrait, simplified on mobile landscape */}
-                  {!isMobilePortrait && !screenSize.isMobile && (
-                    <div className={isLargeScreen ? 'mt-6' : 'mt-3'}>
-                                            <div className={`${
-                        isLargeScreen ? 'mb-2 text-sm' : 'mb-1 text-xs'
-                      }`}>Display:</div>
-                      <div className={isLargeScreen ? 'space-y-2' : 'space-y-1'}>
-                          <label className={`flex items-center cursor-pointer ${
+              {/* Main Content - Responsive Layout with scroll */}
+              <div className={`flex-1 flex min-h-0 ${
+                isMobilePortrait ? 'flex-col space-y-2' : 
+                isMobileLandscape ? 'flex-col space-y-1' : 
+                screenSize.isMobile ? 'flex-col space-y-2' : 
+                isLargeScreen ? 'space-x-6' : 'space-x-4'
+              }`}>
+                {/* Video Section */}
+                <div className="flex-1 flex flex-col min-h-0">
+                  <div className={`border-2 border-gray-400 flex-1 flex flex-col min-h-0 ${
+                    isLargeScreen ? 'p-4' : 
+                    isMobileLandscape ? 'p-1' : 'p-2'
+                  }`} style={{ borderStyle: 'outset' }}>
+                    <div className={`font-bold ${
+                      isMobilePortrait ? 'mb-2 text-[11px]' : 
+                      screenSize.isMobile ? 'mb-2 text-xs' : 
+                      isLargeScreen ? 'mb-3 text-sm' : 'mb-2 text-xs'
+                    }`}>Video</div>
+                    <div 
+                      className={`bg-white border-2 border-gray-400 focus:outline-dotted focus:outline-1 focus:outline-black overflow-y-auto flex-1 min-h-0 ${
+                        isMobilePortrait ? 'min-h-[120px]' : 
+                        isMobileLandscape ? 'min-h-[80px]' :
+                        screenSize.isMobile ? 'min-h-[100px]' :
+                        'min-h-[150px]'
+                      }`}
+                      style={{ borderStyle: 'inset' }}
+                      tabIndex={0}
+                    >
+                      {videoOptions.map((video, index) => (
+                        <div
+                          key={video}
+                          className={`px-2 py-0.5 cursor-pointer ${
+                            selectedVideo === video 
+                              ? 'bg-[#0000ff] text-white' 
+                              : 'hover:bg-gray-100'
+                          } ${
+                            isMobilePortrait ? 'text-[11px]' : 
+                            screenSize.isMobile ? 'text-[10px]' :
                             isLargeScreen ? 'text-sm' : 'text-xs'
-                          }`}>
+                          }`}
+                          style={{ 
+                            minHeight: screenSize.isTouchDevice ? '28px' : 'auto',
+                            touchAction: 'manipulation' 
+                          }}
+                          onClick={() => handleVideoSelect(video)}
+                          onDoubleClick={() => handleVideoDoubleClick(video)}
+                        >
+                          {video}
+                        </div>
+                      ))}
+                    </div>
+                    <button 
+                      className={`bg-gray-300 border-2 border-gray-500 text-gray-500 cursor-not-allowed flex-shrink-0 ${
+                        isMobilePortrait ? 'mt-2 px-2 py-1 text-[10px] w-full' : 
+                        isMobileLandscape ? 'mt-1 px-2 py-0.5 text-[9px]' :
+                        screenSize.isMobile ? 'mt-2 px-2 py-1 text-[10px]' : 
+                        isLargeScreen ? 'mt-4 px-4 py-2 text-sm' : 'mt-2 px-2 py-1 text-xs'
+                      }`}
+                      style={{ 
+                        borderStyle: 'inset',
+                        minHeight: screenSize.isTouchDevice ? 
+                                  (isMobileLandscape ? '28px' : '32px') : 'auto'
+                      }}
+                      disabled
+                    >
+                      Edit Video...
+                    </button>
+                  </div>
+                </div>
+
+                {/* Wallpaper Section */}
+                <div className="flex-1 flex flex-col min-h-0">
+                  <div className={`border-2 border-gray-400 flex-1 flex flex-col min-h-0 ${
+                    isLargeScreen ? 'p-4' : 
+                    isMobileLandscape ? 'p-1' : 'p-2'
+                  }`} style={{ borderStyle: 'outset' }}>
+                    <div className={`font-bold ${
+                      isMobilePortrait ? 'mb-2 text-[11px]' : 
+                      screenSize.isMobile ? 'mb-2 text-xs' : 
+                      isLargeScreen ? 'mb-3 text-sm' : 'mb-2 text-xs'
+                    }`}>Wallpaper</div>
+                    <div 
+                      className={`bg-white border-2 border-gray-400 overflow-y-auto flex-1 min-h-0 ${
+                        isMobilePortrait ? 'min-h-[120px]' : 
+                        isMobileLandscape ? 'min-h-[80px]' :
+                        screenSize.isMobile ? 'min-h-[100px]' :
+                        'min-h-[150px]'
+                      }`}
+                      style={{ borderStyle: 'inset' }}
+                    >
+                      {backgrounds.map((bg) => (
+                        <div
+                          key={bg.id}
+                          className={`px-2 py-0.5 cursor-pointer ${
+                            tempBackground === bg.id && tempVideo === '(None)'
+                              ? 'bg-[#0000ff] text-white' 
+                              : 'hover:bg-gray-100'
+                          } ${
+                            isMobilePortrait ? 'text-[11px]' : 
+                            screenSize.isMobile ? 'text-[10px]' :
+                            isLargeScreen ? 'text-sm' : 'text-xs'
+                          }`}
+                          style={{ 
+                            minHeight: screenSize.isTouchDevice ? '28px' : 'auto',
+                            touchAction: 'manipulation' 
+                          }}
+                          onClick={() => handleWallpaperSelect(bg.id)}
+                          onDoubleClick={() => handleWallpaperDoubleClick(bg.id)}
+                        >
+                          {bg.name}
+                        </div>
+                      ))}
+                    </div>
+                    <button 
+                      className={`bg-[#c0c0c0] border-2 border-gray-400 hover:bg-gray-200 flex-shrink-0 ${
+                        isMobilePortrait ? 'mt-2 px-2 py-1 text-[10px] w-full' : 
+                        isMobileLandscape ? 'mt-1 px-2 py-0.5 text-[9px]' :
+                        screenSize.isMobile ? 'mt-2 px-2 py-1 text-[10px]' : 
+                        isLargeScreen ? 'mt-4 px-4 py-2 text-sm' : 'mt-2 px-2 py-1 text-xs'
+                      }`}
+                      style={{ 
+                        borderStyle: 'outset',
+                        minHeight: screenSize.isTouchDevice ? 
+                                  (isMobileLandscape ? '28px' : '32px') : 'auto'
+                      }}
+                      onClick={() => sounds.playClick()}
+                    >
+                      Browse...
+                    </button>
+                    
+                    {/* Display Options - Hidden on mobile portrait, simplified on mobile landscape */}
+                    {!isMobilePortrait && !screenSize.isMobile && (
+                      <div className={`flex-shrink-0 ${isLargeScreen ? 'mt-6' : 'mt-3'}`}>
+                        <div className={`${
+                          isLargeScreen ? 'mb-2 text-sm' : 'mb-1 text-xs'
+                        }`}>Display:</div>
+                        <div className={isLargeScreen ? 'space-y-2' : 'space-y-1'}>
+                            <label className={`flex items-center cursor-pointer ${
+                              isLargeScreen ? 'text-sm' : 'text-xs'
+                            }`}>
+                              <div className="relative mr-2">
+                                <input 
+                                  type="radio" 
+                                  name="display" 
+                                  value="Tile"
+                                  checked={displayMode === 'Tile'}
+                                  onChange={() => handleDisplayModeChange('Tile')}
+                                  className="sr-only"
+                                />
+                                <div 
+                                  className={`w-3 h-3 rounded-full border-2 border-gray-600 bg-white flex items-center justify-center ${
+                                    displayMode === 'Tile' ? 'border-black' : ''
+                                  }`}
+                                  style={{ borderStyle: 'inset' }}
+                                >
+                                  {displayMode === 'Tile' && (
+                                    <div className="w-1 h-1 bg-black rounded-full"></div>
+                                  )}
+                                </div>
+                              </div>
+                              Tile
+                            </label>
+                            <label className={`flex items-center cursor-pointer ${
+                              isLargeScreen ? 'text-sm' : 'text-xs'
+                            }`}>
                             <div className="relative mr-2">
                               <input 
                                 type="radio" 
                                 name="display" 
-                                value="Tile"
-                                checked={displayMode === 'Tile'}
-                                onChange={() => handleDisplayModeChange('Tile')}
+                                value="Center"
+                                checked={displayMode === 'Center'}
+                                onChange={() => handleDisplayModeChange('Center')}
                                 className="sr-only"
                               />
                               <div 
                                 className={`w-3 h-3 rounded-full border-2 border-gray-600 bg-white flex items-center justify-center ${
-                                  displayMode === 'Tile' ? 'border-black' : ''
+                                  displayMode === 'Center' ? 'border-black' : ''
                                 }`}
                                 style={{ borderStyle: 'inset' }}
                               >
-                                {displayMode === 'Tile' && (
+                                {displayMode === 'Center' && (
                                   <div className="w-1 h-1 bg-black rounded-full"></div>
                                 )}
                               </div>
                             </div>
-                            Tile
+                            Center
                           </label>
-                          <label className={`flex items-center cursor-pointer ${
-                            isLargeScreen ? 'text-sm' : 'text-xs'
-                          }`}>
-                          <div className="relative mr-2">
-                            <input 
-                              type="radio" 
-                              name="display" 
-                              value="Center"
-                              checked={displayMode === 'Center'}
-                              onChange={() => handleDisplayModeChange('Center')}
-                              className="sr-only"
-                            />
-                            <div 
-                              className={`w-3 h-3 rounded-full border-2 border-gray-600 bg-white flex items-center justify-center ${
-                                displayMode === 'Center' ? 'border-black' : ''
-                              }`}
-                              style={{ borderStyle: 'inset' }}
-                            >
-                              {displayMode === 'Center' && (
-                                <div className="w-1 h-1 bg-black rounded-full"></div>
-                              )}
-                            </div>
-                          </div>
-                          Center
-                        </label>
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Other tabs placeholder */}
-        {activeTab !== 'Background' && (
-          <div className="flex items-center justify-center h-full">
-            <div className="text-center text-gray-600">
-              <div className={`mb-2 ${screenSize.isMobile ? 'text-sm' : 'text-sm'}`}>{activeTab}</div>
-              <div className={screenSize.isMobile ? 'text-xs' : 'text-xs'}>Settings not implemented</div>
+          {/* Other tabs placeholder */}
+          {activeTab !== 'Background' && (
+            <div className="flex items-center justify-center flex-1 min-h-[300px]">
+              <div className="text-center text-gray-600">
+                <div className={`mb-2 ${screenSize.isMobile ? 'text-sm' : 'text-sm'}`}>{activeTab}</div>
+                <div className={screenSize.isMobile ? 'text-xs' : 'text-xs'}>Settings not implemented</div>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
-      {/* Action Buttons - Responsive */}
-      <div className={`bg-[#c0c0c0] p-2 flex justify-end border-t border-gray-400 ${
-        isMobilePortrait ? 'space-x-1 flex-wrap gap-1' : screenSize.isMobile ? 'space-x-1' : 'space-x-2'
+      {/* Action Buttons - Fixed Footer */}
+      <div className={`bg-[#c0c0c0] flex justify-end border-t border-gray-400 flex-shrink-0 ${
+        isMobilePortrait ? 'p-2 space-x-1 flex-wrap gap-1' : 
+        isMobileLandscape ? 'px-2 py-1 space-x-1' :
+        screenSize.isMobile ? 'p-2 space-x-1' : 'p-2 space-x-2'
       }`}>
         <button 
           className={`bg-[#c0c0c0] border-2 border-gray-400 hover:bg-gray-200 ${
             isMobilePortrait ? 'px-2 py-1 text-[11px] flex-1 min-w-0' :
+            isMobileLandscape ? 'px-2 py-0.5 text-[9px]' :
             screenSize.isMobile ? 'px-3 py-1 text-[10px]' : 
             isLargeScreen ? 'px-8 py-2 text-sm' : 'px-6 py-1 text-xs'
           }`}
@@ -498,8 +485,10 @@ export const DisplayProperties: React.FC<DisplayPropertiesProps> = ({
             borderStyle: 'outset',
             borderColor: '#000000 #c0c0c0 #c0c0c0 #000000',
             borderWidth: '2px',
-            minWidth: screenSize.isMobile ? '60px' : 'auto',
-            minHeight: screenSize.isTouchDevice ? '36px' : 'auto'
+            minWidth: screenSize.isMobile ? 
+                     (isMobileLandscape ? '50px' : '60px') : 'auto',
+            minHeight: screenSize.isTouchDevice ? 
+                      (isMobileLandscape ? '30px' : '36px') : 'auto'
           }}
           onClick={handleOK}
         >
@@ -508,13 +497,16 @@ export const DisplayProperties: React.FC<DisplayPropertiesProps> = ({
         <button 
           className={`bg-[#c0c0c0] border-2 border-gray-400 hover:bg-gray-200 ${
             isMobilePortrait ? 'px-2 py-1 text-[11px] flex-1 min-w-0' :
+            isMobileLandscape ? 'px-2 py-0.5 text-[9px]' :
             screenSize.isMobile ? 'px-3 py-1 text-[10px]' : 
             isLargeScreen ? 'px-8 py-2 text-sm' : 'px-6 py-1 text-xs'
           }`}
           style={{ 
             borderStyle: 'outset',
-            minWidth: screenSize.isMobile ? '60px' : 'auto',
-            minHeight: screenSize.isTouchDevice ? '36px' : 'auto'
+            minWidth: screenSize.isMobile ? 
+                     (isMobileLandscape ? '50px' : '60px') : 'auto',
+            minHeight: screenSize.isTouchDevice ? 
+                      (isMobileLandscape ? '30px' : '36px') : 'auto'
           }}
           onClick={handleCancel}
         >
@@ -527,13 +519,16 @@ export const DisplayProperties: React.FC<DisplayPropertiesProps> = ({
               : 'bg-gray-300 border-2 border-gray-500 text-gray-500 cursor-not-allowed'
           } ${
             isMobilePortrait ? 'px-2 py-1 text-[11px] flex-1 min-w-0' :
+            isMobileLandscape ? 'px-2 py-0.5 text-[9px]' :
             screenSize.isMobile ? 'px-3 py-1 text-[10px]' : 
             isLargeScreen ? 'px-8 py-2 text-sm' : 'px-6 py-1 text-xs'
           }`}
           style={{ 
             borderStyle: hasChanges ? 'outset' : 'inset',
-            minWidth: screenSize.isMobile ? '60px' : 'auto',
-            minHeight: screenSize.isTouchDevice ? '36px' : 'auto'
+            minWidth: screenSize.isMobile ? 
+                     (isMobileLandscape ? '50px' : '60px') : 'auto',
+            minHeight: screenSize.isTouchDevice ? 
+                      (isMobileLandscape ? '30px' : '36px') : 'auto'
           }}
           disabled={!hasChanges}
           onClick={hasChanges ? handleApply : undefined}
