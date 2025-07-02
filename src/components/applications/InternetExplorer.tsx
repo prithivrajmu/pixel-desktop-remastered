@@ -4,6 +4,22 @@ import { useSounds } from '../SoundManager';
 import { useScreenSize } from '../../hooks/use-mobile';
 import { useNavigate } from 'react-router-dom';
 
+// Very small markdown-to-HTML helper (links & line breaks only)
+const mdToHtml = (markdown: string) => {
+  let html = markdown
+    // links
+    .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
+    // bold **text** or __text__
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/__(.*?)__/g, '<strong>$1</strong>')
+    // italics *text* or _text_
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/_(.*?)_/g, '<em>$1</em>')
+    // convert line breaks
+    .replace(/\n/g, '<br/>');
+  return html;
+};
+
 interface InternetExplorerProps {
   /** When provided, the window starts on that page instead of the blog home */
   initialPage?: string;
@@ -301,9 +317,7 @@ export const InternetExplorer: React.FC<InternetExplorerProps> = ({ initialPage 
                   <div className="text-sm text-gray-600 mb-6">
                     Published: {currentPost.date}
                   </div>
-                  <div className="prose prose-sm whitespace-pre-line">
-                    {currentPost.content}
-                  </div>
+                  <div className="prose prose-sm" dangerouslySetInnerHTML={{ __html: mdToHtml(currentPost.content) }} />
                 </div>
               ) : (
                 <div className="text-center py-8">
