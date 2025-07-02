@@ -2,15 +2,124 @@ import React, { useState, useEffect } from 'react';
 import { loadBlogPosts, loadSinglePost, BlogPost } from '../../data/blogPosts';
 import { useSounds } from '../SoundManager';
 import { useScreenSize } from '../../hooks/use-mobile';
+import { useNavigate } from 'react-router-dom';
 
-export const InternetExplorer: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState<string>('home');
+// Very small markdown-to-HTML helper (links & line breaks only)
+const mdToHtml = (markdown: string) => {
+     // Convert horizontal rules first
+   let text = markdown.replace(/^---+\s*$/gm, '<hr style="margin: 2em 0; border: none; border-top: 1px solid #ccc;"/>');
+  
+  // Split into lines and process lists and paragraphs
+  const lines = text.split('\n');
+  const processed: string[] = [];
+  let inList = false;
+  let currentParagraph: string[] = [];
+  
+  const flushParagraph = () => {
+    if (currentParagraph.length > 0) {
+      const content = currentParagraph.join(' ').trim();
+             if (content) {
+         processed.push(`<p style="margin: 1em 0; line-height: 1.6;">${content}</p>`);
+       }
+      currentParagraph = [];
+    }
+  };
+  
+  for (const line of lines) {
+    const trimmed = line.trim();
+    
+    // Handle horizontal rules
+    if (trimmed === '<hr/>') {
+      flushParagraph();
+      if (inList) {
+        processed.push('</ul>');
+        inList = false;
+      }
+             processed.push('<hr style="margin: 2em 0; border: none; border-top: 1px solid #ccc;"/>');
+       continue;
+     }
+     
+     // Handle headings
+    if (/^#{1,3}\s+/.test(trimmed)) {
+      flushParagraph();
+      if (inList) {
+        processed.push('</ul>');
+        inList = false;
+      }
+             if (trimmed.startsWith('### ')) {
+         processed.push(`<h3 style="margin: 1.5em 0 0.5em 0; font-size: 1.2em; font-weight: bold;">${trimmed.substring(4)}</h3>`);
+       } else if (trimmed.startsWith('## ')) {
+         processed.push(`<h2 style="margin: 1.8em 0 0.6em 0; font-size: 1.4em; font-weight: bold;">${trimmed.substring(3)}</h2>`);
+       } else if (trimmed.startsWith('# ')) {
+         processed.push(`<h1 style="margin: 2em 0 0.8em 0; font-size: 1.6em; font-weight: bold;">${trimmed.substring(2)}</h1>`);
+       }
+      continue;
+    }
+    
+    // Handle list items
+    if (/^[-*]\s+/.test(trimmed)) {
+      flushParagraph();
+             if (!inList) {
+         processed.push('<ul style="margin: 1em 0; padding-left: 2em;">');
+         inList = true;
+       }
+       const item = trimmed.replace(/^[-*]\s+/, '');
+       processed.push(`<li style="margin: 0.3em 0;">${item}</li>`);
+      continue;
+    }
+    
+    // Handle empty lines
+    if (!trimmed) {
+      if (inList) {
+        processed.push('</ul>');
+        inList = false;
+      }
+      flushParagraph();
+      continue;
+    }
+    
+    // Regular text - add to current paragraph
+    if (inList) {
+      processed.push('</ul>');
+      inList = false;
+    }
+    currentParagraph.push(trimmed);
+  }
+  
+  // Flush any remaining paragraph
+  flushParagraph();
+  if (inList) {
+    processed.push('</ul>');
+  }
+  
+  // Join and apply inline formatting
+  let html = processed.join('')
+    // links
+    .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
+    // bold **text** or __text__
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/__(.*?)__/g, '<strong>$1</strong>')
+    // italics *text* or _text_ (but not list items)
+    .replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em>$1</em>')
+    .replace(/(?<!_)_([^_]+)_(?!_)/g, '<em>$1</em>');
+    
+  return html;
+};
+
+interface InternetExplorerProps {
+  /** When provided, the window starts on that page instead of the blog home */
+  initialPage?: string;
+}
+
+export const InternetExplorer: React.FC<InternetExplorerProps> = ({ initialPage = 'home' }) => {
+  const [currentPage, setCurrentPage] = useState<string>(initialPage);
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [currentPost, setCurrentPost] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
   const [postLoading, setPostLoading] = useState(false);
   const sounds = useSounds();
   const screenSize = useScreenSize();
+  const navigate = useNavigate();
 
   // Load all posts for the home page
   useEffect(() => {
@@ -45,6 +154,18 @@ export const InternetExplorer: React.FC = () => {
       
       loadPost();
     }
+  }, [currentPage]);
+
+  // Apply initial page on mount / when prop changes
+  useEffect(() => {
+    setCurrentPage(initialPage || 'home');
+  }, [initialPage]);
+
+  // Keep the URL in sync when page changes (so address bar & back/forward work)
+  useEffect(() => {
+    if (currentPage === 'home') navigate('/blog', { replace: true });
+    else navigate(`/blog/${currentPage}`, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
   if (loading) {
@@ -282,9 +403,14 @@ export const InternetExplorer: React.FC = () => {
                   <div className="text-sm text-gray-600 mb-6">
                     Published: {currentPost.date}
                   </div>
-                  <div className="prose prose-sm whitespace-pre-line">
-                    {currentPost.content}
-                  </div>
+                  <div 
+                    className="prose prose-sm" 
+                    style={{
+                      lineHeight: '1.6',
+                      maxWidth: 'none'
+                    }}
+                    dangerouslySetInnerHTML={{ __html: mdToHtml(currentPost.content) }} 
+                  />
                 </div>
               ) : (
                 <div className="text-center py-8">
