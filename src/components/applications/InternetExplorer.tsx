@@ -2,15 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { loadBlogPosts, loadSinglePost, BlogPost } from '../../data/blogPosts';
 import { useSounds } from '../SoundManager';
 import { useScreenSize } from '../../hooks/use-mobile';
+import { useNavigate } from 'react-router-dom';
 
-export const InternetExplorer: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState<string>('home');
+interface InternetExplorerProps {
+  /** When provided, the window starts on that page instead of the blog home */
+  initialPage?: string;
+}
+
+export const InternetExplorer: React.FC<InternetExplorerProps> = ({ initialPage = 'home' }) => {
+  const [currentPage, setCurrentPage] = useState<string>(initialPage);
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [currentPost, setCurrentPost] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
   const [postLoading, setPostLoading] = useState(false);
   const sounds = useSounds();
   const screenSize = useScreenSize();
+  const navigate = useNavigate();
 
   // Load all posts for the home page
   useEffect(() => {
@@ -45,6 +52,18 @@ export const InternetExplorer: React.FC = () => {
       
       loadPost();
     }
+  }, [currentPage]);
+
+  // Apply initial page on mount / when prop changes
+  useEffect(() => {
+    setCurrentPage(initialPage || 'home');
+  }, [initialPage]);
+
+  // Keep the URL in sync when page changes (so address bar & back/forward work)
+  useEffect(() => {
+    if (currentPage === 'home') navigate('/blog', { replace: true });
+    else navigate(`/blog/${currentPage}`, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
   if (loading) {

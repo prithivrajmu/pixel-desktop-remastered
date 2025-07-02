@@ -36,7 +36,16 @@ export interface WindowData {
   prevPosition?: { x: number; y: number };
 }
 
-export const Desktop: React.FC = () => {
+export interface DesktopProps {
+  /**
+   * Array of windows to automatically open when the desktop mounts. Should not
+   * contain runtime generated fields such as id, size, or zIndex – those are
+   * handled by the desktop itself.
+   */
+  autoOpenWindows?: Array<Omit<WindowData, 'id' | 'zIndex' | 'size'>>;
+}
+
+export const Desktop: React.FC<DesktopProps> = ({ autoOpenWindows = [] }) => {
   const {
     windows,
     activeWindowId,
@@ -292,6 +301,15 @@ export const Desktop: React.FC = () => {
     },
     [screenSize]
   );
+
+  // Automatically open any windows provided via props on initial mount
+  useEffect(() => {
+    if (autoOpenWindows.length > 0) {
+      autoOpenWindows.forEach(cfg => handleOpenWindow(cfg));
+    }
+    // We only want this to run once on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
