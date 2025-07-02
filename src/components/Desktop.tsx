@@ -43,9 +43,13 @@ export interface DesktopProps {
    * handled by the desktop itself.
    */
   autoOpenWindows?: Array<Omit<WindowData, 'id' | 'zIndex' | 'size'>>;
+  /**
+   * Callback fired when all windows are closed
+   */
+  onAllWindowsClosed?: () => void;
 }
 
-export const Desktop: React.FC<DesktopProps> = ({ autoOpenWindows = [] }) => {
+export const Desktop: React.FC<DesktopProps> = ({ autoOpenWindows = [], onAllWindowsClosed }) => {
   const {
     windows,
     activeWindowId,
@@ -60,6 +64,7 @@ export const Desktop: React.FC<DesktopProps> = ({ autoOpenWindows = [] }) => {
   const [isShutdownDialogOpen, setIsShutdownDialogOpen] = useState(false);
   const [isShutdownScreenVisible, setIsShutdownScreenVisible] = useState(false);
   const welcomeOpenedRef = useRef(false);
+  const hasHadWindowsRef = useRef(false);
   const { activeDialog, openDialog, closeDialog } = useGlobalDialog();
 
   const {
@@ -86,6 +91,22 @@ export const Desktop: React.FC<DesktopProps> = ({ autoOpenWindows = [] }) => {
   // Initialize performance optimizations
   useSmartPreloader();
   usePerformanceMonitor('Desktop');
+
+  // Clear welcome flag when browser tab/window is closed
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      const currentSessionId = sessionStorage.getItem('desktop.sessionId');
+      const storedSessionId = localStorage.getItem('desktop.hasSeenWelcome');
+      
+      // Clear the welcome flag if it matches current session
+      if (currentSessionId && storedSessionId === currentSessionId) {
+        localStorage.removeItem('desktop.hasSeenWelcome');
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, []);
 
   const [isDisplayPropertiesOpen, setIsDisplayPropertiesOpen] = useState(false);
   const [isPropertiesDialogOpen, setIsPropertiesDialogOpen] = useState(false);
@@ -176,19 +197,33 @@ export const Desktop: React.FC<DesktopProps> = ({ autoOpenWindows = [] }) => {
     (window as any).__lastBreakpoint = isMobile ? 'mobile' : isTablet ? 'tablet' : 'desktop';
   }, [screenSize.isMobile, screenSize.isTablet, windows, getOptimalWindowSize, centerWindow, updateWindow, screenSize.width, screenSize.height]);
 
-  // Show welcome screen on startup
+  // Show welcome screen on startup (only once per session)
   useEffect(() => {
-    if (!welcomeOpenedRef.current) {
+    const hasSeenWelcome = localStorage.getItem('desktop.hasSeenWelcome');
+    const sessionId = sessionStorage.getItem('desktop.sessionId') || Date.now().toString();
+    
+    // Store session ID if not exists
+    if (!sessionStorage.getItem('desktop.sessionId')) {
+      sessionStorage.setItem('desktop.sessionId', sessionId);
+    }
+    
+    // Only show welcome if:
+    // 1. Haven't seen it this session (localStorage check)
+    // 2. No auto-open windows (so we don't show it on blog routes)
+    // 3. Component ref hasn't already shown it
+    if (!hasSeenWelcome && autoOpenWindows.length === 0 && !welcomeOpenedRef.current) {
       // Play boot sequence sound
       sounds.playBootSequence();
       
       const timer = setTimeout(() => {
         openWindow(welcomeWindow);
         welcomeOpenedRef.current = true;
+        // Mark as seen for this browser session
+        localStorage.setItem('desktop.hasSeenWelcome', sessionId);
       }, 1000);
       return () => clearTimeout(timer);
     }
-  }, [openWindow, sounds]);
+  }, [openWindow, sounds, autoOpenWindows.length]);
 
   const handleOpenWindow = (windowConfig: any) => {
     const optimalSize = getOptimalWindowSize();
@@ -302,14 +337,29 @@ export const Desktop: React.FC<DesktopProps> = ({ autoOpenWindows = [] }) => {
     [screenSize]
   );
 
-  // Automatically open any windows provided via props on initial mount
+  // Automatically open any windows provided via props
   useEffect(() => {
-    if (autoOpenWindows.length > 0) {
-      autoOpenWindows.forEach(cfg => handleOpenWindow(cfg));
-    }
-    // We only want this to run once on mount
+    if (autoOpenWindows.length === 0) return;
+
+    autoOpenWindows.forEach(cfg => {
+      // If a window with the same title is already open, do not reopen it
+      const alreadyOpen = windows.some(w => w.title === cfg.title);
+      if (!alreadyOpen) {
+        handleOpenWindow(cfg);
+      }
+    });
+    // Only run when the autoOpenWindows reference changes (e.g., route change)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [autoOpenWindows]);
+
+  // Track if we've had windows and call onAllWindowsClosed when they're all closed
+  useEffect(() => {
+    if (windows.length > 0) {
+      hasHadWindowsRef.current = true;
+    } else if (windows.length === 0 && hasHadWindowsRef.current && onAllWindowsClosed) {
+      onAllWindowsClosed();
+    }
+  }, [windows.length, onAllWindowsClosed]);
 
   return (
     <>
@@ -447,11 +497,7 @@ export const Desktop: React.FC<DesktopProps> = ({ autoOpenWindows = [] }) => {
             onUpdatePosition={(position) => updateWindow(windowData.id, { position })}
             onUpdateSize={(size) => updateWindow(windowData.id, { size })}
           >
-            {windowData.title === 'Welcome' ? (
-              <windowData.component onClose={() => closeWindow(windowData.id)} />
-            ) : (
-              <windowData.component />
-            )}
+            <windowData.component onClose={() => closeWindow(windowData.id)} />
           </Window>
         ))}
 
