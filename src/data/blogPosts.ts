@@ -9,7 +9,8 @@ export interface BlogPost {
 // List of available blog post IDs - add new post IDs here
 const availablePostIds = [
   'blog-1',
-  'blog-2'
+  'blog-2',
+  'blog-3'
 ];
 
 // Function to parse markdown front matter
