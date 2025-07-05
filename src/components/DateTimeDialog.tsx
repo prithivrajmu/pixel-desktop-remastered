@@ -50,12 +50,12 @@ export const DateTimeDialog: React.FC<DateTimeDialogProps> = ({ date, onClose, p
 
   return (
     <div
-      className="fixed z-[70]"
+      className="fixed z-[110]"
       style={{ left, top, position: 'fixed' }}
       onClick={onClose}
     >
       <div
-        className="bg-gray-200 border-2 border-gray-400 shadow-lg max-w-[98vw] z-[70]"
+        className="bg-gray-200 border-2 border-gray-400 shadow-lg max-w-[98vw] z-[110]"
         style={{ 
           borderStyle: 'outset', 
           fontFamily: 'MS Sans Serif, sans-serif', 
