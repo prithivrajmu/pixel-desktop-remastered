@@ -37,7 +37,7 @@ export const VolumeDialog: React.FC<VolumeDialogProps> = ({ volume, isMuted, onV
 
   return (
     <div
-      className="fixed z-[70]"
+      className="fixed z-[110]"
       style={{ left, top, position: 'fixed' }}
       onClick={onClose}
     >

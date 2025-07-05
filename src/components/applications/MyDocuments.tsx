@@ -28,6 +28,30 @@ export const MyDocuments: React.FC = () => {
 
   const projects: Project[] = [
     {
+      name: 'Inventree Sync - Founder & Lead Developer',
+      icon: '📦',
+      description: 'Built a comprehensive AI-powered inventory management system with multi-tenant architecture, real-time analytics, and automated data entry features.',
+      tech: ['React 18', 'TypeScript', 'Supabase', 'Tailwind CSS', 'AI Integration', 'Multi-tenant Architecture'],
+      status: 'current',
+      details: {
+        duration: '2024 - Present',
+        achievements: [
+          'Built modern inventory management system with AI-powered photo parsing',
+          'Implemented secure multi-tenant architecture with Row-Level Security',
+          'Created modular PDF generation system for invoices and receipts',
+          'Developed real-time dashboard with advanced analytics and reporting',
+          'Integrated automated Excel processing for bulk data entry'
+        ],
+        responsibilities: [
+          'Full-stack development using React 18 and TypeScript',
+          'Backend architecture design with Supabase integration',
+          'AI-powered features implementation for automated data entry',
+          'Multi-tenant security architecture with role-based access control',
+          'User experience design and responsive interface development'
+        ]
+      }
+    },
+    {
       name: 'A M Foods - Director',
       icon: '🍲',
       description: 'Driving modernization and operational efficiency for a legacy restaurant brand (est. 1973). Architected custom inventory & payroll software.',
@@ -123,6 +147,12 @@ export const MyDocuments: React.FC = () => {
       icon: '/icons/Mail text.ico',
       type: 'pdf',
       onClick: downloadResume
+    },
+    {
+      name: 'Inventree Sync',
+      icon: '/icons/inventreesync.svg',
+      type: 'app',
+      onClick: () => window.open('https://inventreesync.com', '_blank', 'noopener,noreferrer')
     },
     {
       name: 'Portfolio',
@@ -544,7 +574,7 @@ export const MyDocuments: React.FC = () => {
 
         <div className="mt-6 border-2 border-gray-400 p-3" style={{ borderStyle: 'inset' }}>
           <h3 className="font-bold mb-2">Quick Access</h3>
-          <div className="flex space-x-4 text-xs">
+          <div className="flex flex-wrap gap-2 text-xs">
             <button 
               onClick={downloadResume}
               className="bg-gray-300 border border-gray-400 px-3 py-1 hover:bg-gray-200" 
@@ -562,6 +592,24 @@ export const MyDocuments: React.FC = () => {
                <img src="/icons/Mail text.ico" alt="Resume" className="w-4 h-4 inline mr-1" />
                Download Resume
              </button>
+            <button 
+              onClick={() => window.open('https://inventreesync.com', '_blank', 'noopener,noreferrer')}
+              className="bg-gray-300 border border-gray-400 px-3 py-1 hover:bg-gray-200" 
+              style={{ borderStyle: 'outset' }}
+              onMouseDown={(e) => {
+                e.currentTarget.style.borderStyle = 'inset';
+              }}
+              onMouseUp={(e) => {
+                e.currentTarget.style.borderStyle = 'outset';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderStyle = 'outset';
+              }}
+              title="Visit Inventree Sync Application"
+            >
+              <img src="/icons/inventreesync.svg" alt="Inventree Sync" className="w-4 h-4 inline mr-1" />
+              Launch Inventree Sync
+            </button>
             <button className="bg-gray-300 border border-gray-400 px-3 py-1 hover:bg-gray-200" style={{ borderStyle: 'outset' }}>
               <a href="https://linkedin.com/in/prithivrajmu" target="_blank" rel="noopener noreferrer" className="text-blue-700 underline hover:text-blue-900">🔗 LinkedIn</a>
             </button>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useScreenSize } from '../../hooks/use-mobile';
 
 interface WelcomeProps {
@@ -7,6 +7,30 @@ interface WelcomeProps {
 
 export const Welcome: React.FC<WelcomeProps> = ({ onClose }) => {
   const screenSize = useScreenSize();
+  const [currentTipIndex, setCurrentTipIndex] = useState(0);
+  
+  // Cycling "Did you know" content from MyDocuments and RecycleBin
+  const didYouKnowTips = [
+    "You can leverage data analytics and simulation to modernize a 50-year-old business, driving efficiency and reducing waste. That's the power of combining tech with tradition!",
+    "Strategic data migration can save hundreds of thousands annually? A well-planned move from BigQuery to Snowflake saved one company $345k per year!",
+    "Aircraft manufacturing costs can be reduced by 15% and operational efficiency improved by 25% through data-driven optimization and automated reporting systems!",
+    "Hub-and-spoke optimization models can reduce delivery times by 30% in drone operations, revolutionizing logistics and supply chain management!",
+    "Custom inventory management systems can reduce operational waste by 30% while cutting overall costs by 25% through digital transformation initiatives!",
+    "AI-powered photo parsing and Excel file processing can completely automate data entry in modern inventory management systems!",
+    "Multi-tenant architecture with Row-Level Security ensures that thousands of organizations can share the same database while keeping their data completely isolated!",
+    "Real-time dashboards and predictive analytics can turn a traditional restaurant business into a data-driven operation, optimizing everything from inventory to payroll!",
+    "Computer vision systems can enable autonomous flight operations, processing complex spatial data in real-time for safe navigation!",
+    "Every career milestone, even completed projects, becomes a foundation for future innovations. Legacy experiences aren't just history—they're career accelerators!"
+  ];
+
+  // Cycle through tips every 4 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTipIndex((prevIndex) => (prevIndex + 1) % didYouKnowTips.length);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [didYouKnowTips.length]);
   
   return (
     <div className="bg-gray-300 h-full p-0 overflow-auto" style={{ fontFamily: '"MS Sans Serif", sans-serif' }}>
@@ -25,12 +49,14 @@ export const Welcome: React.FC<WelcomeProps> = ({ onClose }) => {
             <div className="flex-1 min-w-0">
               <h3 className="font-bold text-sm mb-2">Welcome!</h3>
               <p className="text-xs leading-relaxed mb-4">
-                This is a Windows 95-inspired portfolio website build by Prithiv Raj M U.
+                This is a Windows 95-inspired portfolio website build by Prithiv Raj M U. Explore the desktop to discover projects, experiences, and innovations in data science and software development.
               </p>            
               <h4 className="font-bold text-sm mb-2">Did you know...</h4>
-              <p className="text-xs leading-relaxed mb-4">
-                You can leverage data analytics and simulation to modernize a 50-year-old business, driving efficiency and reducing waste. That's the power of combining tech with tradition!
-              </p>
+              <div className="min-h-[60px] flex items-start">
+                <p className="text-xs leading-relaxed mb-4 transition-opacity duration-500">
+                  {didYouKnowTips[currentTipIndex]}
+                </p>
+              </div>
             </div>
           </div>
           
