@@ -320,7 +320,7 @@ export const MyComputer: React.FC = () => {
             <h2 className="text-lg font-bold mb-2">My Defragged Identity</h2>
             <div className="space-y-1 text-xs">
               <p><strong>Name:</strong> Prithiv Raj M U</p>
-              <p><strong>Profession:</strong> Founder & Tech Leader | Learning LLMs, Vibe Coding</p>
+              <p><strong>Profession:</strong> Engineer & Entrepreneur (E²) | Learning LLMs, Vibe Coding</p>
               <p><strong>Experience:</strong> 9+ Years</p>
               <p><strong>Location:</strong> Chennai, India | San Francisco, USA</p>
               <p><strong>Pronouns:</strong> He/Him</p>
