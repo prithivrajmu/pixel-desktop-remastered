@@ -357,33 +357,27 @@ export const MyComputer: React.FC = () => {
             <div>
               <p><strong>Languages:</strong></p>
               <p>• Python (NumPy, Pandas, SciPy, PyTorch)</p>
-              <p>• SQL</p>
-              <p>• C++/C</p>
-              <p>• R</p>
+              <p>• SQL, lookml</p>
               <p>• JavaScript/TypeScript</p>
+              <p>• C++/C, Java</p>
             </div>
             <div>
               <p><strong>Databases:</strong></p>
-              <p>• Snowflake</p>
-              <p>• BigQuery</p>
-              <p>• Postgres</p>
+              <p>• Snowflake, BigQuery, Postgres, MySQL, MongoDB</p>
+              <p>• Data Warehousing, ETL/ELT Architecture</p>  
             </div>
             <div>
               <p><strong>Frameworks & Tools:</strong></p>
-              <p>• React, Flask</p>
-              <p>• Looker, dbt, Databricks</p>
-              <p>• Sisense, Spark</p>
-              <p>• Docker, AWS, GCP, Git</p>
+              <p>• React, Flask, Next.js, Tailwind CSS, Bootstrap</p>
+              <p>• Looker, Tableau, Power BI, dbt, Databricks</p>
+              <p>• Docker, Kubernetes, AWS, GCP, Git,</p>
             </div>
             <div>
               <p><strong>Expertise:</strong></p>
-              <p>• Data Science, Machine Learning</p>
-              <p>• Agent-Based Simulation</p>
-              <p>• Operations Research</p>
-              <p>• ETL/ELT Architecture</p>
-              <p>• Data Warehousing</p>
-              <p>• Full-Stack Web Development</p>
-              <p>• SEO</p>
+              <p>• Team Building, Leadership, Product Management</p>           
+              <p>• Data Science, Machine Learning, LLMs, Operations Research</p>
+              <p>• Simulation Systems - Agentic, Monte Carlo, Event Based</p>
+              <p>• Full-Stack Web Development, SEO</p>
             </div>
           </div>
         </div>
@@ -391,7 +385,16 @@ export const MyComputer: React.FC = () => {
         <div className="border-2 border-gray-400 p-3" style={{ borderStyle: 'inset' }}>
           <h3 className="font-bold mb-2">About</h3>
           <p className="text-xs leading-relaxed">
-            A results-driven leader with over 9 years of experience spanning high-growth startups and successful entrepreneurial ventures. Proven ability to build and lead high-performing teams, architect complex data solutions from the ground up, and drive business modernization. Combines deep expertise in data science, analytics, and agent-based simulation with a founder's mindset for product development, operational efficiency, and P&L responsibility.
+            A output-driven person with over 9 years of experience spanning high-growth startups and successful entrepreneurial ventures.
+            Proven ability to build and lead high-performing teams, architect complex data solutions from the ground up, and drive business
+            modernization. Combines deep expertise in data science, analytics, and agent-based simulation with a founder's mindset for product
+            development, operational efficiency, and P&L responsibility.
+            <br />
+            <br />
+            TLDR:
+            <br />
+            I am a data scientist, engineer, and entrepreneur. Passion for building products and services that
+            help people live better lives. I am a quick learner and a problem solver.
           </p>
         </div>
       </div>
