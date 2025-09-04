@@ -173,10 +173,10 @@ export const getDesktopIcons = (screenSize: { isMobile: boolean; isTablet: boole
       name: 'The Urban Pinnal',
       position: positions[6],
       tooltip: 'Open The Urban Pinnal website',
-      icon: '/icons/Generic.ico',
+      icon: '/icons/theurbanpinnal.ico',
       windowConfig: {
         title: 'The Urban Pinnal',
-        icon: '/icons/Generic.ico',
+        icon: '/icons/theurbanpinnal.ico',
         component: () => {
           React.useEffect(() => {
             window.open('https://theurbanpinnal.com', '_blank');
@@ -294,10 +294,10 @@ export const desktopIcons = [
     name: 'The Urban Pinnal',
     position: { x: 20, y: 500 },
     tooltip: 'Open The Urban Pinnal website',
-    icon: '/icons/Generic.ico',
+    icon: '/icons/theurbanpinnal.ico',
     windowConfig: {
       title: 'The Urban Pinnal',
-      icon: '/icons/Generic.ico',
+      icon: '/icons/theurbanpinnal.ico',
       component: () => {
         React.useEffect(() => {
           window.open('https://theurbanpinnal.com', '_blank');

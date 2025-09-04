@@ -10,7 +10,8 @@ export interface BlogPost {
 const availablePostIds = [
   'blog-1',
   'blog-2',
-  'blog-3'
+  'blog-3',
+  'urban-pinnal-ecommerce-case-study'
 ];
 
 // Function to parse markdown front matter
