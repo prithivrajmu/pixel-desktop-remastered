@@ -370,14 +370,15 @@ export const MyComputer: React.FC = () => {
               <p><strong>Frameworks & Tools:</strong></p>
               <p>• React, Flask, Next.js, Tailwind CSS, Bootstrap</p>
               <p>• Looker, Tableau, Power BI, dbt, Databricks</p>
-              <p>• Docker, Kubernetes, AWS, GCP, Git,</p>
+              <p>• Docker, Kubernetes, AWS, GCP, Git</p>
+              <p>• Shopify API, Sanity CMS, GraphQL</p>
             </div>
             <div>
               <p><strong>Expertise:</strong></p>
               <p>• Team Building, Leadership, Product Management</p>           
               <p>• Data Science, Machine Learning, LLMs, Operations Research</p>
               <p>• Simulation Systems - Agentic, Monte Carlo, Event Based</p>
-              <p>• Full-Stack Web Development, SEO</p>
+              <p>• Full-Stack Web Development, SEO, E-commerce</p>
             </div>
           </div>
         </div>

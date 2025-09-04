@@ -34,7 +34,7 @@ export const getResponsiveIconPositions = (screenSize: { isMobile: boolean; isTa
   // Calculate optimal spacing for elegant layout
   const baseSpacing = iconContainerSize + 32; // Container size + increased gap for better spacing
   const maxIconsPerColumn = Math.floor(availableHeight / baseSpacing);
-  const totalIcons = 6; // We now have 6 desktop icons
+  const totalIcons = 7; // We now have 7 desktop icons (added theurbanpinnal.com)
   
   // Determine layout: single column vs multi-column
   const needsMultipleColumns = maxIconsPerColumn < totalIcons;
@@ -167,6 +167,29 @@ export const getDesktopIcons = (screenSize: { isMobile: boolean; isTablet: boole
         isMinimized: false,
         position: { x: 0, y: 0 }
       }
+    },
+    {
+      id: 'theurbanpinnal',
+      name: 'The Urban Pinnal',
+      position: positions[6],
+      tooltip: 'Open The Urban Pinnal website',
+      icon: '/icons/theurbanpinnal.ico',
+      windowConfig: {
+        title: 'The Urban Pinnal',
+        icon: '/icons/theurbanpinnal.ico',
+        component: () => {
+          React.useEffect(() => {
+            window.open('https://theurbanpinnal.com', '_blank');
+          }, []);
+          return (
+            <div className="w-full h-full flex items-center justify-center bg-white" style={{ fontFamily: 'Times New Roman, serif' }}>
+              Redirecting to theurbanpinnal.com...
+            </div>
+          );
+        },
+        isMinimized: false,
+        position: { x: 0, y: 0 }
+      }
     }
   ];
 };
@@ -259,6 +282,29 @@ export const desktopIcons = [
         return (
           <div className="w-full h-full flex items-center justify-center bg-white" style={{ fontFamily: 'Times New Roman, serif' }}>
             Redirecting to inventreesync.com...
+          </div>
+        );
+      },
+      isMinimized: false,
+      position: { x: 0, y: 0 }
+    }
+  },
+  {
+    id: 'theurbanpinnal',
+    name: 'The Urban Pinnal',
+    position: { x: 20, y: 500 },
+    tooltip: 'Open The Urban Pinnal website',
+    icon: '/icons/theurbanpinnal.ico',
+    windowConfig: {
+      title: 'The Urban Pinnal',
+      icon: '/icons/theurbanpinnal.ico',
+      component: () => {
+        React.useEffect(() => {
+          window.open('https://theurbanpinnal.com', '_blank');
+        }, []);
+        return (
+          <div className="w-full h-full flex items-center justify-center bg-white" style={{ fontFamily: 'Times New Roman, serif' }}>
+            Redirecting to theurbanpinnal.com...
           </div>
         );
       },
