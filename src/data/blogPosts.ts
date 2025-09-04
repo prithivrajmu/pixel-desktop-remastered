@@ -9,9 +9,9 @@ export interface BlogPost {
 // List of available blog post IDs - add new post IDs here
 const availablePostIds = [
   'blog-1',
-  'blog-2',
+  'blog-2', 
   'blog-3',
-  'urban-pinnal-ecommerce-case-study'
+  'blog-4'
 ];
 
 // Function to parse markdown front matter
@@ -72,7 +72,7 @@ const loadBlogPost = async (id: string): Promise<BlogPost | null> => {
 // Function to load all blog posts from markdown files
 export const loadBlogPosts = async (): Promise<BlogPost[]> => {
   try {
-    // Load all posts in parallel
+    // Load all posts in parallel using filenames
     const postPromises = availablePostIds.map(id => loadBlogPost(id));
     const posts = await Promise.all(postPromises);
     

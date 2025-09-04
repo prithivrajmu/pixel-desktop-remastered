@@ -1,5 +1,5 @@
 ---
-id: urban-pinnal-ecommerce-case-study
+id: blog-4
 title: "Building The Urban Pinnal: A Modern E-commerce Platform for Traditional Indian Craftsmanship"
 date: 2025-09-04
 preview: "How I built a headless e-commerce platform connecting traditional Tamil Nadu artisans with global markets using React, Shopify, and Sanity CMS."
@@ -165,6 +165,10 @@ The platform has successfully:
 - Vercel
 - Custom domain configuration
 - Environment management
+
+## Visit The Urban Pinnal
+
+Ready to explore the platform in action? Visit **[The Urban Pinnal](https://theurbanpinnal.com)** to see how traditional Indian craftsmanship meets modern e-commerce technology. Browse our curated collection of handcrafted products, read artisan stories, and experience the seamless shopping experience we've built.
 
 ## Conclusion
 
