@@ -52,6 +52,30 @@ export const MyDocuments: React.FC = () => {
       }
     },
     {
+      name: 'The Urban Pinnal - Lead Developer',
+      icon: '🛍️',
+      description: 'Built a modern headless e-commerce platform connecting traditional Tamil Nadu artisans with global markets using React, Shopify, and Sanity CMS.',
+      tech: ['React 18', 'TypeScript', 'Shopify API', 'Sanity CMS', 'GraphQL', 'Tailwind CSS', 'Headless E-commerce'],
+      status: 'completed',
+      details: {
+        duration: '2024',
+        achievements: [
+          'Developed headless e-commerce platform with Shopify Storefront API integration',
+          'Implemented advanced shopping cart system with persistent storage and real-time updates',
+          'Created content management system using Sanity CMS for artisan stories and blog posts',
+          'Built responsive design optimized for mobile commerce (70% mobile traffic)',
+          'Achieved comprehensive SEO implementation with structured data and dynamic meta tags'
+        ],
+        responsibilities: [
+          'Full-stack development using React 18 and TypeScript',
+          'Headless e-commerce architecture design and implementation',
+          'GraphQL integration with Shopify Storefront API',
+          'Content management system development with Sanity CMS',
+          'Performance optimization and mobile-first responsive design'
+        ]
+      }
+    },
+    {
       name: 'A M Foods - Director',
       icon: '🍲',
       description: 'Driving modernization and operational efficiency for a legacy restaurant brand (est. 1973). Architected custom inventory & payroll software.',
@@ -153,6 +177,12 @@ export const MyDocuments: React.FC = () => {
       icon: '/icons/inventreesync.svg',
       type: 'app',
       onClick: () => window.open('https://inventreesync.com', '_blank', 'noopener,noreferrer')
+    },
+    {
+      name: 'The Urban Pinnal',
+      icon: '/icons/theurbanpinnal.ico',
+      type: 'app',
+      onClick: () => window.open('https://theurbanpinnal.com', '_blank', 'noopener,noreferrer')
     },
     {
       name: 'Portfolio',
