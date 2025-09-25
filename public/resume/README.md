@@ -4,7 +4,7 @@ This directory contains the resume file for download functionality.
 
 ## Setup Instructions
 
-1. Add your resume file as `Prithiv_Raj_MU_Resume.pdf` in this directory
+1. Add your resume file as `Prithiv_Raj_Resume.pdf` in this directory
 2. The file will be automatically downloadable from:
    - My Computer: "Download Resume" button
    - My Documents: "Resume.odf" file (double-click) and "Download Resume" button in Quick Access
@@ -12,9 +12,9 @@ This directory contains the resume file for download functionality.
 ## Supported Formats
 
 While the UI shows "Resume.odf" (OpenDocument format), the actual download can be any format:
-- PDF (recommended): `Prithiv_Raj_MU_Resume.pdf`
-- DOC/DOCX: `Prithiv_Raj_MU_Resume.doc`
-- ODF: `Prithiv_Raj_MU_Resume.odf`
+- PDF (recommended): `Prithiv_Raj_Resume.pdf`
+- DOC/DOCX: `Prithiv_Raj_Resume.doc`
+- ODF: `Prithiv_Raj_Resume.odf`
 
 ## Alternative Storage Options
 
