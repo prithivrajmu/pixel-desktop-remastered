@@ -286,4 +286,17 @@
       transform: none !important;
     }
   }
+
+  /* Skill bubble panel - prevent layout shift */
+  .group .pointer-events-none {
+    position: absolute;
+    will-change: opacity, transform;
+  }
+
+  /* Hide skill bubbles on mobile (no hover support) */
+  @media (max-width: 768px) {
+    .group .pointer-events-none[role="list"] {
+      display: none;
+    }
+  }
 }
