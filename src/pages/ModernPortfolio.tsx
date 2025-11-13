@@ -384,7 +384,7 @@ const ModernPortfolio: React.FC = () => {
             <p className="text-gray-600">No blog posts available at the moment.</p>
           </div>
         ) : (
-          <div className="space-y-6 max-w-4xl mx-auto">
+          <div className="space-y-6">
             {blogPosts.map((post) => {
               const slug = generateSlug(post.title);
               const blogUrl = `/blog/${post.id}`;
