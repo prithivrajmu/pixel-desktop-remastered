@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { loadBlogPosts, loadSinglePost, BlogPost } from '../../data/blogPosts';
+import { loadBlogPosts, findPostByIdOrSlug, type BlogPost } from '../../data/blogPosts';
 import { useSounds } from '../SoundManager';
 import { useScreenSize } from '../../hooks/use-mobile';
 import { useNavigate } from 'react-router-dom';
@@ -143,7 +143,7 @@ export const InternetExplorer: React.FC<InternetExplorerProps> = ({ initialPage 
       const loadPost = async () => {
         setPostLoading(true);
         try {
-          const post = await loadSinglePost(currentPage);
+          const post = await findPostByIdOrSlug(currentPage);
           setCurrentPost(post);
         } catch (error) {
           console.error('Failed to load post:', error);

@@ -40,13 +40,6 @@ const ModernPortfolio: React.FC = () => {
     loadPosts();
   }, []);
 
-  // Generate SEO-friendly slug from title
-  const generateSlug = (title: string): string => {
-    return title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '');
-  };
 
   const scrollToSection = (ref: React.RefObject<HTMLDivElement>) => {
     ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -386,8 +379,7 @@ const ModernPortfolio: React.FC = () => {
         ) : (
           <div className="space-y-6">
             {blogPosts.map((post) => {
-              const slug = generateSlug(post.title);
-              const blogUrl = `/blog/${post.id}`;
+              const blogUrl = `/blog/${post.slug}`;
               
               return (
                 <article

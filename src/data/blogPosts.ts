@@ -4,7 +4,16 @@ export interface BlogPost {
   date: string; // YYYY-MM-DD
   preview: string;
   content: string;
+  slug: string; // SEO-friendly URL slug
 }
+
+// Generate SEO-friendly slug from title
+export const generateSlug = (title: string): string => {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+};
 
 // List of available blog post IDs - add new post IDs here
 const availablePostIds = [
@@ -55,12 +64,14 @@ const loadBlogPost = async (id: string): Promise<BlogPost | null> => {
       const markdownText = await response.text();
       const { frontMatter, content } = parseFrontMatter(markdownText);
       
+      const title = frontMatter.title || 'Untitled';
       return {
         id: frontMatter.id || id,
-        title: frontMatter.title || 'Untitled',
+        title: title,
         date: frontMatter.date || '1995-01-01',
         preview: frontMatter.preview || content.substring(0, 150) + '...',
-        content: content
+        content: content,
+        slug: generateSlug(title)
       };
     }
   } catch (error) {
@@ -91,4 +102,25 @@ export const loadBlogPosts = async (): Promise<BlogPost[]> => {
 // Function to load a single post by ID
 export const loadSinglePost = async (id: string): Promise<BlogPost | null> => {
   return loadBlogPost(id);
+};
+
+// Function to find a post by slug
+export const findPostBySlug = async (slug: string): Promise<BlogPost | null> => {
+  try {
+    const allPosts = await loadBlogPosts();
+    return allPosts.find(post => post.slug === slug) || null;
+  } catch (error) {
+    console.warn(`Could not find blog post with slug: ${slug}`);
+    return null;
+  }
+};
+
+// Function to find a post by ID or slug (for backward compatibility)
+export const findPostByIdOrSlug = async (identifier: string): Promise<BlogPost | null> => {
+  // First try to load by ID (for backward compatibility)
+  const postById = await loadBlogPost(identifier);
+  if (postById) return postById;
+  
+  // If not found, try to find by slug
+  return findPostBySlug(identifier);
 }; 
