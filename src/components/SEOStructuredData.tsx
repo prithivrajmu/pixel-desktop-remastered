@@ -14,7 +14,7 @@ interface SEOStructuredDataProps {
 export const SEOStructuredData: React.FC<SEOStructuredDataProps> = ({ type = 'home', blogPost }) => {
   const baseUrl = 'https://prithivraj.xyz';
   
-  // Memoize schemas to avoid recreating on every render
+  // Create schemas - using useMemo with stable dependencies
   const personSchema = useMemo(() => ({
     "@context": "https://schema.org",
     "@type": "Person",
@@ -53,7 +53,7 @@ export const SEOStructuredData: React.FC<SEOStructuredDataProps> = ({ type = 'ho
       "Software Architecture"
     ],
     "description": summary
-  }), [contactInfo.email, contactInfo.phone, contactInfo.github, contactInfo.linkedin, contactInfo.website, education, summary]);
+  }), []);
 
   // Professional Profile Schema
   const profileSchema = useMemo(() => ({
@@ -77,7 +77,7 @@ export const SEOStructuredData: React.FC<SEOStructuredDataProps> = ({ type = 'ho
         contactInfo.website
       ].filter(Boolean)
     }
-  }), [contactInfo.email, contactInfo.github, contactInfo.linkedin, contactInfo.website, summary]);
+  }), []);
 
   // Portfolio/Collection Schema
   const portfolioSchema = useMemo(() => ({
@@ -98,7 +98,7 @@ export const SEOStructuredData: React.FC<SEOStructuredDataProps> = ({ type = 'ho
         "keywords": project.tech.join(", ")
       }
     }))
-  }), [portfolioProjectsList, baseUrl]);
+  }), []);
 
   // Work Experience Schema
   const workExperienceSchema = useMemo(() => ({
@@ -115,7 +115,7 @@ export const SEOStructuredData: React.FC<SEOStructuredDataProps> = ({ type = 'ho
       "description": project.description,
       "skills": project.tech
     }))
-  }), [portfolioProjects]);
+  }), []);
 
   // Blog Post Schema
   const blogPostSchema = useMemo(() => blogPost ? {
@@ -140,7 +140,7 @@ export const SEOStructuredData: React.FC<SEOStructuredDataProps> = ({ type = 'ho
       "@id": `${baseUrl}/blog/${blogPost.slug}`
     },
     "url": `${baseUrl}/blog/${blogPost.slug}`
-  } : null, [blogPost, baseUrl]);
+  } : null, [blogPost?.slug, blogPost?.title, blogPost?.description, blogPost?.date]);
 
   // Website Schema
   const websiteSchema = useMemo(() => ({
@@ -161,9 +161,15 @@ export const SEOStructuredData: React.FC<SEOStructuredDataProps> = ({ type = 'ho
       },
       "query-input": "required name=search_term_string"
     }
-  }), [summary, baseUrl]);
+  }), []);
 
   useEffect(() => {
+    // Only run in browser environment
+    if (typeof window === 'undefined' || typeof document === 'undefined') {
+      return;
+    }
+
+    // Build schemas array based on type
     const schemas = [];
     
     if (type === 'home') {
@@ -180,17 +186,28 @@ export const SEOStructuredData: React.FC<SEOStructuredDataProps> = ({ type = 'ho
 
     // Add new structured data scripts to head
     schemas.forEach((schema) => {
-      const script = document.createElement('script');
-      script.type = 'application/ld+json';
-      script.text = JSON.stringify(schema);
-      document.head.appendChild(script);
+      if (schema) {
+        try {
+          const script = document.createElement('script');
+          script.type = 'application/ld+json';
+          script.text = JSON.stringify(schema);
+          document.head.appendChild(script);
+        } catch (error) {
+          console.error('Error adding structured data script:', error);
+        }
+      }
     });
 
     // Cleanup function
     return () => {
-      const scripts = document.querySelectorAll('script[type="application/ld+json"]');
-      scripts.forEach(script => script.remove());
+      try {
+        const scripts = document.querySelectorAll('script[type="application/ld+json"]');
+        scripts.forEach(script => script.remove());
+      } catch (error) {
+        console.error('Error removing structured data scripts:', error);
+      }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type, blogPost]);
 
   return null;
