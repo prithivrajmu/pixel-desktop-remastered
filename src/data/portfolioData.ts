@@ -187,6 +187,7 @@ export const portfolioProjectsList: PortfolioProject[] = [
     description: 'Full-stack real estate marketplace featuring multi-step property listing wizard with Google Maps API and PostGIS geospatial queries.',
     tech: ['Next.js 14', 'TypeScript', 'Supabase', 'PostgreSQL', 'PostGIS', 'Google Maps API', 'Tailwind CSS'],
     status: 'completed',
+    url: 'https://infiestates.com',
     details: {
       duration: '2024',
       achievements: [

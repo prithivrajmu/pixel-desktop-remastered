@@ -252,4 +252,93 @@
       min-width: fit-content;
     }
   }
+
+  /* Animation utilities for modern portfolio */
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal-base {
+      opacity: 0;
+      transform: translateY(0.5rem);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal-up {
+      transform: translateY(0.5rem);
+    }
+
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-2rem);
+      transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(2rem);
+      transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal-scale {
+      opacity: 0;
+      transform: scale(0.9);
+      transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .reveal-rotate {
+      opacity: 0;
+      transform: rotate(-5deg) scale(0.95);
+      transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .reveal-bounce {
+      opacity: 0;
+      transform: translateY(2rem) scale(0.9);
+      transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    .is-inview {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    .hover-lift:hover {
+      transform: translateY(-2px) scale(1.01);
+    }
+
+    .parallax-slow {
+      transition: transform 0.3s ease-out;
+    }
+  }
+
+  .hover-lift {
+    will-change: transform;
+    transform: translateZ(0);
+  }
+
+  /* Respect reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    .reveal-base,
+    .reveal-up,
+    .reveal-left,
+    .reveal-right,
+    .reveal-scale,
+    .reveal-rotate,
+    .reveal-bounce,
+    .hover-lift {
+      transition: none !important;
+      transform: none !important;
+    }
+  }
+
+  /* Skill bubble panel - prevent layout shift */
+  .group .pointer-events-none {
+    position: absolute;
+    will-change: opacity, transform;
+  }
+
+  /* Hide skill bubbles on mobile (no hover support) */
+  @media (max-width: 768px) {
+    .group .pointer-events-none[role="list"] {
+      display: none;
+    }
+  }
 }

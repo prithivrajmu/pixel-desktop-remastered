@@ -1,14 +1,14 @@
-User-agent: Googlebot
-Allow: /
+# robots.txt for prithivraj.xyz
 
-User-agent: Bingbot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
-
+# Allow all search engines
 User-agent: *
 Allow: /
+
+# Disallow Win95 mode from indexing (optional - can be removed if you want it indexed)
+Disallow: /?mode=win95
+
+# Sitemap location
+Sitemap: https://prithivraj.xyz/sitemap.xml
+
+# Crawl-delay (optional - helps prevent server overload)
+Crawl-delay: 1

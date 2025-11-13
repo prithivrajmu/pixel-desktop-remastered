@@ -34,7 +34,7 @@ export const getResponsiveIconPositions = (screenSize: { isMobile: boolean; isTa
   // Calculate optimal spacing for elegant layout
   const baseSpacing = iconContainerSize + 32; // Container size + increased gap for better spacing
   const maxIconsPerColumn = Math.floor(availableHeight / baseSpacing);
-  const totalIcons = 7; // We now have 7 desktop icons (added theurbanpinnal.com)
+  const totalIcons = 8; // We now have 8 desktop icons (added Modern Site)
   
   // Determine layout: single column vs multi-column
   const needsMultipleColumns = maxIconsPerColumn < totalIcons;
@@ -190,6 +190,29 @@ export const getDesktopIcons = (screenSize: { isMobile: boolean; isTablet: boole
         isMinimized: false,
         position: { x: 0, y: 0 }
       }
+    },
+    {
+      id: 'modern-site',
+      name: 'Modern Site',
+      position: positions[7],
+      tooltip: 'View Modern Portfolio Site',
+      icon: '/icons/Desktop.ico',
+      windowConfig: {
+        title: 'Modern Site',
+        icon: '/icons/Desktop.ico',
+        component: () => {
+          React.useEffect(() => {
+            window.location.href = '/?mode=modern';
+          }, []);
+          return (
+            <div className="w-full h-full flex items-center justify-center bg-white" style={{ fontFamily: 'Times New Roman, serif' }}>
+              Redirecting to modern site...
+            </div>
+          );
+        },
+        isMinimized: false,
+        position: { x: 0, y: 0 }
+      }
     }
   ];
 };
@@ -305,6 +328,29 @@ export const desktopIcons = [
         return (
           <div className="w-full h-full flex items-center justify-center bg-white" style={{ fontFamily: 'Times New Roman, serif' }}>
             Redirecting to theurbanpinnal.com...
+          </div>
+        );
+      },
+      isMinimized: false,
+      position: { x: 0, y: 0 }
+    }
+  },
+  {
+    id: 'modern-site',
+    name: 'Modern Site',
+    position: { x: 20, y: 580 },
+    tooltip: 'View Modern Portfolio Site',
+    icon: '/icons/Desktop.ico',
+    windowConfig: {
+      title: 'Modern Site',
+      icon: '/icons/Desktop.ico',
+      component: () => {
+        React.useEffect(() => {
+          window.location.href = '/?mode=modern';
+        }, []);
+        return (
+          <div className="w-full h-full flex items-center justify-center bg-white" style={{ fontFamily: 'Times New Roman, serif' }}>
+            Redirecting to modern site...
           </div>
         );
       },
