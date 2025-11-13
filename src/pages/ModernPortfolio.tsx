@@ -1,7 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { downloadResume } from '@/utils/downloadUtils';
 import { portfolioProjects, portfolioProjectsList, getAllSkills, contactInfo } from '@/data/portfolioData';
-import { Menu, X, Download, Mail, Github, Linkedin, ExternalLink, ChevronDown, Monitor } from 'lucide-react';
+import { loadBlogPosts, type BlogPost } from '@/data/blogPosts';
+import { Menu, X, Download, Mail, Github, Linkedin, ExternalLink, ChevronDown, Monitor, BookOpen } from 'lucide-react';
 
 const ModernPortfolio: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -18,9 +19,34 @@ const ModernPortfolio: React.FC = () => {
   const skillsRef = useRef<HTMLDivElement>(null);
   const experienceRef = useRef<HTMLDivElement>(null);
   const projectsRef = useRef<HTMLDivElement>(null);
+  const blogRef = useRef<HTMLDivElement>(null);
   const contactRef = useRef<HTMLDivElement>(null);
 
   const skills = getAllSkills();
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [blogLoading, setBlogLoading] = useState(true);
+
+  useEffect(() => {
+    const loadPosts = async () => {
+      try {
+        const posts = await loadBlogPosts();
+        setBlogPosts(posts);
+      } catch (error) {
+        console.error('Failed to load blog posts:', error);
+      } finally {
+        setBlogLoading(false);
+      }
+    };
+    loadPosts();
+  }, []);
+
+  // Generate SEO-friendly slug from title
+  const generateSlug = (title: string): string => {
+    return title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+  };
 
   const scrollToSection = (ref: React.RefObject<HTMLDivElement>) => {
     ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -94,6 +120,9 @@ const ModernPortfolio: React.FC = () => {
               <button onClick={() => scrollToSection(projectsRef)} className="text-gray-700 hover:text-gray-900 transition-colors">
                 Projects
               </button>
+              <button onClick={() => scrollToSection(blogRef)} className="text-gray-700 hover:text-gray-900 transition-colors">
+                Blog
+              </button>
               <button onClick={() => scrollToSection(contactRef)} className="text-gray-700 hover:text-gray-900 transition-colors">
                 Contact
               </button>
@@ -138,6 +167,9 @@ const ModernPortfolio: React.FC = () => {
               </button>
               <button onClick={() => scrollToSection(projectsRef)} className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
                 Projects
+              </button>
+              <button onClick={() => scrollToSection(blogRef)} className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
+                Blog
               </button>
               <button onClick={() => scrollToSection(contactRef)} className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
                 Contact
@@ -195,9 +227,9 @@ const ModernPortfolio: React.FC = () => {
       </section>
 
       {/* About Section */}
-      <section ref={aboutRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <section ref={aboutRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white">
         <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">About Me</h2>
-        <div className="bg-white rounded-xl shadow-lg p-8 max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto">
           <p className="text-gray-700 leading-relaxed mb-4">
             I'm a Technical Lead Engineer with 9+ years of experience in data, software, operations research, and managing technical teams. 
             Currently at Headwind Labs, I bridge the gap between executive strategy and hands-on engineering, using modern web technologies 
@@ -217,7 +249,7 @@ const ModernPortfolio: React.FC = () => {
       </section>
 
       {/* Skills Section */}
-      <section ref={skillsRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white">
+      <section ref={skillsRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Skills</h2>
         <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
           {skills.map((skill, index) => (
