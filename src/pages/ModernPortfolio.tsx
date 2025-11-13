@@ -254,20 +254,20 @@ const ModernPortfolio: React.FC = () => {
 
     {/* About Section */}
     <section ref={aboutRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white" itemScope itemType="https://schema.org/AboutPage">
-      <div ref={aboutSectionRef.ref} className={`motion-safe ${aboutSectionRef.inView ? 'is-inview' : 'reveal-base reveal-up'}`}>
-        <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">About Me</h2>
+      <div ref={aboutSectionRef.ref} className={`motion-safe ${aboutSectionRef.inView ? 'is-inview' : 'reveal-left'}`}>
+        <h2 className={`text-3xl font-bold text-gray-900 mb-8 text-center motion-safe ${aboutSectionRef.inView ? 'is-inview' : 'reveal-scale'}`}>About Me</h2>
         <div className="max-w-4xl mx-auto">
-        <p className="text-gray-700 leading-relaxed mb-4">
+        <p className={`text-gray-700 leading-relaxed mb-4 motion-safe ${aboutSectionRef.inView ? 'is-inview' : 'reveal-left'}`} style={{ transitionDelay: '100ms' }}>
           I'm a Technical Lead Engineer with 9+ years of experience in data, software, operations research, and managing technical teams. 
           Currently at Headwind Labs, I bridge the gap between executive strategy and hands-on engineering, using modern web technologies 
           (React, TypeScript, Supabase) to build custom tools that solve real-world business problems.
         </p>
-        <p className="text-gray-700 leading-relaxed mb-4">
+        <p className={`text-gray-700 leading-relaxed mb-4 motion-safe ${aboutSectionRef.inView ? 'is-inview' : 'reveal-right'}`} style={{ transitionDelay: '200ms' }}>
           My experience spans from data science research at NEXTOR II (FAA Consortium) developing simulation models of US airspace, 
           to leading data teams at companies like Volansi and Zipline, where I built operational tools that increased efficiency by 25-33% 
           and reduced manufacturing costs by 15%.
         </p>
-        <p className="text-gray-700 leading-relaxed">
+        <p className={`text-gray-700 leading-relaxed motion-safe ${aboutSectionRef.inView ? 'is-inview' : 'reveal-left'}`} style={{ transitionDelay: '300ms' }}>
           Currently, I'm building Kattru (AI-powered learning platform), Zippy Bee (proprietary CRM), and Inventree Sync (inventory management system). 
           My approach combines deep technical knowledge with strategic thinking, enabling me to deliver solutions that not only solve 
           technical challenges but also drive measurable business impact.
@@ -278,8 +278,8 @@ const ModernPortfolio: React.FC = () => {
 
     {/* Skills Section */}
     <section ref={skillsRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <div ref={skillsSectionRef.ref} className={`motion-safe ${skillsSectionRef.inView ? 'is-inview' : 'reveal-base reveal-up'}`}>
-        <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Skills</h2>
+      <div ref={skillsSectionRef.ref} className={`motion-safe ${skillsSectionRef.inView ? 'is-inview' : 'reveal-bounce'}`}>
+        <h2 className={`text-3xl font-bold text-gray-900 mb-8 text-center motion-safe ${skillsSectionRef.inView ? 'is-inview' : 'reveal-scale'}`}>Skills</h2>
         <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
           {skills.map((skill, index) => {
             const relatedItems = skillToItems.get(skill) || [];
@@ -331,14 +331,16 @@ const ModernPortfolio: React.FC = () => {
 
     {/* Experience Section */}
     <section ref={experienceRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <div ref={experienceSectionRef.ref} className={`motion-safe ${experienceSectionRef.inView ? 'is-inview' : 'reveal-base reveal-up'}`}>
-        <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Work Experience</h2>
+      <div ref={experienceSectionRef.ref} className={`motion-safe ${experienceSectionRef.inView ? 'is-inview' : 'reveal-scale'}`}>
+        <h2 className={`text-3xl font-bold text-gray-900 mb-12 text-center motion-safe ${experienceSectionRef.inView ? 'is-inview' : 'reveal-bounce'}`}>Work Experience</h2>
         <div className="space-y-8" itemScope itemType="https://schema.org/ItemList">
-          {portfolioProjects.map((project, index) => (
+          {portfolioProjects.map((project, index) => {
+            const animationType = index % 2 === 0 ? 'reveal-left' : 'reveal-right';
+            return (
             <article
               key={index}
-              className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow hover-lift"
-              style={{ transitionDelay: `${index * 50}ms` }}
+              className={`bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow hover-lift motion-safe ${experienceSectionRef.inView ? 'is-inview' : animationType}`}
+              style={{ transitionDelay: `${index * 100}ms` }}
               itemScope
               itemType="https://schema.org/Occupation"
             >
@@ -403,21 +405,24 @@ const ModernPortfolio: React.FC = () => {
               )}
             </div>
           </article>
-        ))}
+            );
+          })}
       </div>
       </div>
     </section>
 
     {/* Projects Section */}
     <section ref={projectsRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white">
-      <div ref={projectsSectionRef.ref} className={`motion-safe ${projectsSectionRef.inView ? 'is-inview' : 'reveal-base reveal-up'}`}>
-        <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Featured Projects</h2>
+      <div ref={projectsSectionRef.ref} className={`motion-safe ${projectsSectionRef.inView ? 'is-inview' : 'reveal-scale'}`}>
+        <h2 className={`text-3xl font-bold text-gray-900 mb-12 text-center motion-safe ${projectsSectionRef.inView ? 'is-inview' : 'reveal-bounce'}`}>Featured Projects</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" itemScope itemType="https://schema.org/ItemList">
-          {portfolioProjectsList.map((project, index) => (
+          {portfolioProjectsList.map((project, index) => {
+            const animationType = index % 3 === 0 ? 'reveal-scale' : index % 3 === 1 ? 'reveal-left' : 'reveal-right';
+            return (
             <article
               key={index}
-              className="bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-shadow border border-gray-200 flex flex-col h-full hover-lift"
-              style={{ transitionDelay: `${index * 50}ms` }}
+              className={`bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-shadow border border-gray-200 flex flex-col h-full hover-lift motion-safe ${projectsSectionRef.inView ? 'is-inview' : animationType}`}
+              style={{ transitionDelay: `${index * 80}ms` }}
               itemScope
               itemType="https://schema.org/SoftwareApplication"
             >
@@ -443,15 +448,16 @@ const ModernPortfolio: React.FC = () => {
               )}
             </div>
           </article>
-        ))}
+            );
+          })}
       </div>
       </div>
     </section>
 
     {/* Blog Section */}
     <section ref={blogRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <div ref={blogSectionRef.ref} className={`motion-safe ${blogSectionRef.inView ? 'is-inview' : 'reveal-base reveal-up'}`}>
-        <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Blog</h2>
+      <div ref={blogSectionRef.ref} className={`motion-safe ${blogSectionRef.inView ? 'is-inview' : 'reveal-rotate'}`}>
+        <h2 className={`text-3xl font-bold text-gray-900 mb-12 text-center motion-safe ${blogSectionRef.inView ? 'is-inview' : 'reveal-scale'}`}>Blog</h2>
         {blogLoading ? (
           <div className="text-center py-12">
             <div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
@@ -466,12 +472,13 @@ const ModernPortfolio: React.FC = () => {
           <div className="space-y-6">
             {blogPosts.map((post, index) => {
               const blogUrl = `/blog/${post.slug}`;
+              const animationType = index % 2 === 0 ? 'reveal-left' : 'reveal-right';
               
               return (
                 <article
                   key={post.id}
-                  className="bg-white rounded-xl p-6 hover:shadow-lg transition-shadow border border-gray-200 hover-lift"
-                  style={{ transitionDelay: `${index * 50}ms` }}
+                  className={`bg-white rounded-xl p-6 hover:shadow-lg transition-shadow border border-gray-200 hover-lift motion-safe ${blogSectionRef.inView ? 'is-inview' : animationType}`}
+                  style={{ transitionDelay: `${index * 100}ms` }}
                   itemScope
                   itemType="https://schema.org/BlogPosting"
                 >
@@ -519,9 +526,9 @@ const ModernPortfolio: React.FC = () => {
 
     {/* Contact Section */}
     <section ref={contactRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <div ref={contactSectionRef.ref} className={`motion-safe ${contactSectionRef.inView ? 'is-inview' : 'reveal-base reveal-up'}`}>
-        <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Get In Touch</h2>
-        <div className="bg-white rounded-xl shadow-lg p-8 max-w-2xl mx-auto">
+      <div ref={contactSectionRef.ref} className={`motion-safe ${contactSectionRef.inView ? 'is-inview' : 'reveal-bounce'}`}>
+        <h2 className={`text-3xl font-bold text-gray-900 mb-12 text-center motion-safe ${contactSectionRef.inView ? 'is-inview' : 'reveal-scale'}`}>Get In Touch</h2>
+        <div className={`bg-white rounded-xl shadow-lg p-8 max-w-2xl mx-auto motion-safe ${contactSectionRef.inView ? 'is-inview' : 'reveal-scale'}`} style={{ transitionDelay: '100ms' }}>
         <p className="text-center text-gray-700 mb-8">
           I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.
         </p>

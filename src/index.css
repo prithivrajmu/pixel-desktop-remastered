@@ -264,6 +264,36 @@
     transform: translateY(0.5rem);
   }
 
+  .motion-safe .reveal-left {
+    opacity: 0;
+    transform: translateX(-2rem);
+    transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .motion-safe .reveal-right {
+    opacity: 0;
+    transform: translateX(2rem);
+    transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .motion-safe .reveal-scale {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .motion-safe .reveal-rotate {
+    opacity: 0;
+    transform: rotate(-5deg) scale(0.95);
+    transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .motion-safe .reveal-bounce {
+    opacity: 0;
+    transform: translateY(2rem) scale(0.9);
+    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
   .motion-safe .is-inview {
     opacity: 1;
     transform: none;
@@ -278,9 +308,20 @@
     transform: translateY(-2px) scale(1.01);
   }
 
+  /* Parallax-like effect for background elements */
+  .motion-safe .parallax-slow {
+    transition: transform 0.3s ease-out;
+  }
+
   /* Respect reduced motion preference */
   @media (prefers-reduced-motion: reduce) {
     .reveal-base,
+    .reveal-up,
+    .reveal-left,
+    .reveal-right,
+    .reveal-scale,
+    .reveal-rotate,
+    .reveal-bounce,
     .hover-lift {
       transition: none !important;
       transform: none !important;
