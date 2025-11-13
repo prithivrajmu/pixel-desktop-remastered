@@ -339,7 +339,7 @@ export const InternetExplorer: React.FC<InternetExplorerProps> = ({ initialPage 
                           onClick={(e) => {
                             e.preventDefault();
                             sounds.playDialUpConnect();
-                            setCurrentPage(article.id);
+                            setCurrentPage(article.slug);
                           }}
                         >
                           {article.title}
@@ -355,7 +355,7 @@ export const InternetExplorer: React.FC<InternetExplorerProps> = ({ initialPage 
                           className="text-blue-600 underline"
                           onClick={(e) => {
                             e.preventDefault();
-                            setCurrentPage(article.id);
+                            setCurrentPage(article.slug);
                           }}
                         >
                           Read more...
