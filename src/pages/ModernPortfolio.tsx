@@ -1,8 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { downloadResume } from '@/utils/downloadUtils';
 import { portfolioProjects, portfolioProjectsList, getAllSkills, contactInfo } from '@/data/portfolioData';
 import { loadBlogPosts, type BlogPost } from '@/data/blogPosts';
 import { Menu, X, Download, Mail, Github, Linkedin, ExternalLink, ChevronDown, Monitor, BookOpen } from 'lucide-react';
+import { useInView } from '@/hooks/useInView';
 // import { SEOStructuredData } from '@/components/SEOStructuredData';
 
 const ModernPortfolio: React.FC = () => {
@@ -26,6 +27,33 @@ const ModernPortfolio: React.FC = () => {
   const skills = getAllSkills();
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [blogLoading, setBlogLoading] = useState(true);
+
+  // Build skill to projects/experience mapping
+  const skillToItems = useMemo(() => {
+    const items = [...portfolioProjects, ...portfolioProjectsList].map(p => ({
+      name: p.name,
+      icon: p.icon,
+      url: p.url,
+      tech: p.tech
+    }));
+    const map = new Map<string, { name: string; icon: string; url?: string }[]>();
+    skills.forEach((skill) => {
+      const relatedItems = items.filter(item => item.tech.includes(skill));
+      if (relatedItems.length > 0) {
+        map.set(skill, relatedItems);
+      }
+    });
+    return map;
+  }, [skills]);
+
+  // Intersection observers for animations
+  const heroRef = useInView<HTMLDivElement>();
+  const aboutSectionRef = useInView<HTMLDivElement>();
+  const skillsSectionRef = useInView<HTMLDivElement>();
+  const experienceSectionRef = useInView<HTMLDivElement>();
+  const projectsSectionRef = useInView<HTMLDivElement>();
+  const blogSectionRef = useInView<HTMLDivElement>();
+  const contactSectionRef = useInView<HTMLDivElement>();
 
   useEffect(() => {
     const loadPosts = async () => {
@@ -124,7 +152,7 @@ const ModernPortfolio: React.FC = () => {
             </button>
             <button
               onClick={downloadResume}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors hover-lift"
               aria-label="Download resume PDF"
             >
               <Download className="w-4 h-4" aria-hidden="true" />
@@ -132,7 +160,7 @@ const ModernPortfolio: React.FC = () => {
             </button>
             <button
               onClick={() => window.location.href = '/?mode=win95'}
-              className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors hover-lift"
               title="Experience Windows 95 Style Portfolio"
               aria-label="Switch to Windows 95 style portfolio"
             >
@@ -194,7 +222,7 @@ const ModernPortfolio: React.FC = () => {
 
     {/* Hero Section */}
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32" itemScope itemType="https://schema.org/Person">
-      <div className="text-center">
+      <div ref={heroRef.ref} className={`text-center motion-safe ${heroRef.inView ? 'is-inview' : 'reveal-base reveal-up'}`}>
         <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4" itemProp="name">
           Prithiv Raj
         </h1>
@@ -209,13 +237,13 @@ const ModernPortfolio: React.FC = () => {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button
             onClick={() => scrollToSection(contactRef)}
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium hover-lift"
           >
             Get In Touch
           </button>
           <button
             onClick={downloadResume}
-            className="px-6 py-3 bg-white text-gray-900 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium flex items-center justify-center gap-2"
+            className="px-6 py-3 bg-white text-gray-900 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium flex items-center justify-center gap-2 hover-lift"
           >
             <Download className="w-5 h-5" />
             Download Resume
@@ -226,8 +254,9 @@ const ModernPortfolio: React.FC = () => {
 
     {/* About Section */}
     <section ref={aboutRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white" itemScope itemType="https://schema.org/AboutPage">
-      <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">About Me</h2>
-      <div className="max-w-4xl mx-auto">
+      <div ref={aboutSectionRef.ref} className={`motion-safe ${aboutSectionRef.inView ? 'is-inview' : 'reveal-base reveal-up'}`}>
+        <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">About Me</h2>
+        <div className="max-w-4xl mx-auto">
         <p className="text-gray-700 leading-relaxed mb-4">
           I'm a Technical Lead Engineer with 9+ years of experience in data, software, operations research, and managing technical teams. 
           Currently at Headwind Labs, I bridge the gap between executive strategy and hands-on engineering, using modern web technologies 
@@ -244,34 +273,75 @@ const ModernPortfolio: React.FC = () => {
           technical challenges but also drive measurable business impact.
         </p>
       </div>
+      </div>
     </section>
 
     {/* Skills Section */}
     <section ref={skillsRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Skills</h2>
-      <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
-        {skills.map((skill, index) => (
-          <span
-            key={index}
-            className="px-4 py-2 bg-blue-50 text-blue-700 rounded-full text-sm font-medium border border-blue-200"
-          >
-            {skill}
-          </span>
-        ))}
+      <div ref={skillsSectionRef.ref} className={`motion-safe ${skillsSectionRef.inView ? 'is-inview' : 'reveal-base reveal-up'}`}>
+        <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Skills</h2>
+        <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
+          {skills.map((skill, index) => {
+            const relatedItems = skillToItems.get(skill) || [];
+            return (
+              <div key={index} className="relative group inline-block">
+                <span
+                  className="px-4 py-2 bg-blue-50 text-blue-700 rounded-full text-sm font-medium border border-blue-200 hover-lift cursor-default"
+                  style={{ transitionDelay: `${index * 30}ms` }}
+                >
+                  {skill}
+                </span>
+                {relatedItems.length > 0 && (
+                  <div 
+                    className="pointer-events-none absolute left-1/2 top-full -translate-x-1/2 mt-2 opacity-0 translate-y-1 motion-safe group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 z-20"
+                    role="list"
+                    aria-label={`Projects using ${skill}`}
+                  >
+                    <div className="flex flex-wrap gap-1.5 p-2 bg-white border border-gray-200 rounded-xl shadow-xl max-w-xs">
+                      {relatedItems.slice(0, 6).map((item, itemIndex) => (
+                        <div
+                          key={itemIndex}
+                          role="listitem"
+                          title={item.name}
+                          className="w-9 h-9 rounded-full bg-gray-50 border border-gray-200 flex items-center justify-center text-lg select-none opacity-0 scale-95 motion-safe group-hover:opacity-100 group-hover:scale-100 transition duration-200"
+                          style={{ transitionDelay: `${itemIndex * 30}ms` }}
+                          aria-label={item.name}
+                        >
+                          <span aria-hidden="true">{item.icon}</span>
+                        </div>
+                      ))}
+                      {relatedItems.length > 6 && (
+                        <div 
+                          className="w-9 h-9 rounded-full bg-gray-100 border border-gray-200 text-xs font-medium flex items-center justify-center"
+                          title={`${relatedItems.length - 6} more projects`}
+                          aria-label={`${relatedItems.length - 6} more projects`}
+                        >
+                          +{relatedItems.length - 6}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </section>
 
     {/* Experience Section */}
     <section ref={experienceRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Work Experience</h2>
-      <div className="space-y-8" itemScope itemType="https://schema.org/ItemList">
-        {portfolioProjects.map((project, index) => (
-          <article
-            key={index}
-            className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
-            itemScope
-            itemType="https://schema.org/Occupation"
-          >
+      <div ref={experienceSectionRef.ref} className={`motion-safe ${experienceSectionRef.inView ? 'is-inview' : 'reveal-base reveal-up'}`}>
+        <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Work Experience</h2>
+        <div className="space-y-8" itemScope itemType="https://schema.org/ItemList">
+          {portfolioProjects.map((project, index) => (
+            <article
+              key={index}
+              className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow hover-lift"
+              style={{ transitionDelay: `${index * 50}ms` }}
+              itemScope
+              itemType="https://schema.org/Occupation"
+            >
             <div className="p-6">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-start gap-4">
@@ -335,19 +405,22 @@ const ModernPortfolio: React.FC = () => {
           </article>
         ))}
       </div>
+      </div>
     </section>
 
     {/* Projects Section */}
     <section ref={projectsRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white">
-      <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Featured Projects</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" itemScope itemType="https://schema.org/ItemList">
-        {portfolioProjectsList.map((project, index) => (
-          <article
-            key={index}
-            className="bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-shadow border border-gray-200 flex flex-col h-full"
-            itemScope
-            itemType="https://schema.org/SoftwareApplication"
-          >
+      <div ref={projectsSectionRef.ref} className={`motion-safe ${projectsSectionRef.inView ? 'is-inview' : 'reveal-base reveal-up'}`}>
+        <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Featured Projects</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" itemScope itemType="https://schema.org/ItemList">
+          {portfolioProjectsList.map((project, index) => (
+            <article
+              key={index}
+              className="bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-shadow border border-gray-200 flex flex-col h-full hover-lift"
+              style={{ transitionDelay: `${index * 50}ms` }}
+              itemScope
+              itemType="https://schema.org/SoftwareApplication"
+            >
             <div className="text-4xl mb-4 flex-shrink-0" aria-label={`${project.name} icon`}>{project.icon}</div>
             <h3 className="text-lg font-bold text-gray-900 mb-2 flex-shrink-0" itemProp="name">{project.name}</h3>
             <p className="text-sm text-gray-600 mb-4 flex-grow line-clamp-3 min-h-[3.75rem]" itemProp="description">{project.description}</p>
@@ -372,33 +445,36 @@ const ModernPortfolio: React.FC = () => {
           </article>
         ))}
       </div>
+      </div>
     </section>
 
     {/* Blog Section */}
     <section ref={blogRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Blog</h2>
-      {blogLoading ? (
-        <div className="text-center py-12">
-          <div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-          <p className="mt-4 text-gray-600">Loading blog posts...</p>
-        </div>
-      ) : blogPosts.length === 0 ? (
-        <div className="text-center py-12">
-          <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-600">No blog posts available at the moment.</p>
-        </div>
-      ) : (
-        <div className="space-y-6">
-          {blogPosts.map((post) => {
-            const blogUrl = `/blog/${post.slug}`;
-            
-            return (
-              <article
-                key={post.id}
-                className="bg-white rounded-xl p-6 hover:shadow-lg transition-shadow border border-gray-200"
-                itemScope
-                itemType="https://schema.org/BlogPosting"
-              >
+      <div ref={blogSectionRef.ref} className={`motion-safe ${blogSectionRef.inView ? 'is-inview' : 'reveal-base reveal-up'}`}>
+        <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Blog</h2>
+        {blogLoading ? (
+          <div className="text-center py-12">
+            <div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <p className="mt-4 text-gray-600">Loading blog posts...</p>
+          </div>
+        ) : blogPosts.length === 0 ? (
+          <div className="text-center py-12">
+            <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <p className="text-gray-600">No blog posts available at the moment.</p>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {blogPosts.map((post, index) => {
+              const blogUrl = `/blog/${post.slug}`;
+              
+              return (
+                <article
+                  key={post.id}
+                  className="bg-white rounded-xl p-6 hover:shadow-lg transition-shadow border border-gray-200 hover-lift"
+                  style={{ transitionDelay: `${index * 50}ms` }}
+                  itemScope
+                  itemType="https://schema.org/BlogPosting"
+                >
                 <header>
                   <h3 className="text-xl font-bold text-gray-900 mb-2" itemProp="headline">
                   <a
@@ -438,12 +514,14 @@ const ModernPortfolio: React.FC = () => {
           })}
         </div>
       )}
+      </div>
     </section>
 
     {/* Contact Section */}
     <section ref={contactRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Get In Touch</h2>
-      <div className="bg-white rounded-xl shadow-lg p-8 max-w-2xl mx-auto">
+      <div ref={contactSectionRef.ref} className={`motion-safe ${contactSectionRef.inView ? 'is-inview' : 'reveal-base reveal-up'}`}>
+        <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Get In Touch</h2>
+        <div className="bg-white rounded-xl shadow-lg p-8 max-w-2xl mx-auto">
         <p className="text-center text-gray-700 mb-8">
           I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.
         </p>
@@ -537,7 +615,7 @@ const ModernPortfolio: React.FC = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
             <a
               href={`mailto:${contactInfo.email}`}
-              className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+              className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium hover-lift"
             >
               <Mail className="w-5 h-5" />
               Email Me
@@ -546,7 +624,7 @@ const ModernPortfolio: React.FC = () => {
               href={contactInfo.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors font-medium"
+              className="flex items-center justify-center gap-2 px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors font-medium hover-lift"
             >
               <Github className="w-5 h-5" />
               GitHub
@@ -555,7 +633,7 @@ const ModernPortfolio: React.FC = () => {
               href={contactInfo.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium"
+              className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium hover-lift"
             >
               <Linkedin className="w-5 h-5" />
               LinkedIn
@@ -564,13 +642,14 @@ const ModernPortfolio: React.FC = () => {
           <div className="text-center">
             <button
               onClick={downloadResume}
-              className="flex items-center justify-center gap-2 mx-auto px-6 py-3 bg-white text-gray-900 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+              className="flex items-center justify-center gap-2 mx-auto px-6 py-3 bg-white text-gray-900 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium hover-lift"
             >
               <Download className="w-5 h-5" />
               Download Resume PDF
             </button>
           </div>
         </div>
+      </div>
       </div>
     </section>
 

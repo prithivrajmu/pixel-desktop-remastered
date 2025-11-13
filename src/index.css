@@ -252,4 +252,38 @@
       min-width: fit-content;
     }
   }
+
+  /* Animation utilities for modern portfolio */
+  .motion-safe .reveal-base {
+    opacity: 0;
+    transform: translateY(0.5rem);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .motion-safe .reveal-up {
+    transform: translateY(0.5rem);
+  }
+
+  .motion-safe .is-inview {
+    opacity: 1;
+    transform: none;
+  }
+
+  .hover-lift {
+    will-change: transform;
+    transform: translateZ(0);
+  }
+
+  .motion-safe .hover-lift:hover {
+    transform: translateY(-2px) scale(1.01);
+  }
+
+  /* Respect reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    .reveal-base,
+    .hover-lift {
+      transition: none !important;
+      transform: none !important;
+    }
+  }
 }
