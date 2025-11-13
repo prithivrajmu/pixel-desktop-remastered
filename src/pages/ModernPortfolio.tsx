@@ -3,6 +3,7 @@ import { downloadResume } from '@/utils/downloadUtils';
 import { portfolioProjects, portfolioProjectsList, getAllSkills, contactInfo } from '@/data/portfolioData';
 import { loadBlogPosts, type BlogPost } from '@/data/blogPosts';
 import { Menu, X, Download, Mail, Github, Linkedin, ExternalLink, ChevronDown, Monitor, BookOpen } from 'lucide-react';
+import { SEOStructuredData } from '@/components/SEOStructuredData';
 
 const ModernPortfolio: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -90,48 +91,54 @@ const ModernPortfolio: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      {/* Navigation Header */}
+    <>
+      <SEOStructuredData type="home" />
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+        {/* Navigation Header */}
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
-              <h1 className="text-xl font-bold text-gray-900">Prithiv Raj</h1>
+              <a href="/" className="text-xl font-bold text-gray-900 hover:text-gray-700 transition-colors" aria-label="Prithiv Raj - Home">
+                Prithiv Raj
+              </a>
             </div>
             
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
-              <button onClick={() => scrollToSection(aboutRef)} className="text-gray-700 hover:text-gray-900 transition-colors">
+            <nav className="hidden md:flex items-center space-x-8" aria-label="Main navigation">
+              <button onClick={() => scrollToSection(aboutRef)} className="text-gray-700 hover:text-gray-900 transition-colors" aria-label="Navigate to About section">
                 About
               </button>
-              <button onClick={() => scrollToSection(skillsRef)} className="text-gray-700 hover:text-gray-900 transition-colors">
+              <button onClick={() => scrollToSection(skillsRef)} className="text-gray-700 hover:text-gray-900 transition-colors" aria-label="Navigate to Skills section">
                 Skills
               </button>
-              <button onClick={() => scrollToSection(experienceRef)} className="text-gray-700 hover:text-gray-900 transition-colors">
+              <button onClick={() => scrollToSection(experienceRef)} className="text-gray-700 hover:text-gray-900 transition-colors" aria-label="Navigate to Experience section">
                 Experience
               </button>
-              <button onClick={() => scrollToSection(projectsRef)} className="text-gray-700 hover:text-gray-900 transition-colors">
+              <button onClick={() => scrollToSection(projectsRef)} className="text-gray-700 hover:text-gray-900 transition-colors" aria-label="Navigate to Projects section">
                 Projects
               </button>
-              <button onClick={() => scrollToSection(blogRef)} className="text-gray-700 hover:text-gray-900 transition-colors">
+              <button onClick={() => scrollToSection(blogRef)} className="text-gray-700 hover:text-gray-900 transition-colors" aria-label="Navigate to Blog section">
                 Blog
               </button>
-              <button onClick={() => scrollToSection(contactRef)} className="text-gray-700 hover:text-gray-900 transition-colors">
+              <button onClick={() => scrollToSection(contactRef)} className="text-gray-700 hover:text-gray-900 transition-colors" aria-label="Navigate to Contact section">
                 Contact
               </button>
               <button
                 onClick={downloadResume}
                 className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                aria-label="Download resume PDF"
               >
-                <Download className="w-4 h-4" />
+                <Download className="w-4 h-4" aria-hidden="true" />
                 Resume
               </button>
               <button
                 onClick={() => window.location.href = '/?mode=win95'}
                 className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
                 title="Experience Windows 95 Style Portfolio"
+                aria-label="Switch to Windows 95 style portfolio"
               >
-                <Monitor className="w-4 h-4" />
+                <Monitor className="w-4 h-4" aria-hidden="true" />
                 Win95 Mode
               </button>
             </div>
@@ -188,9 +195,9 @@ const ModernPortfolio: React.FC = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32" itemScope itemType="https://schema.org/Person">
         <div className="text-center">
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4" itemProp="name">
             Prithiv Raj
           </h1>
           <p className="text-xl md:text-2xl text-gray-600 mb-8">
@@ -220,7 +227,7 @@ const ModernPortfolio: React.FC = () => {
       </section>
 
       {/* About Section */}
-      <section ref={aboutRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white">
+      <section ref={aboutRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white" itemScope itemType="https://schema.org/AboutPage">
         <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">About Me</h2>
         <div className="max-w-4xl mx-auto">
           <p className="text-gray-700 leading-relaxed mb-4">
@@ -259,18 +266,20 @@ const ModernPortfolio: React.FC = () => {
       {/* Experience Section */}
       <section ref={experienceRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Work Experience</h2>
-        <div className="space-y-8">
+        <div className="space-y-8" itemScope itemType="https://schema.org/ItemList">
           {portfolioProjects.map((project, index) => (
-            <div
+            <article
               key={index}
               className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
+              itemScope
+              itemType="https://schema.org/Occupation"
             >
               <div className="p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-start gap-4">
-                    <span className="text-4xl">{project.icon}</span>
+                    <span className="text-4xl" aria-label={`${project.name} icon`}>{project.icon}</span>
                     <div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-1">{project.name}</h3>
+                      <h3 className="text-xl font-bold text-gray-900 mb-1" itemProp="name">{project.name}</h3>
                       {project.details && (
                         <p className="text-sm text-gray-500">{project.details.duration}</p>
                       )}
@@ -284,7 +293,7 @@ const ModernPortfolio: React.FC = () => {
                     {project.status === 'current' ? 'Current' : 'Completed'}
                   </span>
                 </div>
-                <p className="text-gray-700 mb-4">{project.description}</p>
+                <p className="text-gray-700 mb-4" itemProp="description">{project.description}</p>
                 <div className="flex flex-wrap gap-2 mb-4">
                   {project.tech.map((tech, techIndex) => (
                     <span
@@ -325,7 +334,7 @@ const ModernPortfolio: React.FC = () => {
                   </div>
                 )}
               </div>
-            </div>
+            </article>
           ))}
         </div>
       </section>
@@ -333,15 +342,17 @@ const ModernPortfolio: React.FC = () => {
       {/* Projects Section */}
       <section ref={projectsRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white">
         <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Featured Projects</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" itemScope itemType="https://schema.org/ItemList">
           {portfolioProjectsList.map((project, index) => (
-            <div
+            <article
               key={index}
               className="bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-shadow border border-gray-200 flex flex-col h-full"
+              itemScope
+              itemType="https://schema.org/SoftwareApplication"
             >
-              <div className="text-4xl mb-4 flex-shrink-0">{project.icon}</div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2 flex-shrink-0">{project.name}</h3>
-              <p className="text-sm text-gray-600 mb-4 flex-grow line-clamp-3 min-h-[3.75rem]">{project.description}</p>
+              <div className="text-4xl mb-4 flex-shrink-0" aria-label={`${project.name} icon`}>{project.icon}</div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2 flex-shrink-0" itemProp="name">{project.name}</h3>
+              <p className="text-sm text-gray-600 mb-4 flex-grow line-clamp-3 min-h-[3.75rem]" itemProp="description">{project.description}</p>
               <div className="mt-auto pt-2">
                 {project.url ? (
                   <a
@@ -349,8 +360,10 @@ const ModernPortfolio: React.FC = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium text-sm"
+                    aria-label={`Visit ${project.name} project website`}
+                    itemProp="url"
                   >
-                    Visit Project <ExternalLink className="w-4 h-4" />
+                    Visit Project <ExternalLink className="w-4 h-4" aria-hidden="true" />
                   </a>
                 ) : (
                   <span className="inline-flex items-center gap-2 text-gray-400 font-medium text-sm">
@@ -358,7 +371,7 @@ const ModernPortfolio: React.FC = () => {
                   </span>
                 )}
               </div>
-            </div>
+            </article>
           ))}
         </div>
       </section>
@@ -390,13 +403,14 @@ const ModernPortfolio: React.FC = () => {
                 >
                   <header>
                     <h3 className="text-xl font-bold text-gray-900 mb-2" itemProp="headline">
-                      <a
-                        href={blogUrl}
-                        className="hover:text-blue-600 transition-colors"
-                        itemProp="url"
-                      >
-                        {post.title}
-                      </a>
+                  <a
+                    href={blogUrl}
+                    className="hover:text-blue-600 transition-colors"
+                    itemProp="url"
+                    aria-label={`Read blog post: ${post.title}`}
+                  >
+                    {post.title}
+                  </a>
                     </h3>
                     <time
                       className="text-sm text-gray-500"
@@ -416,8 +430,9 @@ const ModernPortfolio: React.FC = () => {
                   <a
                     href={blogUrl}
                     className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium text-sm"
+                    aria-label={`Read more about ${post.title}`}
                   >
-                    Read More <ExternalLink className="w-4 h-4" />
+                    Read More <ExternalLink className="w-4 h-4" aria-hidden="true" />
                   </a>
                   <meta itemProp="author" content="Prithiv Raj" />
                 </article>
@@ -450,6 +465,7 @@ const ModernPortfolio: React.FC = () => {
                 required
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Your name"
+                aria-label="Your name"
               />
             </div>
             <div>
@@ -465,6 +481,7 @@ const ModernPortfolio: React.FC = () => {
                 required
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="your.email@example.com"
+                aria-label="Your email address"
               />
             </div>
             <div>
@@ -480,6 +497,7 @@ const ModernPortfolio: React.FC = () => {
                 required
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="What's this about?"
+                aria-label="Message subject"
               />
             </div>
             <div>
@@ -495,6 +513,7 @@ const ModernPortfolio: React.FC = () => {
                 rows={5}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
                 placeholder="Tell me about your project or idea..."
+                aria-label="Your message"
               />
             </div>
             <button
@@ -563,7 +582,8 @@ const ModernPortfolio: React.FC = () => {
           <p className="text-gray-400">© {new Date().getFullYear()} Prithiv Raj. All rights reserved.</p>
         </div>
       </footer>
-    </div>
+      </div>
+    </>
   );
 };
 
