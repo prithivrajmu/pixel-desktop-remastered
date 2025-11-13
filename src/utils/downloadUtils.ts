@@ -36,8 +36,8 @@ export const downloadResume = () => {
     const link = document.createElement('a');
     
     // Use the resume file from the public folder
-    link.href = '/resume/Prithiv_Raj_Resume.pdf';
-    link.download = 'Prithiv_Raj_Resume.pdf';
+    link.href = '/resume/Prithiv_Raj_Resume_Master_Nov_13_25.pdf';
+    link.download = 'Prithiv_Raj_Resume_Master_Nov_13_25.pdf';
     
     // Append to body, click, and remove
     document.body.appendChild(link);

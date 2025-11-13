@@ -1,11 +1,22 @@
 import React, { useMemo, useCallback } from "react";
 import { Desktop } from "@/components/Desktop";
 import { InternetExplorer } from "@/components/LazyComponents";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import ModernPortfolio from "./ModernPortfolio";
+import { Win95ModeDialog, useWin95ModePreference } from "@/components/Win95ModeDialog";
 
 const Index: React.FC = () => {
+  // Initialize router hooks first - these must be called unconditionally
   const location = useLocation();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  
+  // Then initialize our custom hook
+  const { mode, showDialog, setShowDialog, handleModeSelect } = useWin95ModePreference();
+  
+  // Check URL parameter for mode override
+  const urlMode = searchParams.get('mode') as 'modern' | 'win95' | null;
+  const currentMode = urlMode || mode || 'modern';
 
   // Determine if the current path is /blog or /blog/:id
   const blogInfo = useMemo(() => {
@@ -43,11 +54,25 @@ const Index: React.FC = () => {
     }
   }, [blogInfo.isBlog, navigate]);
 
+  // Show Win95 mode for blog routes or if explicitly set to win95
+  const shouldShowWin95 = currentMode === 'win95' || blogInfo.isBlog;
+
   return (
-    <Desktop
-      autoOpenWindows={autoWindows}
-      onAllWindowsClosed={handleAllClosed}
-    />
+    <>
+      <Win95ModeDialog
+        open={showDialog}
+        onOpenChange={setShowDialog}
+        onSelectMode={handleModeSelect}
+      />
+      {shouldShowWin95 ? (
+        <Desktop
+          autoOpenWindows={autoWindows}
+          onAllWindowsClosed={handleAllClosed}
+        />
+      ) : (
+        <ModernPortfolio />
+      )}
+    </>
   );
 };
 

@@ -213,6 +213,14 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
   // Map menu items to .ico files in public/icons
   const menuItems: MenuItem[] = [
     {
+      label: 'View Modern Site',
+      icon: '/icons/Desktop.ico',
+      action: () => {
+        window.location.href = '/?mode=modern';
+      }
+    },
+    { type: 'separator' },
+    {
       label: 'Programs',
       icon: '/icons/Program Folder (16x16px & 24x24px).ico',
       hasSubmenu: true,
