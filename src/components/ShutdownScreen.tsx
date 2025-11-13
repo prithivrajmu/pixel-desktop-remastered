@@ -16,13 +16,19 @@ export const ShutdownScreen: React.FC<ShutdownScreenProps> = ({
       <div className="text-center space-y-4">
         <div className="text-xl md:text-2xl mb-8">Windows 95</div>
         <div className="text-base md:text-lg text-center px-4">It's now safe to turn off your computer.</div>
-        <div className="mt-8">
+        <div className="mt-8 flex flex-col gap-3 items-center">
           <button
             onClick={onRestart}
             className="text-sm text-orange-600 hover:text-orange-400 underline opacity-50 hover:opacity-75"
           >
             restart
           </button>
+          <a
+            href="/?mode=modern"
+            className="text-sm text-orange-600 hover:text-orange-400 underline opacity-50 hover:opacity-75"
+          >
+            view modern site
+          </a>
         </div>
       </div>
     </div>
