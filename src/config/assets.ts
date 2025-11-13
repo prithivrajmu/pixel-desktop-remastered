@@ -130,8 +130,8 @@ export const screensaverAssets: Record<string, AssetConfig> = {
 export const documentAssets: Record<string, AssetConfig> = {
   'resume': {
     id: 'resume',
-    name: 'Prithiv Raj MU Resume',
-    path: '/resume/Prithiv_Raj_MU_Resume.pdf',
+    name: 'Prithiv Raj Resume',
+    path: '/resume/Prithiv_Raj_Resume_Master_Nov_13_25.pdf',
     type: 'document',
     category: 'document'
   },

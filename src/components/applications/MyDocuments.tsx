@@ -28,138 +28,117 @@ export const MyDocuments: React.FC = () => {
 
   const projects: Project[] = [
     {
-      name: 'Inventree Sync - Founder & Lead Developer',
-      icon: '📦',
-      description: 'Built a comprehensive AI-powered inventory management system with multi-tenant architecture, real-time analytics, and automated data entry features.',
-      tech: ['React 18', 'TypeScript', 'Supabase', 'Tailwind CSS', 'AI Integration', 'Multi-tenant Architecture'],
+      name: 'Headwind Labs - Technical Lead Engineer',
+      icon: '🚀',
+      description: 'Building AI-powered learning platform (Kattru), proprietary CRM (Zippy Bee), and custom inventory management system (Inventree Sync) to solve real-world business problems.',
+      tech: ['React', 'TypeScript', 'Supabase', 'PostgreSQL', 'OpenAI', 'Gemini', 'LangChain', 'RAG', 'Serverless'],
       status: 'current',
       details: {
-        duration: '2024 - Present',
+        duration: 'March 2023 - Present',
         achievements: [
-          'Built modern inventory management system with AI-powered photo parsing',
-          'Implemented secure multi-tenant architecture with Row-Level Security',
-          'Created modular PDF generation system for invoices and receipts',
-          'Developed real-time dashboard with advanced analytics and reporting',
-          'Integrated automated Excel processing for bulk data entry'
+          'Built Kattru, AI-powered learning platform with RAG-based course generation, encrypted API key management, and serverless architecture supporting OpenAI/Gemini models',
+          'Engineered and deployed Zippy Bee, a proprietary full-stack CRM (React, TypeScript, Supabase) to manage entire business pipeline from lead to close',
+          'Designed system modules for lead/client management, project tracking, and agent analytics with role-based access and data security (RLS)',
+          'Architected and built Inventree Sync, custom inventory and payroll management system replacing manual Google Sheets, significantly reducing waste and manual errors',
+          'Engineered data-driven inventory control system, optimizing stock levels based on sales velocity and supplier lead times'
         ],
         responsibilities: [
-          'Full-stack development using React 18 and TypeScript',
-          'Backend architecture design with Supabase integration',
-          'AI-powered features implementation for automated data entry',
-          'Multi-tenant security architecture with role-based access control',
-          'User experience design and responsive interface development'
+          'Full-stack software architecture and development',
+          'AI/ML integration and RAG implementation',
+          'Database design with Row-Level Security policies',
+          'Serverless Edge Functions development',
+          'Business problem-solving through custom software solutions'
         ]
       }
     },
     {
-      name: 'The Urban Pinnal - Lead Developer',
-      icon: '🛍️',
-      description: 'Built a modern headless e-commerce platform connecting traditional Tamil Nadu artisans with global markets using React, Shopify, and Sanity CMS.',
-      tech: ['React 18', 'TypeScript', 'Shopify API', 'Sanity CMS', 'GraphQL', 'Tailwind CSS', 'Headless E-commerce'],
-      status: 'completed',
-      details: {
-        duration: '2024',
-        achievements: [
-          'Developed headless e-commerce platform with Shopify Storefront API integration',
-          'Implemented advanced shopping cart system with persistent storage and real-time updates',
-          'Created content management system using Sanity CMS for artisan stories and blog posts',
-          'Built responsive design optimized for mobile commerce (70% mobile traffic)',
-          'Achieved comprehensive SEO implementation with structured data and dynamic meta tags'
-        ],
-        responsibilities: [
-          'Full-stack development using React 18 and TypeScript',
-          'Headless e-commerce architecture design and implementation',
-          'GraphQL integration with Shopify Storefront API',
-          'Content management system development with Sanity CMS',
-          'Performance optimization and mobile-first responsive design'
-        ]
-      }
-    },
-    {
-      name: 'A M Foods - Director',
-      icon: '🍲',
-      description: 'Driving modernization and operational efficiency for a legacy restaurant brand (est. 1973). Architected custom inventory & payroll software.',
-      tech: ['Business Leadership', 'Software Dev', 'Digital Transformation', 'Data-Driven Inventory'],
-      status: 'current',
-      details: {
-        duration: '2023 - Present',
-        achievements: [
-          'Reduced operational costs by 25% through digital transformation initiatives',
-          'Architected custom inventory management system reducing waste by 30%',
-          'Implemented data-driven decision making across all business operations',
-          'Led successful modernization of 50-year-old business processes'
-        ],
-        responsibilities: [
-          'Strategic planning and business modernization',
-          'Software architecture and development oversight',
-          'Team leadership and cross-functional collaboration',
-          'P&L responsibility and operational efficiency optimization'
-        ]
-      }
-    },
-    {
-      name: 'Nalam Properties - Founder',
-      icon: '🏠',
-      description: 'Launched a real estate venture (nalamproperties.com). Built a proprietary website and lead management system from the ground up.',
-      tech: ['Entrepreneurship', 'Full-Stack Dev', 'SEO', 'Agent-Based Simulation'],
-      status: 'current',
-      details: {
-        duration: '2023 - Present',
-        achievements: [
-          'Successfully launched real estate platform with custom lead management',
-          'Achieved 40% conversion rate improvement through data analytics',
-          'Built proprietary agent-based simulation models for market analysis',
-          'Established strong SEO presence with 200% organic traffic growth'
-        ],
-        responsibilities: [
-          'Full-stack web development and architecture',
-          'Business strategy and market analysis',
-          'SEO optimization and digital marketing',
-          'Customer relationship management and sales optimization'
-        ]
-      }
-    },
-    {
-      name: 'Zipline - Sr. Data Analyst',
-      icon: '✈️',
-      description: 'Managed software/data teams to build operational tools. Reduced aircraft manufacturing costs by 15% and improved efficiency by 25%.',
-      tech: ['ETL', 'Docker', 'Sisense', 'Tableau', 'Hypothesis Testing', 'Process Improvement'],
-      status: 'completed',
-      details: {
-        duration: '2021 - 2023',
-        achievements: [
-          'Reduced aircraft manufacturing costs by 15% through data-driven optimization',
-          'Improved operational efficiency by 25% via automated reporting systems',
-          'Led cross-functional team of 8 engineers and analysts',
-          'Deployed scalable ETL pipelines processing 10M+ daily events'
-        ],
-        responsibilities: [
-          'Data architecture and ETL pipeline development',
-          'Team leadership and project management',
-          'Business intelligence and reporting dashboard creation',
-          'Statistical analysis and hypothesis testing for operational improvements'
-        ]
-      }
-    },
-    {
-      name: 'Volansi - Lead Data Eng.',
+      name: 'Volansi - Lead Data Analytics and Engineering',
       icon: '🚁',
-      description: 'Led data team for drone manufacturing & delivery. Developed hub-and-spoke network models to optimize fleet operations.',
-      tech: ['Python', 'Scipy', 'OpenCV', 'SQL', 'Team Leadership', 'Agile'],
+      description: 'Hired and managed data team, implementing data-driven solutions for drone engineering, manufacturing, sales, and delivery operations.',
+      tech: ['Python', 'SciPy', 'SimPy', 'SQL', 'ML', 'Survival Analysis', 'Team Leadership', 'Agile'],
       status: 'completed',
       details: {
-        duration: '2019 - 2021',
+        duration: 'Sept 2021 - Jan 2023',
         achievements: [
-          'Architected scalable data infrastructure supporting 100+ daily flights',
-          'Developed hub-and-spoke optimization models reducing delivery time by 30%',
-          'Led team of 5 data engineers in agile development environment',
-          'Implemented computer vision systems for autonomous flight operations'
+          'Hired and managed the data team, implementing data-driven solutions for drone engineering, manufacturing, sales, and delivery operations',
+          'Led and executed high-stakes program to develop hub-and-spoke drone delivery network, survival analysis using ML, securing buy-in from multiple cross-functional leaders',
+          'Managed project roadmaps and agile ceremonies (Kanban/Scrum) for data engineering and analytics teams',
+          'Conducted ad-hoc operations analysis using SciPy, SimPy, and SQL, including GHG emissions modeling for drone networks',
+          'Developed simulation and optimization tools for fleet allocation and healthcare supply chains to support Sales team in evaluating new markets'
         ],
         responsibilities: [
-          'Data engineering team leadership and mentoring',
-          'Scalable data pipeline architecture and implementation',
-          'Operations research and network optimization modeling',
-          'Computer vision and machine learning system development'
+          'Data team leadership and management',
+          'Cross-functional collaboration and stakeholder management',
+          'Operations research and network optimization',
+          'Agile project management and roadmapping',
+          'Ad-hoc analysis and modeling for business decisions'
+        ]
+      }
+    },
+    {
+      name: 'Mashey - Sr Analytics Consultant/Engineer',
+      icon: '💻',
+      description: 'Led development and migration of data stack (ETL to ELT) for e-commerce brand, moving from BigQuery to Snowflake and implementing dbt.',
+      tech: ['dbt', 'Snowflake', 'BigQuery', 'ETL/ELT', 'SQL', 'GDPR', 'CCPA', 'Data Warehousing'],
+      status: 'completed',
+      details: {
+        duration: 'June 2021 - Sept 2021',
+        achievements: [
+          'Led development and migration of data stack (ETL to ELT) for e-commerce brand, moving from BigQuery to Snowflake and implementing dbt',
+          'Ensured data warehouse policies were compliant with GDPR and CCPA',
+          'Analyzed user cohorts and trends to inform Go-To-Market strategies',
+          'Contributed to $345,000 in quarterly savings by optimizing product and shipping costs'
+        ],
+        responsibilities: [
+          'Data warehouse architecture and migration planning',
+          'ETL to ELT pipeline transformation',
+          'Compliance and data governance',
+          'User analytics and cohort analysis',
+          'Cost optimization through data insights'
+        ]
+      }
+    },
+    {
+      name: 'Zipline International - Senior Data Analyst',
+      icon: '✈️',
+      description: 'Worked in Data and Operations Engineering teams, managing software and data projects to build internal tools for daily operations in US, Ghana, and Rwanda.',
+      tech: ['Python', 'SQL', 'Sisense', 'Tableau', 'BI Tools', 'Microservices', 'Hypothesis Testing'],
+      status: 'completed',
+      details: {
+        duration: 'June 2019 - May 2021',
+        achievements: [
+          'Worked in Data and Operations Engineering teams, managing software and data projects to build internal tools for daily operations in US, Ghana, and Rwanda',
+          'Increased operational efficiency by 25% and site throughput by 33%',
+          'Supported cross-functional teams with ad-hoc hypothesis testing, serving results via BI tools (Sisense, Tableau) and microservice apps',
+          'Contributed to anomaly detection analysis that achieved a 15% reduction in per-unit aircraft manufacturing cost'
+        ],
+        responsibilities: [
+          'Software and data project management',
+          'Internal tool development for operations',
+          'Cross-functional team support',
+          'BI dashboard creation and maintenance',
+          'Statistical analysis and hypothesis testing'
+        ]
+      }
+    },
+    {
+      name: 'NEXTOR II (FAA Consortium) - Data Scientist',
+      icon: '🛰️',
+      description: 'Developed simulation model of US airspace to provide post-operations evaluation for airlines, the FAA, and airports.',
+      tech: ['Python', 'Simulation', 'Queuing Theory', 'Operations Research', 'Aviation Analytics'],
+      status: 'completed',
+      details: {
+        duration: 'Aug 2016 - Jan 2019',
+        achievements: [
+          'Developed simulation model of US airspace to provide post-operations evaluation for airlines, the FAA, and airports',
+          'Implemented queuing theory simulation model to analyze and quantify operational capabilities for the Detroit Metro Airport expansion plan'
+        ],
+        responsibilities: [
+          'Complex systems modeling and simulation development',
+          'Queuing theory implementation',
+          'Post-operations evaluation and analysis',
+          'Collaboration with FAA, airlines, and airports',
+          'Research and development in aviation operations'
         ]
       }
     }

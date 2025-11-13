@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { loadBlogPosts, loadSinglePost, BlogPost } from '../../data/blogPosts';
+import { loadBlogPosts, findPostByIdOrSlug, type BlogPost } from '../../data/blogPosts';
 import { useSounds } from '../SoundManager';
 import { useScreenSize } from '../../hooks/use-mobile';
 import { useNavigate } from 'react-router-dom';
@@ -121,7 +121,12 @@ export const InternetExplorer: React.FC<InternetExplorerProps> = ({ initialPage 
   const screenSize = useScreenSize();
   const navigate = useNavigate();
 
-  // Load all posts for the home page
+  // Apply initial page on mount / when prop changes
+  useEffect(() => {
+    setCurrentPage(initialPage || 'home');
+  }, [initialPage]);
+
+  // Load all posts for the home page and cache them
   useEffect(() => {
     const loadPosts = async () => {
       try {
@@ -137,29 +142,30 @@ export const InternetExplorer: React.FC<InternetExplorerProps> = ({ initialPage 
     loadPosts();
   }, []);
 
-  // Load individual post when navigating to a specific post
+  // Load individual post when navigating to a specific post (after posts are loaded)
   useEffect(() => {
-    if (currentPage !== 'home') {
+    if (currentPage !== 'home' && !loading) {
       const loadPost = async () => {
         setPostLoading(true);
         try {
-          const post = await loadSinglePost(currentPage);
+          const post = await findPostByIdOrSlug(currentPage);
           setCurrentPost(post);
+          if (!post) {
+            console.warn(`Blog post not found: ${currentPage}`);
+          }
         } catch (error) {
           console.error('Failed to load post:', error);
+          setCurrentPost(null);
         } finally {
           setPostLoading(false);
         }
       };
       
       loadPost();
+    } else if (currentPage === 'home') {
+      setCurrentPost(null);
     }
-  }, [currentPage]);
-
-  // Apply initial page on mount / when prop changes
-  useEffect(() => {
-    setCurrentPage(initialPage || 'home');
-  }, [initialPage]);
+  }, [currentPage, loading]);
 
   // Keep the URL in sync when page changes (so address bar & back/forward work)
   useEffect(() => {

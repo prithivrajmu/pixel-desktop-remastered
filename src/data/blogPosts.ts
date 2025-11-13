@@ -4,7 +4,16 @@ export interface BlogPost {
   date: string; // YYYY-MM-DD
   preview: string;
   content: string;
+  slug: string; // SEO-friendly URL slug
 }
+
+// Generate SEO-friendly slug from title
+export const generateSlug = (title: string): string => {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+};
 
 // List of available blog post IDs - add new post IDs here
 const availablePostIds = [
@@ -55,12 +64,14 @@ const loadBlogPost = async (id: string): Promise<BlogPost | null> => {
       const markdownText = await response.text();
       const { frontMatter, content } = parseFrontMatter(markdownText);
       
+      const title = frontMatter.title || 'Untitled';
       return {
         id: frontMatter.id || id,
-        title: frontMatter.title || 'Untitled',
+        title: title,
         date: frontMatter.date || '1995-01-01',
         preview: frontMatter.preview || content.substring(0, 150) + '...',
-        content: content
+        content: content,
+        slug: generateSlug(title)
       };
     }
   } catch (error) {
@@ -81,6 +92,9 @@ export const loadBlogPosts = async (): Promise<BlogPost[]> => {
       .filter((post): post is BlogPost => post !== null)
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     
+    // Update cache
+    postsCache = validPosts;
+    
     return validPosts;
   } catch (error) {
     console.warn('Could not load blog posts from markdown files');
@@ -91,4 +105,54 @@ export const loadBlogPosts = async (): Promise<BlogPost[]> => {
 // Function to load a single post by ID
 export const loadSinglePost = async (id: string): Promise<BlogPost | null> => {
   return loadBlogPost(id);
+};
+
+// Cache for loaded posts to avoid reloading
+let postsCache: BlogPost[] | null = null;
+
+// Function to find a post by slug
+export const findPostBySlug = async (slug: string): Promise<BlogPost | null> => {
+  try {
+    // Use cache if available, otherwise load all posts
+    let allPosts = postsCache;
+    if (!allPosts) {
+      allPosts = await loadBlogPosts();
+    }
+    
+    const post = allPosts.find(post => post.slug === slug);
+    if (post) {
+      return post;
+    }
+    
+    // If not found, log for debugging
+    console.warn(`Blog post with slug "${slug}" not found. Available slugs:`, allPosts.map(p => p.slug));
+    return null;
+  } catch (error) {
+    console.warn(`Could not find blog post with slug: ${slug}`, error);
+    return null;
+  }
+};
+
+// Function to find a post by ID or slug (for backward compatibility)
+export const findPostByIdOrSlug = async (identifier: string): Promise<BlogPost | null> => {
+  // First try to find by slug (most common case now)
+  const postBySlug = await findPostBySlug(identifier);
+  if (postBySlug) return postBySlug;
+  
+  // If not found by slug, try to load by ID (for backward compatibility with old URLs)
+  const postById = await loadBlogPost(identifier);
+  if (postById) {
+    // Update cache if we found a post by ID
+    if (postsCache) {
+      const existingIndex = postsCache.findIndex(p => p.id === postById.id);
+      if (existingIndex >= 0) {
+        postsCache[existingIndex] = postById;
+      } else {
+        postsCache.push(postById);
+      }
+    }
+    return postById;
+  }
+  
+  return null;
 }; 
