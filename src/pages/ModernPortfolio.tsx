@@ -370,6 +370,71 @@ const ModernPortfolio: React.FC = () => {
         </div>
       </section>
 
+      {/* Blog Section */}
+      <section ref={blogRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Blog</h2>
+        {blogLoading ? (
+          <div className="text-center py-12">
+            <div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <p className="mt-4 text-gray-600">Loading blog posts...</p>
+          </div>
+        ) : blogPosts.length === 0 ? (
+          <div className="text-center py-12">
+            <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <p className="text-gray-600">No blog posts available at the moment.</p>
+          </div>
+        ) : (
+          <div className="space-y-6 max-w-4xl mx-auto">
+            {blogPosts.map((post) => {
+              const slug = generateSlug(post.title);
+              const blogUrl = `/blog/${post.id}`;
+              
+              return (
+                <article
+                  key={post.id}
+                  className="bg-white rounded-xl p-6 hover:shadow-lg transition-shadow border border-gray-200"
+                  itemScope
+                  itemType="https://schema.org/BlogPosting"
+                >
+                  <header>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2" itemProp="headline">
+                      <a
+                        href={blogUrl}
+                        className="hover:text-blue-600 transition-colors"
+                        itemProp="url"
+                      >
+                        {post.title}
+                      </a>
+                    </h3>
+                    <time
+                      className="text-sm text-gray-500"
+                      dateTime={post.date}
+                      itemProp="datePublished"
+                    >
+                      {new Date(post.date).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </time>
+                  </header>
+                  <p className="text-gray-700 mt-3 mb-4 line-clamp-2" itemProp="description">
+                    {post.preview}
+                  </p>
+                  <a
+                    href={blogUrl}
+                    className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium text-sm"
+                  >
+                    Read More <ExternalLink className="w-4 h-4" />
+                  </a>
+                  <meta itemProp="author" content="Prithiv Raj" />
+                </article>
+              );
+            })}
+          </div>
+        )}
+      </section>
+
       {/* Contact Section */}
       <section ref={contactRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Get In Touch</h2>
