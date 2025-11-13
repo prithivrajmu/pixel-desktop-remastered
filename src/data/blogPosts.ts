@@ -92,6 +92,9 @@ export const loadBlogPosts = async (): Promise<BlogPost[]> => {
       .filter((post): post is BlogPost => post !== null)
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     
+    // Update cache
+    postsCache = validPosts;
+    
     return validPosts;
   } catch (error) {
     console.warn('Could not load blog posts from markdown files');
@@ -104,23 +107,52 @@ export const loadSinglePost = async (id: string): Promise<BlogPost | null> => {
   return loadBlogPost(id);
 };
 
+// Cache for loaded posts to avoid reloading
+let postsCache: BlogPost[] | null = null;
+
 // Function to find a post by slug
 export const findPostBySlug = async (slug: string): Promise<BlogPost | null> => {
   try {
-    const allPosts = await loadBlogPosts();
-    return allPosts.find(post => post.slug === slug) || null;
+    // Use cache if available, otherwise load all posts
+    let allPosts = postsCache;
+    if (!allPosts) {
+      allPosts = await loadBlogPosts();
+    }
+    
+    const post = allPosts.find(post => post.slug === slug);
+    if (post) {
+      return post;
+    }
+    
+    // If not found, log for debugging
+    console.warn(`Blog post with slug "${slug}" not found. Available slugs:`, allPosts.map(p => p.slug));
+    return null;
   } catch (error) {
-    console.warn(`Could not find blog post with slug: ${slug}`);
+    console.warn(`Could not find blog post with slug: ${slug}`, error);
     return null;
   }
 };
 
 // Function to find a post by ID or slug (for backward compatibility)
 export const findPostByIdOrSlug = async (identifier: string): Promise<BlogPost | null> => {
-  // First try to load by ID (for backward compatibility)
-  const postById = await loadBlogPost(identifier);
-  if (postById) return postById;
+  // First try to find by slug (most common case now)
+  const postBySlug = await findPostBySlug(identifier);
+  if (postBySlug) return postBySlug;
   
-  // If not found, try to find by slug
-  return findPostBySlug(identifier);
+  // If not found by slug, try to load by ID (for backward compatibility with old URLs)
+  const postById = await loadBlogPost(identifier);
+  if (postById) {
+    // Update cache if we found a post by ID
+    if (postsCache) {
+      const existingIndex = postsCache.findIndex(p => p.id === postById.id);
+      if (existingIndex >= 0) {
+        postsCache[existingIndex] = postById;
+      } else {
+        postsCache.push(postById);
+      }
+    }
+    return postById;
+  }
+  
+  return null;
 }; 
