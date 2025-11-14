@@ -183,25 +183,36 @@ const ModernPortfolio: React.FC = () => {
             </button>
             <button
               onClick={downloadResume}
-              className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors hover-lift text-xs sm:text-sm md:text-base"
+              className="flip-button group relative overflow-hidden flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors hover-lift text-xs sm:text-sm md:text-base"
               aria-label="Download resume PDF"
             >
-              <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 flex-shrink-0" aria-hidden="true" />
-              Resume
+              <span
+                aria-hidden="true"
+                className="absolute inset-0 translate-y-full bg-white/25 transition-transform duration-300 ease-out group-hover:translate-y-0"
+              />
+              <Download
+                className="relative z-10 w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 flex-shrink-0 transition-transform duration-500 ease-linear group-hover:rotate-[360deg] group-hover:scale-110"
+                aria-hidden="true"
+              />
+              <span className="relative z-10">Resume</span>
             </button>
             <button
               onClick={() => window.location.href = '/?mode=win95'}
-              className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 bg-[#008080] text-white rounded-lg hover:bg-[#006666] transition-colors hover-lift text-xs sm:text-sm md:text-base"
+              className="flip-button group relative overflow-hidden flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 bg-[#008080] text-white rounded-lg hover:bg-[#006666] transition-colors hover-lift text-xs sm:text-sm md:text-base"
               title="Experience Windows 95 Style Portfolio"
               aria-label="Switch to Windows 95 style portfolio"
             >
+              <span
+                aria-hidden="true"
+                className="absolute inset-0 translate-y-full bg-white/25 transition-transform duration-300 ease-out group-hover:translate-y-0"
+              />
               <img 
                 src="/favicon.ico" 
                 alt="Windows 95" 
-                className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 flex-shrink-0" 
+                className="relative z-10 w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 flex-shrink-0 transition-transform duration-500 ease-linear group-hover:rotate-[360deg] group-hover:scale-110" 
                 aria-hidden="true"
               />
-              Win95
+              <span className="relative z-10">Win95</span>
             </button>
           </nav>
 
@@ -239,23 +250,31 @@ const ModernPortfolio: React.FC = () => {
             <div className="px-4 pt-2 space-y-3">
               <button
                 onClick={downloadResume}
-                className="flex items-center justify-center gap-2.5 w-full px-4 py-3.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 active:bg-blue-800 transition-colors text-base font-semibold min-h-[48px] shadow-sm"
+                className="flip-button group relative overflow-hidden flex items-center justify-center gap-2.5 w-full px-4 py-3.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 active:bg-blue-800 transition-colors text-base font-semibold min-h-[48px] shadow-sm"
               >
-                <Download className="w-5 h-5 flex-shrink-0" />
-                Resume
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-0 translate-y-full bg-white/25 transition-transform duration-300 ease-out group-hover:translate-y-0"
+                />
+                <Download className="relative z-10 w-5 h-5 flex-shrink-0 transition-transform duration-500 ease-linear group-hover:rotate-[360deg] group-hover:scale-110" />
+                <span className="relative z-10">Resume</span>
               </button>
               <button
                 onClick={() => window.location.href = '/?mode=win95'}
-                className="flex items-center justify-center gap-2.5 w-full px-4 py-3.5 bg-[#008080] text-white rounded-lg hover:bg-[#006666] active:bg-[#005555] transition-colors text-base font-semibold min-h-[48px] shadow-sm"
+                className="flip-button group relative overflow-hidden flex items-center justify-center gap-2.5 w-full px-4 py-3.5 bg-[#008080] text-white rounded-lg hover:bg-[#006666] active:bg-[#005555] transition-colors text-base font-semibold min-h-[48px] shadow-sm"
                 title="Experience Windows 95 Style Portfolio"
               >
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-0 translate-y-full bg-white/25 transition-transform duration-300 ease-out group-hover:translate-y-0"
+                />
                 <img 
                   src="/favicon.ico" 
                   alt="Windows 95" 
-                  className="w-5 h-5 flex-shrink-0" 
+                  className="relative z-10 w-5 h-5 flex-shrink-0 transition-transform duration-500 ease-linear group-hover:rotate-[360deg] group-hover:scale-110" 
                   aria-hidden="true"
                 />
-                Win95
+                <span className="relative z-10">Win95</span>
               </button>
             </div>
           </div>
@@ -665,37 +684,53 @@ const ModernPortfolio: React.FC = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
             <a
               href={`mailto:${contactInfo.email}`}
-              className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium hover-lift"
+              className="flip-button flip-button--light group relative overflow-hidden flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium hover-lift"
             >
-              <Mail className="w-5 h-5" />
-              Email Me
+              <span
+                aria-hidden="true"
+                className="absolute inset-0 translate-y-full bg-white/25 transition-transform duration-300 ease-out group-hover:translate-y-0"
+              />
+              <Mail className="relative z-10 w-5 h-5 transition-transform duration-500 ease-linear group-hover:rotate-[360deg] group-hover:scale-110" />
+              <span className="relative z-10">Email Me</span>
             </a>
             <a
               href={contactInfo.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors font-medium hover-lift"
+              className="flip-button group relative overflow-hidden flex items-center justify-center gap-2 px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors font-medium hover-lift"
             >
-              <Github className="w-5 h-5" />
-              GitHub
+              <span
+                aria-hidden="true"
+                className="absolute inset-0 translate-y-full bg-white/25 transition-transform duration-300 ease-out group-hover:translate-y-0"
+              />
+              <Github className="relative z-10 w-5 h-5 transition-transform duration-500 ease-linear group-hover:rotate-[360deg] group-hover:scale-110" />
+              <span className="relative z-10">GitHub</span>
             </a>
             <a
               href={contactInfo.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium hover-lift"
+              className="flip-button group relative overflow-hidden flex items-center justify-center gap-2 px-6 py-3 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium hover-lift"
             >
-              <Linkedin className="w-5 h-5" />
-              LinkedIn
+              <span
+                aria-hidden="true"
+                className="absolute inset-0 translate-y-full bg-white/25 transition-transform duration-300 ease-out group-hover:translate-y-0"
+              />
+              <Linkedin className="relative z-10 w-5 h-5 transition-transform duration-500 ease-linear group-hover:rotate-[360deg] group-hover:scale-110" />
+              <span className="relative z-10">LinkedIn</span>
             </a>
           </div>
           <div className="text-center">
             <button
               onClick={downloadResume}
-              className="flex items-center justify-center gap-2 mx-auto px-6 py-3 bg-white text-gray-900 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium hover-lift"
+              className="flip-button flip-button--light group relative overflow-hidden flex items-center justify-center gap-2 mx-auto px-6 py-3 bg-white text-gray-900 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium hover-lift"
             >
-              <Download className="w-5 h-5" />
-              Download Resume PDF
+              <span
+                aria-hidden="true"
+                className="absolute inset-0 translate-y-full bg-black/10 transition-transform duration-300 ease-out group-hover:translate-y-0"
+              />
+              <Download className="relative z-10 w-5 h-5 transition-transform duration-500 ease-linear group-hover:rotate-[360deg] group-hover:scale-110" />
+              <span className="relative z-10">Resume</span>
             </button>
           </div>
         </div>

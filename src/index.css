@@ -220,6 +220,37 @@
       }
     }
     
+    /* Flip button hover effect */
+    .flip-button {
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .flip-button::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      transform: translateY(100%);
+      transition: transform 0.35s ease;
+      background: rgba(255, 255, 255, 0.2);
+      z-index: 0;
+    }
+
+    .flip-button--light::before {
+      background: rgba(0, 0, 0, 0.15);
+    }
+
+    .flip-button:hover::before,
+    .flip-button:focus-visible::before {
+      transform: translateY(0);
+    }
+
+    .flip-button > * {
+      position: relative;
+      z-index: 1;
+    }
+    
     /* Ensure mobile navigation menu items are properly sized */
     body[data-mode="modern"] header button {
       touch-action: manipulation;
@@ -409,6 +440,11 @@
 
     .hover-lift:hover {
       transform: translateY(-2px) scale(1.01);
+    }
+    
+    /* Override hover-lift for flip buttons */
+    .flip-button.hover-lift:hover {
+      transform: none !important;
     }
 
     .parallax-slow {
