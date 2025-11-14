@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { downloadResume } from '@/utils/downloadUtils';
 import { portfolioProjects, portfolioProjectsList, getAllSkills, contactInfo } from '@/data/portfolioData';
 import { loadBlogPosts, type BlogPost } from '@/data/blogPosts';
@@ -26,24 +26,6 @@ const ModernPortfolio: React.FC = () => {
   const skills = getAllSkills();
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [blogLoading, setBlogLoading] = useState(true);
-
-  // Build skill to projects/experience mapping
-  const skillToItems = useMemo(() => {
-    const items = [...portfolioProjects, ...portfolioProjectsList].map(p => ({
-      name: p.name,
-      icon: p.icon,
-      url: p.url,
-      tech: p.tech
-    }));
-    const map = new Map<string, { name: string; icon: string; url?: string }[]>();
-    skills.forEach((skill) => {
-      const relatedItems = items.filter(item => item.tech.includes(skill));
-      if (relatedItems.length > 0) {
-        map.set(skill, relatedItems);
-      }
-    });
-    return map;
-  }, [skills]);
 
   // Refs for sections
   const heroRef = useRef<HTMLDivElement>(null);
@@ -343,50 +325,14 @@ const ModernPortfolio: React.FC = () => {
       <div ref={skillsSectionRef}>
         <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Skills</h2>
         <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
-          {skills.map((skill, index) => {
-            const relatedItems = skillToItems.get(skill) || [];
-            return (
-              <div key={index} className="relative group inline-block">
-                <span
-                  className="px-4 py-2 bg-blue-50 text-blue-700 rounded-full text-sm font-medium border border-blue-200 hover-lift cursor-default"
-                  style={{ transitionDelay: `${index * 30}ms` }}
-                >
-                  {skill}
-                </span>
-                {relatedItems.length > 0 && (
-                  <div 
-                    className="pointer-events-none absolute left-1/2 top-full -translate-x-1/2 mt-2 opacity-0 translate-y-1 motion-safe group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 z-20"
-                    role="list"
-                    aria-label={`Projects using ${skill}`}
-                  >
-                    <div className="flex flex-wrap gap-1.5 p-2 bg-white border border-gray-200 rounded-xl shadow-xl max-w-xs">
-                      {relatedItems.slice(0, 6).map((item, itemIndex) => (
-                        <div
-                          key={itemIndex}
-                          role="listitem"
-                          title={item.name}
-                          className="w-9 h-9 rounded-full bg-gray-50 border border-gray-200 flex items-center justify-center text-lg select-none opacity-0 scale-95 motion-safe group-hover:opacity-100 group-hover:scale-100 transition duration-200"
-                          style={{ transitionDelay: `${itemIndex * 30}ms` }}
-                          aria-label={item.name}
-                        >
-                          <span aria-hidden="true">{item.icon}</span>
-                        </div>
-                      ))}
-                      {relatedItems.length > 6 && (
-                        <div 
-                          className="w-9 h-9 rounded-full bg-gray-100 border border-gray-200 text-xs font-medium flex items-center justify-center"
-                          title={`${relatedItems.length - 6} more projects`}
-                          aria-label={`${relatedItems.length - 6} more projects`}
-                        >
-                          +{relatedItems.length - 6}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            );
-          })}
+          {skills.map((skill, index) => (
+            <span
+              key={index}
+              className="px-4 py-2 bg-blue-50 text-blue-700 rounded-full text-sm font-medium border border-blue-200"
+            >
+              {skill}
+            </span>
+          ))}
         </div>
       </div>
     </section>
