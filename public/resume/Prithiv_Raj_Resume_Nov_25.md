@@ -64,6 +64,14 @@ Full-Stack Web Application
 * Implemented critical security vulnerabilities including XSS prevention, input validation, secure API key management, and production build hardening with Terser  
 * Architected using React 18, TypeScript, Tailwind CSS, shadcn/ui components, TanStack Query for state management, and Vite for optimized builds
 
+**PDF Miner - PDF Data Extraction Platform** | Python, Streamlit, OCR/AI Integration, GPU, CI/CD  
+Streamlit Web Application
+
+* Architected and developed a production-ready PDF data extraction platform supporting 7 extraction backends with a unified service layer
+* Delivered a Streamlit web application enabling batch processing, custom field extraction, and multi-format export capabilities
+* Optimized performance through GPU/CPU auto-detection, achieving 10-20x speedup for local OCR models
+* Published as a Python package (v1.1.0) with CI/CD, comprehensive testing, and documentation
+
 **StoryWeaver** | AI-powered interactive storytelling platform (Personal Project)
 
 * Built a full-stack React/TypeScript application AI-powered interactive storytelling platform for parents to create personalized children's stories with AI-generated content, illustrations, and narration.  
