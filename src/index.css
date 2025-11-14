@@ -141,7 +141,8 @@
       font-size: 16px;
     }
     
-    body {
+    /* Only apply fixed positioning to Win95 mode, not modern portfolio */
+    body[data-mode="win95"] {
       /* Prevent bounce scrolling */
       overflow: hidden;
       position: fixed;
@@ -150,9 +151,52 @@
       height: 100vh; /* Use viewport height */
       height: 100dvh; /* Dynamic viewport height for mobile browsers */
     }
+    
+      /* Modern portfolio should scroll normally */
+    body[data-mode="modern"] {
+      overflow: auto;
+      overflow-x: hidden;
+      position: relative;
+      width: 100%;
+      height: auto;
+      min-height: 100vh;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Ensure modern portfolio root container can scroll */
+    body[data-mode="modern"] > #root {
+      width: 100%;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    
+    /* Modern portfolio mobile optimizations */
+    body[data-mode="modern"] .min-h-screen {
+      min-height: 100vh;
+      min-height: 100dvh; /* Use dynamic viewport height on mobile */
+    }
+    
+    /* Ensure sticky header works properly on mobile */
+    body[data-mode="modern"] header.sticky {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    
+    /* Mobile menu improvements - ensure menu can scroll if needed */
+    body[data-mode="modern"] header nav .md\\:hidden {
+      max-height: calc(100vh - 64px);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Ensure mobile navigation menu items are properly sized */
+    body[data-mode="modern"] header button {
+      touch-action: manipulation;
+    }
 
-    /* Ensure taskbar extends full width on mobile */
-    [data-taskbar] {
+    /* Ensure taskbar extends full width on mobile (Win95 mode only) */
+    [data-mode="win95"] [data-taskbar] {
       width: 100% !important;
       min-width: 100% !important;
       max-width: 100vw !important;
@@ -172,8 +216,8 @@
       font-size: 0.875rem;
     }
 
-    /* Mobile window optimizations */
-    .absolute {
+    /* Mobile window optimizations (Win95 mode only) */
+    [data-mode="win95"] .absolute {
       /* Ensure windows don't go off-screen on mobile */
       max-width: calc(100vw - 16px);
       max-height: calc(100vh - 64px); /* Account for taskbar */
@@ -199,18 +243,23 @@
     }
   }
 
-  /* Desktop styles */
+  /* Desktop styles - ensure modern portfolio can always scroll */
   @media (min-width: 1024px) {
-    body {
+    body[data-mode="modern"] {
+      overflow: auto;
+      position: static;
+    }
+    
+    body[data-mode="win95"] {
       overflow: auto;
       position: static;
     }
   }
 
-  /* Landscape phone specific adjustments */
+  /* Landscape phone specific adjustments (Win95 mode only) */
   @media (max-width: 640px) and (orientation: landscape) {
     /* Smaller taskbar in landscape */
-    [data-taskbar] {
+    [data-mode="win95"] [data-taskbar] {
       height: 40px !important;
       overflow-x: hidden;
       width: 100% !important;
@@ -219,14 +268,14 @@
     }
 
     /* System tray should not overflow in landscape */
-    [data-taskbar] > div:last-child {
+    [data-mode="win95"] [data-taskbar] > div:last-child {
       flex-shrink: 0;
       min-width: fit-content;
       overflow: hidden;
     }
 
     /* Window buttons should scroll if needed */
-    [data-taskbar] > div:nth-child(3) {
+    [data-mode="win95"] [data-taskbar] > div:nth-child(3) {
       flex: 1;
       min-width: 0;
       overflow-x: auto;
@@ -234,20 +283,20 @@
       -ms-overflow-style: none;
     }
 
-    [data-taskbar] > div:nth-child(3)::-webkit-scrollbar {
+    [data-mode="win95"] [data-taskbar] > div:nth-child(3)::-webkit-scrollbar {
       display: none;
     }
   }
 
-  /* Medium screens landscape adjustments */
+  /* Medium screens landscape adjustments (Win95 mode only) */
   @media (max-width: 960px) and (orientation: landscape) {
     /* Ensure taskbar components don't overflow */
-    [data-taskbar] {
+    [data-mode="win95"] [data-taskbar] {
       overflow-x: hidden;
     }
 
     /* Prioritize system tray visibility */
-    [data-taskbar] > div:last-child {
+    [data-mode="win95"] [data-taskbar] > div:last-child {
       flex-shrink: 0;
       min-width: fit-content;
     }

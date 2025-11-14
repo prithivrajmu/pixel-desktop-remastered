@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from "react";
+import React, { useMemo, useCallback, useEffect } from "react";
 import { Desktop } from "@/components/Desktop";
 import { InternetExplorer } from "@/components/LazyComponents";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
@@ -56,6 +56,17 @@ const Index: React.FC = () => {
 
   // Show Win95 mode for blog routes or if explicitly set to win95
   const shouldShowWin95 = currentMode === 'win95' || blogInfo.isBlog;
+
+  // Add data attribute to body/html to distinguish between modes for CSS
+  useEffect(() => {
+    if (shouldShowWin95) {
+      document.documentElement.setAttribute('data-mode', 'win95');
+      document.body.setAttribute('data-mode', 'win95');
+    } else {
+      document.documentElement.setAttribute('data-mode', 'modern');
+      document.body.setAttribute('data-mode', 'modern');
+    }
+  }, [shouldShowWin95]);
 
   return (
     <>

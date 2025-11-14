@@ -71,7 +71,16 @@ const ModernPortfolio: React.FC = () => {
 
 
   const scrollToSection = (ref: React.RefObject<HTMLDivElement>) => {
-    ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (ref.current) {
+      const headerHeight = 64; // Height of sticky header (h-16 = 64px)
+      const elementPosition = ref.current.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
     setIsMenuOpen(false);
   };
 
