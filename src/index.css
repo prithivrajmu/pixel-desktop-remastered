@@ -194,6 +194,34 @@
     body[data-mode="modern"] header button {
       touch-action: manipulation;
     }
+    
+    /* Ensure favicon icon displays properly in buttons */
+    body[data-mode="modern"] header button img[src*="favicon"] {
+      object-fit: contain;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+    }
+    
+    /* Responsive button sizing for desktop navigation */
+    @media (min-width: 640px) {
+      body[data-mode="modern"] header nav button {
+        white-space: nowrap;
+      }
+    }
+    
+    /* Elegant button resize across breakpoints - maintain aspect ratio */
+    body[data-mode="modern"] header nav button {
+      transition: all 0.2s ease-in-out;
+      min-height: fit-content;
+    }
+    
+    /* Ensure buttons scale proportionally on medium screens */
+    @media (min-width: 768px) and (max-width: 1023px) {
+      body[data-mode="modern"] header nav button {
+        /* Maintain balanced proportions on medium screens */
+        line-height: 1.5;
+      }
+    }
 
     /* Ensure taskbar extends full width on mobile (Win95 mode only) */
     [data-mode="win95"] [data-taskbar] {

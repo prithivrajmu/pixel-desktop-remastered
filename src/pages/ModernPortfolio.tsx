@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { downloadResume } from '@/utils/downloadUtils';
 import { portfolioProjects, portfolioProjectsList, getAllSkills, contactInfo } from '@/data/portfolioData';
 import { loadBlogPosts, type BlogPost } from '@/data/blogPosts';
-import { Menu, X, Download, Mail, Github, Linkedin, ExternalLink, ChevronDown, Monitor, BookOpen } from 'lucide-react';
+import { Menu, X, Download, Mail, Github, Linkedin, ExternalLink, ChevronDown, BookOpen } from 'lucide-react';
 import { useInView } from '@/hooks/useInView';
 // import { SEOStructuredData } from '@/components/SEOStructuredData';
 
@@ -161,20 +161,26 @@ const ModernPortfolio: React.FC = () => {
             </button>
             <button
               onClick={downloadResume}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors hover-lift"
+              className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors hover-lift text-xs sm:text-sm md:text-base"
               aria-label="Download resume PDF"
             >
-              <Download className="w-4 h-4" aria-hidden="true" />
+              <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 flex-shrink-0" aria-hidden="true" />
               Resume
             </button>
             <button
               onClick={() => window.location.href = '/?mode=win95'}
-              className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors hover-lift"
+              className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 bg-[#008080] text-white rounded-lg hover:bg-[#006666] transition-colors hover-lift text-xs sm:text-sm md:text-base"
               title="Experience Windows 95 Style Portfolio"
               aria-label="Switch to Windows 95 style portfolio"
             >
-              <Monitor className="w-4 h-4" aria-hidden="true" />
-              Win95 Mode
+              <img 
+                src="/favicon.ico" 
+                alt="Windows 95" 
+                className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 flex-shrink-0" 
+                aria-hidden="true"
+              />
+              <span className="hidden sm:inline">Win95 Mode</span>
+              <span className="sm:hidden">Win95</span>
             </button>
           </nav>
 
@@ -211,17 +217,22 @@ const ModernPortfolio: React.FC = () => {
             </button>
             <button
               onClick={downloadResume}
-              className="flex items-center justify-center gap-2 w-full mx-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="flex items-center justify-center gap-2 w-full mx-4 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-base font-medium min-h-[44px]"
             >
-              <Download className="w-4 h-4" />
+              <Download className="w-5 h-5 flex-shrink-0" />
               Download Resume
             </button>
             <button
               onClick={() => window.location.href = '/?mode=win95'}
-              className="flex items-center justify-center gap-2 w-full mx-4 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+              className="flex items-center justify-center gap-2 w-full mx-4 px-4 py-3 bg-[#008080] text-white rounded-lg hover:bg-[#006666] transition-colors text-base font-medium min-h-[44px]"
               title="Experience Windows 95 Style Portfolio"
             >
-              <Monitor className="w-4 h-4" />
+              <img 
+                src="/favicon.ico" 
+                alt="Windows 95" 
+                className="w-5 h-5 flex-shrink-0" 
+                aria-hidden="true"
+              />
               Win95 Mode
             </button>
           </div>
