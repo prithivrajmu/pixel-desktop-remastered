@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { downloadResume } from '../../utils/downloadUtils';
 import { useScreenSize } from '../../hooks/use-mobile';
 
 interface Project {
@@ -173,7 +174,7 @@ export const MyDocuments: React.FC = () => {
       name: 'Resume',
       icon: '/icons/Mail text.ico',
       type: 'pdf',
-      onClick: () => {} // No action
+      onClick: downloadResume
     },
     {
       name: 'Inventree Sync',
