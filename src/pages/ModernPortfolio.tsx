@@ -84,6 +84,19 @@ const ModernPortfolio: React.FC = () => {
     setIsMenuOpen(false);
   };
 
+  // Prevent body scroll when mobile menu is open (only in modern mode)
+  useEffect(() => {
+    const isModernMode = document.body.getAttribute('data-mode') === 'modern';
+    if (isMenuOpen && isModernMode) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMenuOpen]);
+
   const toggleProject = (index: number) => {
     setExpandedProject(expandedProject === index ? null : index);
   };
@@ -129,6 +142,15 @@ const ModernPortfolio: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      {/* Backdrop overlay when mobile menu is open */}
+      {isMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 md:hidden transition-opacity duration-300"
+          onClick={() => setIsMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+      
       {/* Navigation Header */}
     <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -179,8 +201,7 @@ const ModernPortfolio: React.FC = () => {
                 className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 flex-shrink-0" 
                 aria-hidden="true"
               />
-              <span className="hidden sm:inline">Win95 Mode</span>
-              <span className="sm:hidden">Win95</span>
+              Win95
             </button>
           </nav>
 
@@ -196,45 +217,47 @@ const ModernPortfolio: React.FC = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 space-y-4 border-t border-gray-200">
-            <button onClick={() => scrollToSection(aboutRef)} className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
+          <div className="md:hidden py-4 space-y-3 border-t border-gray-200 bg-white relative z-50">
+            <button onClick={() => scrollToSection(aboutRef)} className="block w-full text-left px-4 py-2.5 text-gray-700 hover:bg-gray-100 rounded transition-colors">
               About
             </button>
-            <button onClick={() => scrollToSection(skillsRef)} className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
+            <button onClick={() => scrollToSection(skillsRef)} className="block w-full text-left px-4 py-2.5 text-gray-700 hover:bg-gray-100 rounded transition-colors">
               Skills
             </button>
-            <button onClick={() => scrollToSection(experienceRef)} className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
+            <button onClick={() => scrollToSection(experienceRef)} className="block w-full text-left px-4 py-2.5 text-gray-700 hover:bg-gray-100 rounded transition-colors">
               Experience
             </button>
-            <button onClick={() => scrollToSection(projectsRef)} className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
+            <button onClick={() => scrollToSection(projectsRef)} className="block w-full text-left px-4 py-2.5 text-gray-700 hover:bg-gray-100 rounded transition-colors">
               Projects
             </button>
-            <button onClick={() => scrollToSection(blogRef)} className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
+            <button onClick={() => scrollToSection(blogRef)} className="block w-full text-left px-4 py-2.5 text-gray-700 hover:bg-gray-100 rounded transition-colors">
               Blog
             </button>
-            <button onClick={() => scrollToSection(contactRef)} className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
+            <button onClick={() => scrollToSection(contactRef)} className="block w-full text-left px-4 py-2.5 text-gray-700 hover:bg-gray-100 rounded transition-colors">
               Contact
             </button>
-            <button
-              onClick={downloadResume}
-              className="flex items-center justify-center gap-2 w-full mx-4 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-base font-medium min-h-[44px]"
-            >
-              <Download className="w-5 h-5 flex-shrink-0" />
-              Download Resume
-            </button>
-            <button
-              onClick={() => window.location.href = '/?mode=win95'}
-              className="flex items-center justify-center gap-2 w-full mx-4 px-4 py-3 bg-[#008080] text-white rounded-lg hover:bg-[#006666] transition-colors text-base font-medium min-h-[44px]"
-              title="Experience Windows 95 Style Portfolio"
-            >
-              <img 
-                src="/favicon.ico" 
-                alt="Windows 95" 
-                className="w-5 h-5 flex-shrink-0" 
-                aria-hidden="true"
-              />
-              Win95 Mode
-            </button>
+            <div className="px-4 pt-2 space-y-3">
+              <button
+                onClick={downloadResume}
+                className="flex items-center justify-center gap-2.5 w-full px-4 py-3.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 active:bg-blue-800 transition-colors text-base font-semibold min-h-[48px] shadow-sm"
+              >
+                <Download className="w-5 h-5 flex-shrink-0" />
+                Resume
+              </button>
+              <button
+                onClick={() => window.location.href = '/?mode=win95'}
+                className="flex items-center justify-center gap-2.5 w-full px-4 py-3.5 bg-[#008080] text-white rounded-lg hover:bg-[#006666] active:bg-[#005555] transition-colors text-base font-semibold min-h-[48px] shadow-sm"
+                title="Experience Windows 95 Style Portfolio"
+              >
+                <img 
+                  src="/favicon.ico" 
+                  alt="Windows 95" 
+                  className="w-5 h-5 flex-shrink-0" 
+                  aria-hidden="true"
+                />
+                Win95
+              </button>
+            </div>
           </div>
         )}
       </nav>
@@ -266,7 +289,7 @@ const ModernPortfolio: React.FC = () => {
             className="px-6 py-3 bg-white text-gray-900 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium flex items-center justify-center gap-2 hover-lift"
           >
             <Download className="w-5 h-5" />
-            Download Resume
+            Resume
           </button>
         </div>
       </div>

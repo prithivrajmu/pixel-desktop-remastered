@@ -190,6 +190,36 @@
       -webkit-overflow-scrolling: touch;
     }
     
+    /* Mobile menu backdrop fade effect */
+    body[data-mode="modern"] .fixed.inset-0.bg-black {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+    
+    /* Mobile menu slide-in animation */
+    body[data-mode="modern"] header nav > div.md\\:hidden {
+      animation: slideDown 0.3s ease-out;
+    }
+    
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
     /* Ensure mobile navigation menu items are properly sized */
     body[data-mode="modern"] header button {
       touch-action: manipulation;
