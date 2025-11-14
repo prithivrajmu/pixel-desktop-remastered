@@ -3,7 +3,6 @@ import { downloadResume } from '@/utils/downloadUtils';
 import { portfolioProjects, portfolioProjectsList, getAllSkills, contactInfo } from '@/data/portfolioData';
 import { loadBlogPosts, type BlogPost } from '@/data/blogPosts';
 import { Menu, X, Download, Mail, Github, Linkedin, ExternalLink, ChevronDown, BookOpen } from 'lucide-react';
-import { useInView } from '@/hooks/useInView';
 // import { SEOStructuredData } from '@/components/SEOStructuredData';
 
 const ModernPortfolio: React.FC = () => {
@@ -46,14 +45,14 @@ const ModernPortfolio: React.FC = () => {
     return map;
   }, [skills]);
 
-  // Intersection observers for animations
-  const heroRef = useInView<HTMLDivElement>();
-  const aboutSectionRef = useInView<HTMLDivElement>();
-  const skillsSectionRef = useInView<HTMLDivElement>();
-  const experienceSectionRef = useInView<HTMLDivElement>();
-  const projectsSectionRef = useInView<HTMLDivElement>();
-  const blogSectionRef = useInView<HTMLDivElement>();
-  const contactSectionRef = useInView<HTMLDivElement>();
+  // Refs for sections
+  const heroRef = useRef<HTMLDivElement>(null);
+  const aboutSectionRef = useRef<HTMLDivElement>(null);
+  const skillsSectionRef = useRef<HTMLDivElement>(null);
+  const experienceSectionRef = useRef<HTMLDivElement>(null);
+  const projectsSectionRef = useRef<HTMLDivElement>(null);
+  const blogSectionRef = useRef<HTMLDivElement>(null);
+  const contactSectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const loadPosts = async () => {
@@ -68,6 +67,7 @@ const ModernPortfolio: React.FC = () => {
     };
     loadPosts();
   }, []);
+
 
 
   const scrollToSection = (ref: React.RefObject<HTMLDivElement>) => {
@@ -141,7 +141,7 @@ const ModernPortfolio: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="content min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 relative">
       {/* Backdrop overlay when mobile menu is open */}
       {isMenuOpen && (
         <div 
@@ -283,14 +283,14 @@ const ModernPortfolio: React.FC = () => {
     </header>
 
     {/* Hero Section */}
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32" itemScope itemType="https://schema.org/Person">
-      <div ref={heroRef.ref} className={`text-center ${heroRef.inView ? 'is-inview' : 'reveal-base reveal-up'}`}>
+    <section className="section relative z-40 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32" itemScope itemType="https://schema.org/Person">
+      <div ref={heroRef} className="text-center">
         <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4" itemProp="name">
           Prithiv Raj
         </h1>
-        <p className="text-xl md:text-2xl text-gray-600 mb-8">
+        <h3 className="text-xl md:text-2xl text-gray-600 mb-8">
           Technical Lead Engineer | Full-Stack Developer | Data Engineer
-        </p>
+        </h3>
         <p className="text-lg text-gray-500 max-w-2xl mx-auto mb-8">
           Lead Engineer with 9+ years of experience in data, software, operations research, and managing technical teams. 
           Applying my data-driven background to solve real-world business problems by personally architecting and building 
@@ -315,21 +315,21 @@ const ModernPortfolio: React.FC = () => {
     </section>
 
     {/* About Section */}
-    <section ref={aboutRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white" itemScope itemType="https://schema.org/AboutPage">
-      <div ref={aboutSectionRef.ref} className={aboutSectionRef.inView ? 'is-inview' : 'reveal-left'}>
-        <h2 className={`text-3xl font-bold text-gray-900 mb-8 text-center ${aboutSectionRef.inView ? 'is-inview' : 'reveal-scale'}`}>About Me</h2>
+    <section ref={aboutRef} className="section relative z-40 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white" itemScope itemType="https://schema.org/AboutPage">
+      <div ref={aboutSectionRef}>
+        <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">About Me</h2>
         <div className="max-w-4xl mx-auto">
-        <p className={`text-gray-700 leading-relaxed mb-4 ${aboutSectionRef.inView ? 'is-inview' : 'reveal-left'}`} style={{ transitionDelay: '100ms' }}>
+        <p className="text-gray-700 leading-relaxed mb-4">
           I'm a Technical Lead Engineer with 9+ years of experience in data, software, operations research, and managing technical teams. 
           Currently at Headwind Labs, I bridge the gap between executive strategy and hands-on engineering, using modern web technologies 
           (React, TypeScript, Supabase) to build custom tools that solve real-world business problems.
         </p>
-        <p className={`text-gray-700 leading-relaxed mb-4 ${aboutSectionRef.inView ? 'is-inview' : 'reveal-right'}`} style={{ transitionDelay: '200ms' }}>
+        <p className="text-gray-700 leading-relaxed mb-4">
           My experience spans from data science research at NEXTOR II (FAA Consortium) developing simulation models of US airspace, 
           to leading data teams at companies like Volansi and Zipline, where I built operational tools that increased efficiency by 25-33% 
           and reduced manufacturing costs by 15%.
         </p>
-        <p className={`text-gray-700 leading-relaxed ${aboutSectionRef.inView ? 'is-inview' : 'reveal-left'}`} style={{ transitionDelay: '300ms' }}>
+        <p className="text-gray-700 leading-relaxed">
           Currently, I'm building Kattru (AI-powered learning platform), Zippy Bee (proprietary CRM), and Inventree Sync (inventory management system). 
           My approach combines deep technical knowledge with strategic thinking, enabling me to deliver solutions that not only solve 
           technical challenges but also drive measurable business impact.
@@ -339,9 +339,9 @@ const ModernPortfolio: React.FC = () => {
     </section>
 
     {/* Skills Section */}
-    <section ref={skillsRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <div ref={skillsSectionRef.ref} className={skillsSectionRef.inView ? 'is-inview' : 'reveal-bounce'}>
-        <h2 className={`text-3xl font-bold text-gray-900 mb-8 text-center ${skillsSectionRef.inView ? 'is-inview' : 'reveal-scale'}`}>Skills</h2>
+    <section ref={skillsRef} className="section relative z-40 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div ref={skillsSectionRef}>
+        <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Skills</h2>
         <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
           {skills.map((skill, index) => {
             const relatedItems = skillToItems.get(skill) || [];
@@ -392,17 +392,15 @@ const ModernPortfolio: React.FC = () => {
     </section>
 
     {/* Experience Section */}
-    <section ref={experienceRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <div ref={experienceSectionRef.ref} className={experienceSectionRef.inView ? 'is-inview' : 'reveal-scale'}>
-        <h2 className={`text-3xl font-bold text-gray-900 mb-12 text-center ${experienceSectionRef.inView ? 'is-inview' : 'reveal-bounce'}`}>Work Experience</h2>
+    <section ref={experienceRef} className="section relative z-40 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div ref={experienceSectionRef}>
+        <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Work Experience</h2>
         <div className="space-y-8" itemScope itemType="https://schema.org/ItemList">
           {portfolioProjects.map((project, index) => {
-            const animationType = index % 2 === 0 ? 'reveal-left' : 'reveal-right';
             return (
             <article
               key={index}
-              className={`bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow hover-lift ${experienceSectionRef.inView ? 'is-inview' : animationType}`}
-              style={{ transitionDelay: `${index * 100}ms` }}
+              className="experience-card bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow hover-lift"
               itemScope
               itemType="https://schema.org/Occupation"
             >
@@ -474,17 +472,15 @@ const ModernPortfolio: React.FC = () => {
     </section>
 
     {/* Projects Section */}
-    <section ref={projectsRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white">
-      <div ref={projectsSectionRef.ref} className={projectsSectionRef.inView ? 'is-inview' : 'reveal-scale'}>
-        <h2 className={`text-3xl font-bold text-gray-900 mb-12 text-center ${projectsSectionRef.inView ? 'is-inview' : 'reveal-bounce'}`}>Featured Projects</h2>
+    <section ref={projectsRef} className="section relative z-40 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white">
+      <div ref={projectsSectionRef}>
+        <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Featured Projects</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" itemScope itemType="https://schema.org/ItemList">
           {portfolioProjectsList.map((project, index) => {
-            const animationType = index % 3 === 0 ? 'reveal-scale' : index % 3 === 1 ? 'reveal-left' : 'reveal-right';
             return (
             <article
               key={index}
-              className={`bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-shadow border border-gray-200 flex flex-col h-full hover-lift ${projectsSectionRef.inView ? 'is-inview' : animationType}`}
-              style={{ transitionDelay: `${index * 80}ms` }}
+              className="project-card bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-shadow border border-gray-200 flex flex-col h-full hover-lift"
               itemScope
               itemType="https://schema.org/SoftwareApplication"
             >
@@ -517,9 +513,9 @@ const ModernPortfolio: React.FC = () => {
     </section>
 
     {/* Blog Section */}
-    <section ref={blogRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <div ref={blogSectionRef.ref} className={blogSectionRef.inView ? 'is-inview' : 'reveal-rotate'}>
-        <h2 className={`text-3xl font-bold text-gray-900 mb-12 text-center ${blogSectionRef.inView ? 'is-inview' : 'reveal-scale'}`}>Blog</h2>
+    <section ref={blogRef} className="section relative z-40 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div ref={blogSectionRef}>
+        <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Blog</h2>
         {blogLoading ? (
           <div className="text-center py-12">
             <div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
@@ -534,13 +530,11 @@ const ModernPortfolio: React.FC = () => {
           <div className="space-y-6">
             {blogPosts.map((post, index) => {
               const blogUrl = `/blog/${post.slug}`;
-              const animationType = index % 2 === 0 ? 'reveal-left' : 'reveal-right';
               
               return (
                 <article
                   key={post.id}
-                  className={`bg-white rounded-xl p-6 hover:shadow-lg transition-shadow border border-gray-200 hover-lift ${blogSectionRef.inView ? 'is-inview' : animationType}`}
-                  style={{ transitionDelay: `${index * 100}ms` }}
+                  className="blog-post bg-white rounded-xl p-6 hover:shadow-lg transition-shadow border border-gray-200 hover-lift"
                   itemScope
                   itemType="https://schema.org/BlogPosting"
                 >
@@ -587,10 +581,10 @@ const ModernPortfolio: React.FC = () => {
     </section>
 
     {/* Contact Section */}
-    <section ref={contactRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <div ref={contactSectionRef.ref} className={contactSectionRef.inView ? 'is-inview' : 'reveal-bounce'}>
-        <h2 className={`text-3xl font-bold text-gray-900 mb-12 text-center ${contactSectionRef.inView ? 'is-inview' : 'reveal-scale'}`}>Get In Touch</h2>
-        <div className={`bg-white rounded-xl shadow-lg p-8 max-w-2xl mx-auto ${contactSectionRef.inView ? 'is-inview' : 'reveal-scale'}`} style={{ transitionDelay: '100ms' }}>
+    <section ref={contactRef} className="section relative z-40 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div ref={contactSectionRef}>
+        <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Get In Touch</h2>
+        <div className="bg-white rounded-xl shadow-lg p-8 max-w-2xl mx-auto">
         <p className="text-center text-gray-700 mb-8">
           I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.
         </p>
@@ -739,7 +733,7 @@ const ModernPortfolio: React.FC = () => {
     </section>
 
     {/* Footer */}
-    <footer className="bg-gray-900 text-white py-8">
+    <footer className="relative z-40 bg-gray-900 text-white py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <p className="text-gray-400">© {new Date().getFullYear()} Prithiv Raj. All rights reserved.</p>
       </div>
