@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { downloadResume } from '@/utils/downloadUtils';
 import { portfolioProjects, portfolioProjectsList, getAllSkills, contactInfo } from '@/data/portfolioData';
 import { loadBlogPosts, type BlogPost } from '@/data/blogPosts';
 import { Menu, X, Download, Mail, Github, Linkedin, ExternalLink, ChevronDown, BookOpen } from 'lucide-react';
@@ -164,7 +163,6 @@ const ModernPortfolio: React.FC = () => {
               Contact
             </button>
             <button
-              onClick={downloadResume}
               className="flip-button group relative overflow-hidden flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors hover-lift text-xs sm:text-sm md:text-base"
               aria-label="Download resume PDF"
             >
@@ -231,7 +229,6 @@ const ModernPortfolio: React.FC = () => {
             </button>
             <div className="px-4 pt-2 space-y-3">
               <button
-                onClick={downloadResume}
                 className="flip-button group relative overflow-hidden flex items-center justify-center gap-2.5 w-full px-4 py-3.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 active:bg-blue-800 transition-colors text-base font-semibold min-h-[48px] shadow-sm"
               >
                 <span
@@ -286,7 +283,6 @@ const ModernPortfolio: React.FC = () => {
             Get In Touch
           </button>
           <button
-            onClick={downloadResume}
             className="px-6 py-3 bg-white text-gray-900 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium flex items-center justify-center gap-2 hover-lift"
           >
             <Download className="w-5 h-5" />
@@ -662,7 +658,6 @@ const ModernPortfolio: React.FC = () => {
           </div>
           <div className="text-center">
             <button
-              onClick={downloadResume}
               className="flip-button flip-button--light group relative overflow-hidden flex items-center justify-center gap-2 mx-auto px-6 py-3 bg-white text-gray-900 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium hover-lift"
             >
               <span

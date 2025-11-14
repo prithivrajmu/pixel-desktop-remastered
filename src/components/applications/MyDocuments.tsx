@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { downloadResume } from '../../utils/downloadUtils';
 import { useScreenSize } from '../../hooks/use-mobile';
 
 interface Project {
@@ -8,6 +7,7 @@ interface Project {
   description: string;
   tech: string[];
   status: 'current' | 'completed';
+  url?: string;
   details?: {
     duration: string;
     achievements: string[];
@@ -141,6 +141,30 @@ export const MyDocuments: React.FC = () => {
           'Research and development in aviation operations'
         ]
       }
+    },
+    {
+      name: 'PDF Miner - PDF Data Extraction Platform',
+      icon: '📄',
+      description: 'Production-ready PDF data extraction platform supporting 7 extraction backends with a unified service layer, featuring batch processing and multi-format export.',
+      tech: ['Python', 'Streamlit', 'OCR', 'AI Integration', 'GPU', 'CI/CD', 'Python Package'],
+      status: 'completed',
+      url: 'https://github.com/prithivrajmu/extract-data-from-pdf/',
+      details: {
+        duration: '2024',
+        achievements: [
+          'Architected and developed a production-ready PDF data extraction platform supporting 7 extraction backends with a unified service layer',
+          'Delivered a Streamlit web application enabling batch processing, custom field extraction, and multi-format export capabilities',
+          'Optimized performance through GPU/CPU auto-detection, achieving 10-20x speedup for local OCR models',
+          'Published as a Python package (v1.1.0) with CI/CD, comprehensive testing, and documentation'
+        ],
+        responsibilities: [
+          'PDF data extraction platform architecture',
+          'Multi-backend service layer design',
+          'Performance optimization with GPU/CPU detection',
+          'Python package development and publishing',
+          'CI/CD pipeline implementation'
+        ]
+      }
     }
   ];
 
@@ -149,7 +173,7 @@ export const MyDocuments: React.FC = () => {
       name: 'Resume',
       icon: '/icons/Mail text.ico',
       type: 'pdf',
-      onClick: downloadResume
+      onClick: () => {} // No action
     },
     {
       name: 'Inventree Sync',
@@ -329,6 +353,20 @@ export const MyDocuments: React.FC = () => {
               ))}
             </div>
           </div>
+
+          {selectedProject.url && (
+            <div className="mt-6 border-2 border-gray-400 p-4" style={{ borderStyle: 'inset' }}>
+              <h3 className="font-bold mb-3 text-lg">Project Link</h3>
+              <a
+                href={selectedProject.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-700 underline hover:text-blue-900 text-sm break-all"
+              >
+                {selectedProject.url}
+              </a>
+            </div>
+          )}
         </div>
 
         {/* Status Bar */}
@@ -585,7 +623,6 @@ export const MyDocuments: React.FC = () => {
           <h3 className="font-bold mb-2">Quick Access</h3>
           <div className="flex flex-wrap gap-2 text-xs">
             <button 
-              onClick={downloadResume}
               className="bg-gray-300 border border-gray-400 px-3 py-1 hover:bg-gray-200" 
               style={{ borderStyle: 'outset' }}
               onMouseDown={(e) => {

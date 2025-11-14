@@ -59,13 +59,14 @@ export const downloadResume = async () => {
     container.style.position = 'absolute';
     container.style.left = '-9999px';
     container.style.width = '210mm'; // A4 width
-    container.style.padding = '20mm 20mm 30mm 20mm'; // Extra bottom padding for footer
+    container.style.padding = '20mm'; // Consistent padding
     container.style.fontFamily = 'Arial, sans-serif';
     container.style.fontSize = '11pt';
     container.style.lineHeight = '1.6';
     container.style.color = '#000';
     container.style.backgroundColor = '#fff';
     container.style.boxSizing = 'border-box';
+    container.style.pageBreakInside = 'avoid';
     
     // Add styling for better PDF output
     const styledHtml = `
@@ -108,13 +109,20 @@ export const downloadResume = async () => {
         }
         p {
           margin: 8pt 0;
+          page-break-inside: avoid;
         }
         ul, ol {
           margin: 8pt 0;
           padding-left: 20pt;
+          page-break-inside: avoid;
         }
         li {
           margin: 4pt 0;
+          page-break-inside: avoid;
+        }
+        h1, h2, h3, h4, h5, h6 {
+          page-break-after: avoid;
+          page-break-inside: avoid;
         }
         strong {
           font-weight: bold;
@@ -254,9 +262,12 @@ export const downloadResume = async () => {
     const pxToMmX = pdfWidth / container.scrollWidth;
     const pxToMmY = imgHeight / container.scrollHeight;
     
-    // Footer dimensions
-    const footerHeight = 20; // Space reserved for footer (increased to prevent overlap)
-    const contentHeight = pdfHeight - footerHeight; // Available content height per page
+    // Footer and header dimensions
+    const footerHeight = 25; // Space reserved for footer
+    const topPadding = 20; // Top padding for pages after the first (in mm)
+    const bottomSafetyMargin = 15; // Safety margin to prevent text truncation at page breaks (in mm)
+    const firstPageContentHeight = pdfHeight - footerHeight - bottomSafetyMargin; // First page: full height minus footer and safety
+    const subsequentPageContentHeight = pdfHeight - footerHeight - topPadding - bottomSafetyMargin; // Other pages: minus footer, top padding, and safety
     
     // Create PDF
     const pdf = new jsPDF({
@@ -268,8 +279,8 @@ export const downloadResume = async () => {
     // Footer text and links
     const footerText = 'Prithiv Raj - Resume | prithivraj.xyz | prithivrajmu@gmail.com';
     const footerFontSize = 8;
-    const footerY = pdfHeight - 12; // 12mm from bottom (more space)
-    const footerLinkY = footerY + 5; // Position for page number (no link needed)
+    const footerY = pdfHeight - 15; // 15mm from bottom
+    const footerLinkY = footerY + 5; // Position for page number
     
     // Set font size for text width calculations
     pdf.setFontSize(footerFontSize);
@@ -286,71 +297,89 @@ export const downloadResume = async () => {
     const emailLinkX = websiteLinkX + websiteLinkWidth + pdf.getTextWidth(separatorText);
     const emailLinkWidth = pdf.getTextWidth('prithivrajmu@gmail.com');
     
-    // Handle multi-page PDF
+    // Handle multi-page PDF by slicing the canvas intelligently
     const imgData = canvas.toDataURL('image/png', 1.0);
-    let heightLeft = imgHeight;
-    let position = 0;
+    
+    // Calculate page breaks considering content height variations
+    let currentY = 0;
     let pageNum = 1;
-    const totalPages = Math.ceil(imgHeight / contentHeight);
+    const pageBreaks = [0]; // Starting position of each page
     
-    // Add first page with content (clipped to contentHeight to prevent footer overlap)
-    pdf.saveGraphicsState();
-    pdf.rect(0, 0, pdfWidth, contentHeight);
-    pdf.clip();
-    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
-    pdf.restoreGraphicsState();
-    
-    // Add clickable links to first page
-    links.forEach((link) => {
-      const linkYInPdf = link.y * pxToMmY;
-      if (linkYInPdf >= 0 && linkYInPdf < contentHeight) {
-        const linkX = link.x * pxToMmX;
-        const linkY = linkYInPdf;
-        const linkWidth = link.width * pxToMmX;
-        const linkHeight = link.height * pxToMmY;
-        
-        pdf.link(linkX, linkY, linkWidth, linkHeight, { url: link.url });
+    // Calculate where each page should start
+    while (currentY < imgHeight) {
+      const contentHeight = pageNum === 1 ? firstPageContentHeight : subsequentPageContentHeight;
+      currentY += contentHeight;
+      if (currentY < imgHeight) {
+        pageBreaks.push(currentY);
       }
-    });
+      pageNum++;
+    }
     
-    // Add footer to first page
-    pdf.setFontSize(footerFontSize);
-    pdf.setTextColor(100, 100, 100);
-    pdf.text(footerText, pdfWidth / 2, footerY, { align: 'center' });
-    pdf.text(`Page ${pageNum} of ${totalPages}`, pdfWidth / 2, footerLinkY, { align: 'center' });
+    const totalPages = pageBreaks.length;
     
-    // Add clickable links in footer
-    pdf.link(websiteLinkX, footerY - 3, websiteLinkWidth, 4, { url: 'http://prithivraj.xyz' });
-    pdf.link(emailLinkX, footerY - 3, emailLinkWidth, 4, { url: 'mailto:prithivrajmu@gmail.com' });
-    
-    heightLeft -= contentHeight;
-    pageNum++;
-    
-    // Add additional pages if content exceeds one page
-    while (heightLeft > 0) {
-      position = heightLeft - imgHeight;
-      pdf.addPage();
+    // Process each page
+    for (let i = 0; i < totalPages; i++) {
+      if (i > 0) {
+        pdf.addPage();
+      }
       
-      // Clip content to prevent footer overlap
-      pdf.saveGraphicsState();
-      pdf.rect(0, 0, pdfWidth, contentHeight);
-      pdf.clip();
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight, undefined, 'FAST');
-      pdf.restoreGraphicsState();
+      const pageNum = i + 1;
+      const isFirstPage = pageNum === 1;
+      const contentHeight = isFirstPage ? firstPageContentHeight : subsequentPageContentHeight;
+      const yOffset = isFirstPage ? 0 : topPadding; // Add top padding for subsequent pages
       
-      // Add clickable links to this page
+      // Calculate the vertical offset for this page in the canvas
+      const sourceY = pageBreaks[i];
+      const nextPageStart = i + 1 < totalPages ? pageBreaks[i + 1] : imgHeight;
+      const sourceHeight = nextPageStart - sourceY;
+      const pageContentHeight = Math.min(contentHeight, sourceHeight);
+      
+      // Calculate the canvas pixel coordinates for this slice
+      const canvasSourceY = (sourceY / imgHeight) * canvas.height;
+      const canvasSliceHeight = (pageContentHeight / imgHeight) * canvas.height;
+      
+      // Create a temporary canvas for this page slice
+      const pageCanvas = document.createElement('canvas');
+      pageCanvas.width = canvas.width;
+      pageCanvas.height = canvasSliceHeight;
+      const pageCtx = pageCanvas.getContext('2d');
+      
+      if (pageCtx) {
+        // Draw the slice of the main canvas onto the page canvas
+        pageCtx.drawImage(
+          canvas,
+          0, canvasSourceY,           // Source x, y
+          canvas.width, canvasSliceHeight,  // Source width, height
+          0, 0,                       // Destination x, y
+          canvas.width, canvasSliceHeight   // Destination width, height
+        );
+        
+        // Convert page canvas to image and add to PDF
+        const pageImgData = pageCanvas.toDataURL('image/png', 1.0);
+        pdf.addImage(pageImgData, 'PNG', 0, yOffset, imgWidth, pageContentHeight, undefined, 'FAST');
+      }
+      
+      // Add white background in footer area (including safety margin) to cover any overlapping content
+      const contentEndY = isFirstPage ? contentHeight + bottomSafetyMargin : topPadding + contentHeight + bottomSafetyMargin;
+      const footerStartY = pdfHeight - footerHeight;
+      pdf.setFillColor(255, 255, 255);
+      pdf.rect(0, contentEndY, pdfWidth, pdfHeight - contentEndY, 'F');
+      
+      // Add clickable links for this page
       links.forEach((link) => {
         const linkYInPdf = link.y * pxToMmY;
-        const pageStartY = (pageNum - 1) * contentHeight;
-        const pageEndY = pageNum * contentHeight;
         
-        if (linkYInPdf >= pageStartY && linkYInPdf < pageEndY) {
+        if (linkYInPdf >= sourceY && linkYInPdf < nextPageStart) {
           const linkX = link.x * pxToMmX;
-          const linkY = linkYInPdf - pageStartY;
+          const linkY = (linkYInPdf - sourceY) + yOffset;
           const linkWidth = link.width * pxToMmX;
           const linkHeight = link.height * pxToMmY;
           
-          pdf.link(linkX, linkY, linkWidth, linkHeight, { url: link.url });
+          // Only add link if it's within visible content area
+          const maxLinkY = isFirstPage ? contentHeight + bottomSafetyMargin : topPadding + contentHeight + bottomSafetyMargin;
+          if (linkY >= yOffset && linkY < maxLinkY) {
+            pdf.link(linkX, linkY, linkWidth, linkHeight, { url: link.url });
+          }
         }
       });
       
@@ -363,9 +392,6 @@ export const downloadResume = async () => {
       // Add clickable links in footer
       pdf.link(websiteLinkX, footerY - 3, websiteLinkWidth, 4, { url: 'http://prithivraj.xyz' });
       pdf.link(emailLinkX, footerY - 3, emailLinkWidth, 4, { url: 'mailto:prithivrajmu@gmail.com' });
-      
-      heightLeft -= contentHeight;
-      pageNum++;
     }
     
     // Save PDF
