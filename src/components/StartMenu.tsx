@@ -244,7 +244,12 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
       hasSubmenu: true,
       submenu: [
         { label: 'My Documents', icon: '/icons/Book.ico' },
-        { label: 'Resume.pdf', icon: '/icons/Blank sheet.ico' },
+        { label: 'Resume.pdf', icon: '/icons/Blank sheet.ico', action: () => {
+          import('../utils/downloadUtils').then(({ downloadResume }) => {
+            downloadResume();
+            closeDialog();
+          });
+        }},
       ]
     },
     {

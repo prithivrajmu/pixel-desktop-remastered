@@ -54,10 +54,12 @@ export const downloadResume = async () => {
     // Convert markdown to HTML
     const html = marked.parse(markdown);
     
-    // Create a temporary container for the HTML
+    // Create a temporary container for the HTML (completely hidden from view)
     const container = document.createElement('div');
+    container.className = 'resume-pdf-container';
     container.style.position = 'absolute';
     container.style.left = '-9999px';
+    container.style.top = '0';
     container.style.width = '210mm'; // A4 width
     container.style.padding = '20mm'; // Consistent padding
     container.style.fontFamily = 'Arial, sans-serif';
@@ -67,14 +69,17 @@ export const downloadResume = async () => {
     container.style.backgroundColor = '#fff';
     container.style.boxSizing = 'border-box';
     container.style.pageBreakInside = 'avoid';
+    // Keep it out of viewport but renderable for html2canvas
+    container.style.pointerEvents = 'none';
+    container.style.zIndex = '-9999';
     
-    // Add styling for better PDF output
+    // Add styling for better PDF output - scoped to the container only
     const styledHtml = `
       <style>
-        * {
+        .resume-pdf-container * {
           text-decoration: none !important;
         }
-        body {
+        .resume-pdf-container {
           font-family: Arial, sans-serif;
           font-size: 11pt;
           line-height: 1.6;
@@ -82,7 +87,7 @@ export const downloadResume = async () => {
           margin: 0;
           padding: 0;
         }
-        h1 {
+        .resume-pdf-container h1 {
           font-size: 24pt;
           font-weight: bold;
           margin-bottom: 10pt;
@@ -90,55 +95,55 @@ export const downloadResume = async () => {
           padding-bottom: 5pt;
           text-decoration: none !important;
         }
-        h1 * {
+        .resume-pdf-container h1 * {
           text-decoration: none !important;
         }
-        h2 {
+        .resume-pdf-container h2 {
           font-size: 16pt;
           font-weight: bold;
           margin-top: 15pt;
           margin-bottom: 10pt;
           text-decoration: none !important;
         }
-        h3 {
+        .resume-pdf-container h3 {
           font-size: 14pt;
           font-weight: bold;
           margin-top: 12pt;
           margin-bottom: 8pt;
           text-decoration: none !important;
         }
-        p {
+        .resume-pdf-container p {
           margin: 8pt 0;
           page-break-inside: avoid;
         }
-        ul, ol {
+        .resume-pdf-container ul, .resume-pdf-container ol {
           margin: 8pt 0;
           padding-left: 20pt;
           page-break-inside: avoid;
         }
-        li {
+        .resume-pdf-container li {
           margin: 4pt 0;
           page-break-inside: avoid;
         }
-        h1, h2, h3, h4, h5, h6 {
+        .resume-pdf-container h1, .resume-pdf-container h2, .resume-pdf-container h3, .resume-pdf-container h4, .resume-pdf-container h5, .resume-pdf-container h6 {
           page-break-after: avoid;
           page-break-inside: avoid;
         }
-        strong {
+        .resume-pdf-container strong {
           font-weight: bold;
         }
-        em {
+        .resume-pdf-container em {
           font-style: italic;
         }
-        a {
+        .resume-pdf-container a {
           color: #0066cc;
           text-decoration: none !important;
           border-bottom: none !important;
         }
-        a:hover {
+        .resume-pdf-container a:hover {
           text-decoration: none !important;
         }
-        hr {
+        .resume-pdf-container hr {
           border: none;
           border-top: 1pt solid #ccc;
           margin: 15pt 0;
@@ -301,6 +306,9 @@ export const downloadResume = async () => {
     const imgData = canvas.toDataURL('image/png', 1.0);
     
     // Calculate page breaks considering content height variations
+    // Minimum content threshold to create a new page (in mm)
+    const minContentForNewPage = 20;
+    
     let currentY = 0;
     let pageNum = 1;
     const pageBreaks = [0]; // Starting position of each page
@@ -308,11 +316,18 @@ export const downloadResume = async () => {
     // Calculate where each page should start
     while (currentY < imgHeight) {
       const contentHeight = pageNum === 1 ? firstPageContentHeight : subsequentPageContentHeight;
-      currentY += contentHeight;
-      if (currentY < imgHeight) {
-        pageBreaks.push(currentY);
+      const nextY = currentY + contentHeight;
+      
+      // Only create a new page if there's significant content remaining
+      const remainingContent = imgHeight - nextY;
+      if (nextY < imgHeight && remainingContent >= minContentForNewPage) {
+        pageBreaks.push(nextY);
+        currentY = nextY;
+        pageNum++;
+      } else {
+        // Not enough content for a new page, stop here
+        break;
       }
-      pageNum++;
     }
     
     const totalPages = pageBreaks.length;
