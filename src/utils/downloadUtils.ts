@@ -303,8 +303,6 @@ export const downloadResume = async () => {
     const emailLinkWidth = pdf.getTextWidth('prithivrajmu@gmail.com');
     
     // Handle multi-page PDF by slicing the canvas intelligently
-    const imgData = canvas.toDataURL('image/png', 1.0);
-    
     // Calculate page breaks considering content height variations
     // Minimum content threshold to create a new page (in mm)
     const minContentForNewPage = 20;
