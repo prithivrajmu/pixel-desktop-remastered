@@ -35,6 +35,8 @@ export const downloadFile = async (filePath: string, fileName: string): Promise<
 };
 
 export const downloadResume = async () => {
+  let container: HTMLDivElement | null = null;
+  
   try {
     // Fetch the markdown file
     const response = await fetch('/resume/Prithiv_Raj_Resume_Nov_25.md');
@@ -55,7 +57,7 @@ export const downloadResume = async () => {
     const html = marked.parse(markdown);
     
     // Create a temporary container for the HTML (completely hidden from view)
-    const container = document.createElement('div');
+    container = document.createElement('div');
     container.className = 'resume-pdf-container';
     container.style.position = 'absolute';
     container.style.left = '-9999px';
@@ -410,12 +412,14 @@ export const downloadResume = async () => {
     // Save PDF
     pdf.save('Prithiv_Raj_Resume.pdf');
     
-    // Clean up
-    document.body.removeChild(container);
-    
     console.log('Successfully generated and downloaded resume PDF');
   } catch (error) {
     console.error('Error generating resume PDF:', error);
     alert('Sorry, there was an error generating the resume PDF. Please try again.');
+  } finally {
+    // Clean up container in all cases (success or error)
+    if (container && container.parentNode) {
+      document.body.removeChild(container);
+    }
   }
 }; 
