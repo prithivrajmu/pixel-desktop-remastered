@@ -1,9 +1,8 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { downloadResume } from '@/utils/downloadUtils';
 import { portfolioProjects, portfolioProjectsList, getAllSkills, contactInfo } from '@/data/portfolioData';
 import { loadBlogPosts, type BlogPost } from '@/data/blogPosts';
-import { Menu, X, Download, Mail, Github, Linkedin, ExternalLink, ChevronDown, Monitor, BookOpen } from 'lucide-react';
-import { useInView } from '@/hooks/useInView';
+import { Menu, X, Download, Mail, Github, Linkedin, ExternalLink, ChevronDown, BookOpen } from 'lucide-react';
 // import { SEOStructuredData } from '@/components/SEOStructuredData';
 
 const ModernPortfolio: React.FC = () => {
@@ -28,32 +27,14 @@ const ModernPortfolio: React.FC = () => {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [blogLoading, setBlogLoading] = useState(true);
 
-  // Build skill to projects/experience mapping
-  const skillToItems = useMemo(() => {
-    const items = [...portfolioProjects, ...portfolioProjectsList].map(p => ({
-      name: p.name,
-      icon: p.icon,
-      url: p.url,
-      tech: p.tech
-    }));
-    const map = new Map<string, { name: string; icon: string; url?: string }[]>();
-    skills.forEach((skill) => {
-      const relatedItems = items.filter(item => item.tech.includes(skill));
-      if (relatedItems.length > 0) {
-        map.set(skill, relatedItems);
-      }
-    });
-    return map;
-  }, [skills]);
-
-  // Intersection observers for animations
-  const heroRef = useInView<HTMLDivElement>();
-  const aboutSectionRef = useInView<HTMLDivElement>();
-  const skillsSectionRef = useInView<HTMLDivElement>();
-  const experienceSectionRef = useInView<HTMLDivElement>();
-  const projectsSectionRef = useInView<HTMLDivElement>();
-  const blogSectionRef = useInView<HTMLDivElement>();
-  const contactSectionRef = useInView<HTMLDivElement>();
+  // Refs for sections
+  const heroRef = useRef<HTMLDivElement>(null);
+  const aboutSectionRef = useRef<HTMLDivElement>(null);
+  const skillsSectionRef = useRef<HTMLDivElement>(null);
+  const experienceSectionRef = useRef<HTMLDivElement>(null);
+  const projectsSectionRef = useRef<HTMLDivElement>(null);
+  const blogSectionRef = useRef<HTMLDivElement>(null);
+  const contactSectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const loadPosts = async () => {
@@ -70,10 +51,33 @@ const ModernPortfolio: React.FC = () => {
   }, []);
 
 
+
   const scrollToSection = (ref: React.RefObject<HTMLDivElement>) => {
-    ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (ref.current) {
+      const headerHeight = 64; // Height of sticky header (h-16 = 64px)
+      const elementPosition = ref.current.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
     setIsMenuOpen(false);
   };
+
+  // Prevent body scroll when mobile menu is open (only in modern mode)
+  useEffect(() => {
+    const isModernMode = document.body.getAttribute('data-mode') === 'modern';
+    if (isMenuOpen && isModernMode) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMenuOpen]);
 
   const toggleProject = (index: number) => {
     setExpandedProject(expandedProject === index ? null : index);
@@ -119,7 +123,16 @@ const ModernPortfolio: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="content min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 relative">
+      {/* Backdrop overlay when mobile menu is open */}
+      {isMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 md:hidden transition-opacity duration-300"
+          onClick={() => setIsMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+      
       {/* Navigation Header */}
     <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -152,20 +165,36 @@ const ModernPortfolio: React.FC = () => {
             </button>
             <button
               onClick={downloadResume}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors hover-lift"
+              className="flip-button group relative overflow-hidden flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors hover-lift text-xs sm:text-sm md:text-base"
               aria-label="Download resume PDF"
             >
-              <Download className="w-4 h-4" aria-hidden="true" />
-              Resume
+              <span
+                aria-hidden="true"
+                className="absolute inset-0 translate-y-full bg-white/25 transition-transform duration-300 ease-out group-hover:translate-y-0"
+              />
+              <Download
+                className="relative z-10 w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 flex-shrink-0 transition-transform duration-500 ease-linear group-hover:rotate-[360deg] group-hover:scale-110"
+                aria-hidden="true"
+              />
+              <span className="relative z-10">Resume</span>
             </button>
             <button
               onClick={() => window.location.href = '/?mode=win95'}
-              className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors hover-lift"
+              className="flip-button group relative overflow-hidden flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 bg-[#008080] text-white rounded-lg hover:bg-[#006666] transition-colors hover-lift text-xs sm:text-sm md:text-base"
               title="Experience Windows 95 Style Portfolio"
               aria-label="Switch to Windows 95 style portfolio"
             >
-              <Monitor className="w-4 h-4" aria-hidden="true" />
-              Win95 Mode
+              <span
+                aria-hidden="true"
+                className="absolute inset-0 translate-y-full bg-white/25 transition-transform duration-300 ease-out group-hover:translate-y-0"
+              />
+              <img 
+                src="/favicon.ico" 
+                alt="Windows 95" 
+                className="relative z-10 w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 flex-shrink-0 transition-transform duration-500 ease-linear group-hover:rotate-[360deg] group-hover:scale-110" 
+                aria-hidden="true"
+              />
+              <span className="relative z-10">Win95</span>
             </button>
           </nav>
 
@@ -181,54 +210,69 @@ const ModernPortfolio: React.FC = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 space-y-4 border-t border-gray-200">
-            <button onClick={() => scrollToSection(aboutRef)} className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
+          <div className="md:hidden py-4 space-y-3 border-t border-gray-200 bg-white relative z-50">
+            <button onClick={() => scrollToSection(aboutRef)} className="block w-full text-left px-4 py-2.5 text-gray-700 hover:bg-gray-100 rounded transition-colors">
               About
             </button>
-            <button onClick={() => scrollToSection(skillsRef)} className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
+            <button onClick={() => scrollToSection(skillsRef)} className="block w-full text-left px-4 py-2.5 text-gray-700 hover:bg-gray-100 rounded transition-colors">
               Skills
             </button>
-            <button onClick={() => scrollToSection(experienceRef)} className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
+            <button onClick={() => scrollToSection(experienceRef)} className="block w-full text-left px-4 py-2.5 text-gray-700 hover:bg-gray-100 rounded transition-colors">
               Experience
             </button>
-            <button onClick={() => scrollToSection(projectsRef)} className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
+            <button onClick={() => scrollToSection(projectsRef)} className="block w-full text-left px-4 py-2.5 text-gray-700 hover:bg-gray-100 rounded transition-colors">
               Projects
             </button>
-            <button onClick={() => scrollToSection(blogRef)} className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
+            <button onClick={() => scrollToSection(blogRef)} className="block w-full text-left px-4 py-2.5 text-gray-700 hover:bg-gray-100 rounded transition-colors">
               Blog
             </button>
-            <button onClick={() => scrollToSection(contactRef)} className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
+            <button onClick={() => scrollToSection(contactRef)} className="block w-full text-left px-4 py-2.5 text-gray-700 hover:bg-gray-100 rounded transition-colors">
               Contact
             </button>
-            <button
-              onClick={downloadResume}
-              className="flex items-center justify-center gap-2 w-full mx-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-            >
-              <Download className="w-4 h-4" />
-              Download Resume
-            </button>
-            <button
-              onClick={() => window.location.href = '/?mode=win95'}
-              className="flex items-center justify-center gap-2 w-full mx-4 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
-              title="Experience Windows 95 Style Portfolio"
-            >
-              <Monitor className="w-4 h-4" />
-              Win95 Mode
-            </button>
+            <div className="px-4 pt-2 space-y-3">
+              <button
+                onClick={downloadResume}
+                className="flip-button group relative overflow-hidden flex items-center justify-center gap-2.5 w-full px-4 py-3.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 active:bg-blue-800 transition-colors text-base font-semibold min-h-[48px] shadow-sm"
+              >
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-0 translate-y-full bg-white/25 transition-transform duration-300 ease-out group-hover:translate-y-0"
+                />
+                <Download className="relative z-10 w-5 h-5 flex-shrink-0 transition-transform duration-500 ease-linear group-hover:rotate-[360deg] group-hover:scale-110" />
+                <span className="relative z-10">Resume</span>
+              </button>
+              <button
+                onClick={() => window.location.href = '/?mode=win95'}
+                className="flip-button group relative overflow-hidden flex items-center justify-center gap-2.5 w-full px-4 py-3.5 bg-[#008080] text-white rounded-lg hover:bg-[#006666] active:bg-[#005555] transition-colors text-base font-semibold min-h-[48px] shadow-sm"
+                title="Experience Windows 95 Style Portfolio"
+              >
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-0 translate-y-full bg-white/25 transition-transform duration-300 ease-out group-hover:translate-y-0"
+                />
+                <img 
+                  src="/favicon.ico" 
+                  alt="Windows 95" 
+                  className="relative z-10 w-5 h-5 flex-shrink-0 transition-transform duration-500 ease-linear group-hover:rotate-[360deg] group-hover:scale-110" 
+                  aria-hidden="true"
+                />
+                <span className="relative z-10">Win95</span>
+              </button>
+            </div>
           </div>
         )}
       </nav>
     </header>
 
     {/* Hero Section */}
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32" itemScope itemType="https://schema.org/Person">
-      <div ref={heroRef.ref} className={`text-center ${heroRef.inView ? 'is-inview' : 'reveal-base reveal-up'}`}>
+    <section className="section relative z-40 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32" itemScope itemType="https://schema.org/Person">
+      <div ref={heroRef} className="text-center">
         <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4" itemProp="name">
           Prithiv Raj
         </h1>
-        <p className="text-xl md:text-2xl text-gray-600 mb-8">
+        <h3 className="text-xl md:text-2xl text-gray-600 mb-8">
           Technical Lead Engineer | Full-Stack Developer | Data Engineer
-        </p>
+        </h3>
         <p className="text-lg text-gray-500 max-w-2xl mx-auto mb-8">
           Lead Engineer with 9+ years of experience in data, software, operations research, and managing technical teams. 
           Applying my data-driven background to solve real-world business problems by personally architecting and building 
@@ -246,28 +290,28 @@ const ModernPortfolio: React.FC = () => {
             className="px-6 py-3 bg-white text-gray-900 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium flex items-center justify-center gap-2 hover-lift"
           >
             <Download className="w-5 h-5" />
-            Download Resume
+            Resume
           </button>
         </div>
       </div>
     </section>
 
     {/* About Section */}
-    <section ref={aboutRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white" itemScope itemType="https://schema.org/AboutPage">
-      <div ref={aboutSectionRef.ref} className={aboutSectionRef.inView ? 'is-inview' : 'reveal-left'}>
-        <h2 className={`text-3xl font-bold text-gray-900 mb-8 text-center ${aboutSectionRef.inView ? 'is-inview' : 'reveal-scale'}`}>About Me</h2>
+    <section ref={aboutRef} className="section relative z-40 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white" itemScope itemType="https://schema.org/AboutPage">
+      <div ref={aboutSectionRef}>
+        <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">About Me</h2>
         <div className="max-w-4xl mx-auto">
-        <p className={`text-gray-700 leading-relaxed mb-4 ${aboutSectionRef.inView ? 'is-inview' : 'reveal-left'}`} style={{ transitionDelay: '100ms' }}>
+        <p className="text-gray-700 leading-relaxed mb-4">
           I'm a Technical Lead Engineer with 9+ years of experience in data, software, operations research, and managing technical teams. 
           Currently at Headwind Labs, I bridge the gap between executive strategy and hands-on engineering, using modern web technologies 
           (React, TypeScript, Supabase) to build custom tools that solve real-world business problems.
         </p>
-        <p className={`text-gray-700 leading-relaxed mb-4 ${aboutSectionRef.inView ? 'is-inview' : 'reveal-right'}`} style={{ transitionDelay: '200ms' }}>
+        <p className="text-gray-700 leading-relaxed mb-4">
           My experience spans from data science research at NEXTOR II (FAA Consortium) developing simulation models of US airspace, 
           to leading data teams at companies like Volansi and Zipline, where I built operational tools that increased efficiency by 25-33% 
           and reduced manufacturing costs by 15%.
         </p>
-        <p className={`text-gray-700 leading-relaxed ${aboutSectionRef.inView ? 'is-inview' : 'reveal-left'}`} style={{ transitionDelay: '300ms' }}>
+        <p className="text-gray-700 leading-relaxed">
           Currently, I'm building Kattru (AI-powered learning platform), Zippy Bee (proprietary CRM), and Inventree Sync (inventory management system). 
           My approach combines deep technical knowledge with strategic thinking, enabling me to deliver solutions that not only solve 
           technical challenges but also drive measurable business impact.
@@ -277,70 +321,32 @@ const ModernPortfolio: React.FC = () => {
     </section>
 
     {/* Skills Section */}
-    <section ref={skillsRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <div ref={skillsSectionRef.ref} className={skillsSectionRef.inView ? 'is-inview' : 'reveal-bounce'}>
-        <h2 className={`text-3xl font-bold text-gray-900 mb-8 text-center ${skillsSectionRef.inView ? 'is-inview' : 'reveal-scale'}`}>Skills</h2>
+    <section ref={skillsRef} className="section relative z-40 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div ref={skillsSectionRef}>
+        <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Skills</h2>
         <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
-          {skills.map((skill, index) => {
-            const relatedItems = skillToItems.get(skill) || [];
-            return (
-              <div key={index} className="relative group inline-block">
-                <span
-                  className="px-4 py-2 bg-blue-50 text-blue-700 rounded-full text-sm font-medium border border-blue-200 hover-lift cursor-default"
-                  style={{ transitionDelay: `${index * 30}ms` }}
-                >
-                  {skill}
-                </span>
-                {relatedItems.length > 0 && (
-                  <div 
-                    className="pointer-events-none absolute left-1/2 top-full -translate-x-1/2 mt-2 opacity-0 translate-y-1 motion-safe group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 z-20"
-                    role="list"
-                    aria-label={`Projects using ${skill}`}
-                  >
-                    <div className="flex flex-wrap gap-1.5 p-2 bg-white border border-gray-200 rounded-xl shadow-xl max-w-xs">
-                      {relatedItems.slice(0, 6).map((item, itemIndex) => (
-                        <div
-                          key={itemIndex}
-                          role="listitem"
-                          title={item.name}
-                          className="w-9 h-9 rounded-full bg-gray-50 border border-gray-200 flex items-center justify-center text-lg select-none opacity-0 scale-95 motion-safe group-hover:opacity-100 group-hover:scale-100 transition duration-200"
-                          style={{ transitionDelay: `${itemIndex * 30}ms` }}
-                          aria-label={item.name}
-                        >
-                          <span aria-hidden="true">{item.icon}</span>
-                        </div>
-                      ))}
-                      {relatedItems.length > 6 && (
-                        <div 
-                          className="w-9 h-9 rounded-full bg-gray-100 border border-gray-200 text-xs font-medium flex items-center justify-center"
-                          title={`${relatedItems.length - 6} more projects`}
-                          aria-label={`${relatedItems.length - 6} more projects`}
-                        >
-                          +{relatedItems.length - 6}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            );
-          })}
+          {skills.map((skill, index) => (
+            <span
+              key={index}
+              className="px-4 py-2 bg-blue-50 text-blue-700 rounded-full text-sm font-medium border border-blue-200"
+            >
+              {skill}
+            </span>
+          ))}
         </div>
       </div>
     </section>
 
     {/* Experience Section */}
-    <section ref={experienceRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <div ref={experienceSectionRef.ref} className={experienceSectionRef.inView ? 'is-inview' : 'reveal-scale'}>
-        <h2 className={`text-3xl font-bold text-gray-900 mb-12 text-center ${experienceSectionRef.inView ? 'is-inview' : 'reveal-bounce'}`}>Work Experience</h2>
+    <section ref={experienceRef} className="section relative z-40 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div ref={experienceSectionRef}>
+        <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Work Experience</h2>
         <div className="space-y-8" itemScope itemType="https://schema.org/ItemList">
           {portfolioProjects.map((project, index) => {
-            const animationType = index % 2 === 0 ? 'reveal-left' : 'reveal-right';
             return (
             <article
               key={index}
-              className={`bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow hover-lift ${experienceSectionRef.inView ? 'is-inview' : animationType}`}
-              style={{ transitionDelay: `${index * 100}ms` }}
+              className="experience-card bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow hover-lift"
               itemScope
               itemType="https://schema.org/Occupation"
             >
@@ -412,17 +418,15 @@ const ModernPortfolio: React.FC = () => {
     </section>
 
     {/* Projects Section */}
-    <section ref={projectsRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white">
-      <div ref={projectsSectionRef.ref} className={projectsSectionRef.inView ? 'is-inview' : 'reveal-scale'}>
-        <h2 className={`text-3xl font-bold text-gray-900 mb-12 text-center ${projectsSectionRef.inView ? 'is-inview' : 'reveal-bounce'}`}>Featured Projects</h2>
+    <section ref={projectsRef} className="section relative z-40 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white">
+      <div ref={projectsSectionRef}>
+        <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Featured Projects</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" itemScope itemType="https://schema.org/ItemList">
           {portfolioProjectsList.map((project, index) => {
-            const animationType = index % 3 === 0 ? 'reveal-scale' : index % 3 === 1 ? 'reveal-left' : 'reveal-right';
             return (
             <article
               key={index}
-              className={`bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-shadow border border-gray-200 flex flex-col h-full hover-lift ${projectsSectionRef.inView ? 'is-inview' : animationType}`}
-              style={{ transitionDelay: `${index * 80}ms` }}
+              className="project-card bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-shadow border border-gray-200 flex flex-col h-full hover-lift"
               itemScope
               itemType="https://schema.org/SoftwareApplication"
             >
@@ -455,9 +459,9 @@ const ModernPortfolio: React.FC = () => {
     </section>
 
     {/* Blog Section */}
-    <section ref={blogRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <div ref={blogSectionRef.ref} className={blogSectionRef.inView ? 'is-inview' : 'reveal-rotate'}>
-        <h2 className={`text-3xl font-bold text-gray-900 mb-12 text-center ${blogSectionRef.inView ? 'is-inview' : 'reveal-scale'}`}>Blog</h2>
+    <section ref={blogRef} className="section relative z-40 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div ref={blogSectionRef}>
+        <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Blog</h2>
         {blogLoading ? (
           <div className="text-center py-12">
             <div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
@@ -472,13 +476,11 @@ const ModernPortfolio: React.FC = () => {
           <div className="space-y-6">
             {blogPosts.map((post, index) => {
               const blogUrl = `/blog/${post.slug}`;
-              const animationType = index % 2 === 0 ? 'reveal-left' : 'reveal-right';
               
               return (
                 <article
                   key={post.id}
-                  className={`bg-white rounded-xl p-6 hover:shadow-lg transition-shadow border border-gray-200 hover-lift ${blogSectionRef.inView ? 'is-inview' : animationType}`}
-                  style={{ transitionDelay: `${index * 100}ms` }}
+                  className="blog-post bg-white rounded-xl p-6 hover:shadow-lg transition-shadow border border-gray-200 hover-lift"
                   itemScope
                   itemType="https://schema.org/BlogPosting"
                 >
@@ -525,10 +527,10 @@ const ModernPortfolio: React.FC = () => {
     </section>
 
     {/* Contact Section */}
-    <section ref={contactRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <div ref={contactSectionRef.ref} className={contactSectionRef.inView ? 'is-inview' : 'reveal-bounce'}>
-        <h2 className={`text-3xl font-bold text-gray-900 mb-12 text-center ${contactSectionRef.inView ? 'is-inview' : 'reveal-scale'}`}>Get In Touch</h2>
-        <div className={`bg-white rounded-xl shadow-lg p-8 max-w-2xl mx-auto ${contactSectionRef.inView ? 'is-inview' : 'reveal-scale'}`} style={{ transitionDelay: '100ms' }}>
+    <section ref={contactRef} className="section relative z-40 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div ref={contactSectionRef}>
+        <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Get In Touch</h2>
+        <div className="bg-white rounded-xl shadow-lg p-8 max-w-2xl mx-auto">
         <p className="text-center text-gray-700 mb-8">
           I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.
         </p>
@@ -622,37 +624,53 @@ const ModernPortfolio: React.FC = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
             <a
               href={`mailto:${contactInfo.email}`}
-              className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium hover-lift"
+              className="flip-button flip-button--light group relative overflow-hidden flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium hover-lift"
             >
-              <Mail className="w-5 h-5" />
-              Email Me
+              <span
+                aria-hidden="true"
+                className="absolute inset-0 translate-y-full bg-white/25 transition-transform duration-300 ease-out group-hover:translate-y-0"
+              />
+              <Mail className="relative z-10 w-5 h-5 transition-transform duration-500 ease-linear group-hover:rotate-[360deg] group-hover:scale-110" />
+              <span className="relative z-10">Email Me</span>
             </a>
             <a
               href={contactInfo.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors font-medium hover-lift"
+              className="flip-button group relative overflow-hidden flex items-center justify-center gap-2 px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors font-medium hover-lift"
             >
-              <Github className="w-5 h-5" />
-              GitHub
+              <span
+                aria-hidden="true"
+                className="absolute inset-0 translate-y-full bg-white/25 transition-transform duration-300 ease-out group-hover:translate-y-0"
+              />
+              <Github className="relative z-10 w-5 h-5 transition-transform duration-500 ease-linear group-hover:rotate-[360deg] group-hover:scale-110" />
+              <span className="relative z-10">GitHub</span>
             </a>
             <a
               href={contactInfo.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium hover-lift"
+              className="flip-button group relative overflow-hidden flex items-center justify-center gap-2 px-6 py-3 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium hover-lift"
             >
-              <Linkedin className="w-5 h-5" />
-              LinkedIn
+              <span
+                aria-hidden="true"
+                className="absolute inset-0 translate-y-full bg-white/25 transition-transform duration-300 ease-out group-hover:translate-y-0"
+              />
+              <Linkedin className="relative z-10 w-5 h-5 transition-transform duration-500 ease-linear group-hover:rotate-[360deg] group-hover:scale-110" />
+              <span className="relative z-10">LinkedIn</span>
             </a>
           </div>
           <div className="text-center">
             <button
               onClick={downloadResume}
-              className="flex items-center justify-center gap-2 mx-auto px-6 py-3 bg-white text-gray-900 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium hover-lift"
+              className="flip-button flip-button--light group relative overflow-hidden flex items-center justify-center gap-2 mx-auto px-6 py-3 bg-white text-gray-900 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium hover-lift"
             >
-              <Download className="w-5 h-5" />
-              Download Resume PDF
+              <span
+                aria-hidden="true"
+                className="absolute inset-0 translate-y-full bg-black/10 transition-transform duration-300 ease-out group-hover:translate-y-0"
+              />
+              <Download className="relative z-10 w-5 h-5 transition-transform duration-500 ease-linear group-hover:rotate-[360deg] group-hover:scale-110" />
+              <span className="relative z-10">Resume</span>
             </button>
           </div>
         </div>
@@ -661,7 +679,7 @@ const ModernPortfolio: React.FC = () => {
     </section>
 
     {/* Footer */}
-    <footer className="bg-gray-900 text-white py-8">
+    <footer className="relative z-40 bg-gray-900 text-white py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <p className="text-gray-400">© {new Date().getFullYear()} Prithiv Raj. All rights reserved.</p>
       </div>

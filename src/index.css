@@ -141,7 +141,8 @@
       font-size: 16px;
     }
     
-    body {
+    /* Only apply fixed positioning to Win95 mode, not modern portfolio */
+    body[data-mode="win95"] {
       /* Prevent bounce scrolling */
       overflow: hidden;
       position: fixed;
@@ -150,9 +151,141 @@
       height: 100vh; /* Use viewport height */
       height: 100dvh; /* Dynamic viewport height for mobile browsers */
     }
+    
+      /* Modern portfolio should scroll normally */
+    body[data-mode="modern"] {
+      overflow: auto;
+      overflow-x: hidden;
+      position: relative;
+      width: 100%;
+      height: auto;
+      min-height: 100vh;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Ensure modern portfolio root container can scroll */
+    body[data-mode="modern"] > #root {
+      width: 100%;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    
+    /* Modern portfolio mobile optimizations */
+    body[data-mode="modern"] .min-h-screen {
+      min-height: 100vh;
+      min-height: 100dvh; /* Use dynamic viewport height on mobile */
+    }
+    
+    /* Ensure sticky header works properly on mobile */
+    body[data-mode="modern"] header.sticky {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    
+    /* Mobile menu improvements - ensure menu can scroll if needed */
+    body[data-mode="modern"] header nav .md\\:hidden {
+      max-height: calc(100vh - 64px);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Mobile menu backdrop fade effect */
+    body[data-mode="modern"] .fixed.inset-0.bg-black {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+    
+    /* Mobile menu slide-in animation */
+    body[data-mode="modern"] header nav > div.md\\:hidden {
+      animation: slideDown 0.3s ease-out;
+    }
+    
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Flip button hover effect */
+    .flip-button {
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+    }
 
-    /* Ensure taskbar extends full width on mobile */
-    [data-taskbar] {
+    .flip-button::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      transform: translateY(100%);
+      transition: transform 0.35s ease;
+      background: rgba(255, 255, 255, 0.2);
+      z-index: 0;
+    }
+
+    .flip-button--light::before {
+      background: rgba(0, 0, 0, 0.15);
+    }
+
+    .flip-button:hover::before,
+    .flip-button:focus-visible::before {
+      transform: translateY(0);
+    }
+
+    .flip-button > * {
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Ensure mobile navigation menu items are properly sized */
+    body[data-mode="modern"] header button {
+      touch-action: manipulation;
+    }
+    
+    /* Ensure favicon icon displays properly in buttons */
+    body[data-mode="modern"] header button img[src*="favicon"] {
+      object-fit: contain;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+    }
+    
+    /* Responsive button sizing for desktop navigation */
+    @media (min-width: 640px) {
+      body[data-mode="modern"] header nav button {
+        white-space: nowrap;
+      }
+    }
+    
+    /* Elegant button resize across breakpoints - maintain aspect ratio */
+    body[data-mode="modern"] header nav button {
+      transition: all 0.2s ease-in-out;
+      min-height: fit-content;
+    }
+    
+    /* Ensure buttons scale proportionally on medium screens */
+    @media (min-width: 768px) and (max-width: 1023px) {
+      body[data-mode="modern"] header nav button {
+        /* Maintain balanced proportions on medium screens */
+        line-height: 1.5;
+      }
+    }
+
+    /* Ensure taskbar extends full width on mobile (Win95 mode only) */
+    [data-mode="win95"] [data-taskbar] {
       width: 100% !important;
       min-width: 100% !important;
       max-width: 100vw !important;
@@ -172,8 +305,8 @@
       font-size: 0.875rem;
     }
 
-    /* Mobile window optimizations */
-    .absolute {
+    /* Mobile window optimizations (Win95 mode only) */
+    [data-mode="win95"] .absolute {
       /* Ensure windows don't go off-screen on mobile */
       max-width: calc(100vw - 16px);
       max-height: calc(100vh - 64px); /* Account for taskbar */
@@ -199,18 +332,23 @@
     }
   }
 
-  /* Desktop styles */
+  /* Desktop styles - ensure modern portfolio can always scroll */
   @media (min-width: 1024px) {
-    body {
+    body[data-mode="modern"] {
+      overflow: auto;
+      position: static;
+    }
+    
+    body[data-mode="win95"] {
       overflow: auto;
       position: static;
     }
   }
 
-  /* Landscape phone specific adjustments */
+  /* Landscape phone specific adjustments (Win95 mode only) */
   @media (max-width: 640px) and (orientation: landscape) {
     /* Smaller taskbar in landscape */
-    [data-taskbar] {
+    [data-mode="win95"] [data-taskbar] {
       height: 40px !important;
       overflow-x: hidden;
       width: 100% !important;
@@ -219,14 +357,14 @@
     }
 
     /* System tray should not overflow in landscape */
-    [data-taskbar] > div:last-child {
+    [data-mode="win95"] [data-taskbar] > div:last-child {
       flex-shrink: 0;
       min-width: fit-content;
       overflow: hidden;
     }
 
     /* Window buttons should scroll if needed */
-    [data-taskbar] > div:nth-child(3) {
+    [data-mode="win95"] [data-taskbar] > div:nth-child(3) {
       flex: 1;
       min-width: 0;
       overflow-x: auto;
@@ -234,95 +372,44 @@
       -ms-overflow-style: none;
     }
 
-    [data-taskbar] > div:nth-child(3)::-webkit-scrollbar {
+    [data-mode="win95"] [data-taskbar] > div:nth-child(3)::-webkit-scrollbar {
       display: none;
     }
   }
 
-  /* Medium screens landscape adjustments */
+  /* Medium screens landscape adjustments (Win95 mode only) */
   @media (max-width: 960px) and (orientation: landscape) {
     /* Ensure taskbar components don't overflow */
-    [data-taskbar] {
+    [data-mode="win95"] [data-taskbar] {
       overflow-x: hidden;
     }
 
     /* Prioritize system tray visibility */
-    [data-taskbar] > div:last-child {
+    [data-mode="win95"] [data-taskbar] > div:last-child {
       flex-shrink: 0;
       min-width: fit-content;
     }
   }
 
-  /* Animation utilities for modern portfolio */
-  @media (prefers-reduced-motion: no-preference) {
-    .reveal-base {
-      opacity: 0;
-      transform: translateY(0.5rem);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-
-    .reveal-up {
-      transform: translateY(0.5rem);
-    }
-
-    .reveal-left {
-      opacity: 0;
-      transform: translateX(-2rem);
-      transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .reveal-right {
-      opacity: 0;
-      transform: translateX(2rem);
-      transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .reveal-scale {
-      opacity: 0;
-      transform: scale(0.9);
-      transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    .reveal-rotate {
-      opacity: 0;
-      transform: rotate(-5deg) scale(0.95);
-      transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    .reveal-bounce {
-      opacity: 0;
-      transform: translateY(2rem) scale(0.9);
-      transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    }
-
-    .is-inview {
-      opacity: 1 !important;
-      transform: none !important;
-    }
-
-    .hover-lift:hover {
-      transform: translateY(-2px) scale(1.01);
-    }
-
-    .parallax-slow {
-      transition: transform 0.3s ease-out;
-    }
-  }
-
+  /* Hover lift effect for modern portfolio */
   .hover-lift {
     will-change: transform;
     transform: translateZ(0);
   }
 
+  @media (prefers-reduced-motion: no-preference) {
+    .hover-lift:hover {
+      transform: translateY(-2px) scale(1.01);
+    }
+    
+    /* Override hover-lift for flip buttons */
+    .flip-button.hover-lift:hover {
+      transform: none !important;
+    }
+  }
+
   /* Respect reduced motion preference */
   @media (prefers-reduced-motion: reduce) {
-    .reveal-base,
-    .reveal-up,
-    .reveal-left,
-    .reveal-right,
-    .reveal-scale,
-    .reveal-rotate,
-    .reveal-bounce,
     .hover-lift {
       transition: none !important;
       transform: none !important;
@@ -340,5 +427,10 @@
     .group .pointer-events-none[role="list"] {
       display: none;
     }
+  }
+
+  .section {
+    position: relative;
+    z-index: 40;
   }
 }
