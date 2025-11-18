@@ -271,7 +271,7 @@ const ModernPortfolio: React.FC = () => {
           Prithiv Raj
         </h1>
         <h3 className="text-xl md:text-2xl text-gray-600 mb-8">
-          Technical Lead Engineer | Full-Stack Developer | Data Engineer
+          Technical Lead Engineer
         </h3>
         <p className="text-lg text-gray-500 max-w-2xl mx-auto mb-8">
           Lead Engineer with 9+ years of experience in data, software, operations research, and managing technical teams. 
