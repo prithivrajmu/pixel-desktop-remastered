@@ -44,23 +44,23 @@ export const PropertiesDialog: React.FC<PropertiesDialogProps> = ({
   const getIconDescription = (id: string) => {
     const descriptions: Record<string, { description: string; quote: string }> = {
       'my-computer': {
-        description: "Your gateway to exploring my professional identity! This is where you'll find my skills, experience, and the digital essence of who I am as a tech professional. Think of it as the BIOS of my career - all the essential information you need to understand my capabilities.",
+        description: "A profile view of my background, core capabilities, and the systems perspective I bring to data and software work.",
         quote: "\"The computer was born to solve problems that did not exist before.\" - Bill Gates"
       },
       'my-documents': {
-        description: "A curated collection of my professional projects, experiences, and digital artifacts. Like a well-organized filing cabinet, but way cooler and with more pixels! Each folder contains stories of innovation, problem-solving, and the occasional debugging marathon.",
+        description: "A working record of the projects, systems, and operating problems I have taken on across data, architecture, and product delivery.",
         quote: "\"The best way to predict the future is to create it.\" - Peter Drucker"
       },
       'recycle-bin': {
-        description: "Not your typical trash can! This is where I keep archived projects, experimental ideas, and concepts that might see the light of day again. Sometimes the best innovations come from revisiting what we once discarded.",
+        description: "Archived roles and completed chapters. The work lives here because it is finished, not because it stopped being useful.",
         quote: "\"Failure is simply the opportunity to begin again, this time more intelligently.\" - Henry Ford"
       },
       'the-internet': {
-        description: "Your portal to my thoughts, writings, and digital presence across the web. Navigate through my blog posts, articles, and online contributions. Warning: May contain traces of caffeine-fueled coding insights!",
+        description: "A window into my writing, notes, and longer-form thinking about technology, systems, and product work.",
         quote: "\"The Internet is becoming the town square for the global village of tomorrow.\" - Bill Gates"
       },
       'set-up-the-microsoft-network': {
-        description: "Ready to connect? This is your direct line to reach out, collaborate, or just say hello! Whether you're looking to discuss opportunities, share ideas, or debate the best programming language, I'm just a message away.",
+        description: "A direct path to reach out about product, data, architecture, or full-stack engineering work.",
         quote: "\"The single biggest problem in communication is the illusion that it has taken place.\" - George Bernard Shaw"
       }
     };

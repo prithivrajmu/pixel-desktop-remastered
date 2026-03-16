@@ -1,106 +1,90 @@
 # **Prithiv Raj MU**
 
-\+91 7200765498 | | [prithivraj.xyz](http://prithivraj.xyz) | prithivrajmu@gmail.com | [linkedin.com/prithivrajmu](https://linkedin.com/prithivrajmu)
++91 7200765498 | [prithivraj.xyz](http://prithivraj.xyz) | prithivrajmu@gmail.com | [linkedin.com/in/prithivrajmu](https://linkedin.com/in/prithivrajmu)
 
 ### **Summary**
 
-Lead Engineer with 9+ years of experience in data, software, operations research, and managing technical teams. Currently a Technical Lead Engineer, applying my data-driven background to solve real-world business problems by personally architecting and building full-stack software solutions. I bridge the gap between executive strategy and hands-on engineering, using modern web technologies (React, TypeScript, Supabase) to build the custom tools I need to run and optimize my businesses.
+Senior data engineer turned data architect with 9+ years across analytics, operations research, and software delivery. I have built warehouses, simulation models, decision-support systems, and internal applications, and I now lead full-stack product work where data design and application architecture have to work together. More recently, I have been applying that background to practical AI products and learning the realities of inference, latency, and runtime tradeoffs in production systems.
 
-### **Work Experience**
+### **Experience**
 
-***Headwind Labs \- Remote, India \- Technical Lead Engineer***  
-***March 2023 \- Present***
+***Headwind Labs - Remote, India - Technical Lead Engineer***  
+***March 2023 - Present***
 
-* Building ‘**Kattru’,** AI-powered learning platform, with React/TypeScript/Supabase featuring RAG-based course generation, encrypted API key management, and serverless architecture supporting OpenAI/Gemini models  
-* Engineered and deployed **'Zippy Bee,'** a proprietary full-stack CRM (React, TypeScript, Supabase) to manage the entire business pipeline from lead to close.  
-* Designed the system to solve industry problems, building modules for lead/client management, project tracking, and agent analytics with role-based access and data security (RLS).  
-* Architected and built **'Inventree Sync,'** a custom inventory and payroll management system to replace manual Google Sheets. This tool is now the operational backbone, significantly reducing waste and manual errors in the food and FMCG industry.  
-* Engineered a data-driven inventory control system, optimizing stock levels based on sales velocity and supplier lead times.
+* Architected and built Kattru, a learning platform with retrieval-backed course generation, secure key handling, and serverless workflows.
+* Delivered Zippy Bee, a proprietary CRM used to manage the full lead-to-close pipeline with role-based access and reporting.
+* Built Inventree Sync, an inventory and payroll system that replaced spreadsheet-based operations for food and FMCG workflows.
+* Designed operational data flows that connected day-to-day execution with reporting, forecasting, and decision support.
 
-***Volansi \- San Francisco, California, USA \- Lead Data Analytics and Engineering***  
-***Sept 2021 \- Jan 2023***
+***Volansi - San Francisco, California, USA - Lead Data Analytics and Engineering***  
+***Sept 2021 - Jan 2023***
 
-* Hired and managed the data team, implementing data-driven solutions for drone engineering, manufacturing, sales, and delivery operations.  
-* Led and executed a high-stakes program to develop a hub-and-spoke drone delivery network, survival analysis using ML, and more by securing buy-in from multiple cross-functional leaders.  
-* Managed project roadmaps and agile ceremonies (Kanban/Scrum) for the data engineering and analytics teams.  
-* Conducted ad-hoc operations analysis using SciPy, SimPy, and SQL, including GHG emissions modeling for drone networks and identifying illegal mines in DR Congo.  
-* Developed simulation and optimization tools for fleet allocation and healthcare supply chains to support the Sales team in evaluating new markets.
+* Hired and managed the data team and set delivery direction across analytics and data engineering work.
+* Led modeling programs for hub-and-spoke delivery design, survival analysis, and network feasibility.
+* Built simulation and optimization tools used by engineering, operations, and sales teams to evaluate new markets.
+* Ran agile planning and roadmaps across data engineering and analytics initiatives.
 
-***Mashey \- Santa Cruz, California, USA \- Sr Analytics Consultant/Engineer***  
-***June 2021 \- Sept 2021***
+***Mashey - Santa Cruz, California, USA - Senior Analytics Consultant / Engineer***  
+***June 2021 - Sept 2021***
 
-* Led the development and migration of the data stack (ETL to ELT) for an e-commerce brand, moving from BigQuery to Snowflake and implementing dbt.  
-* Ensured data warehouse policies were compliant with GDPR and CCPA.  
-* Analyzed user cohorts and trends to inform Go-To-Market strategies, contributing to $345,000 in quarterly savings by optimizing product and shipping costs.
+* Led the migration from BigQuery to Snowflake and introduced dbt-based transformation workflows.
+* Defined warehouse controls aligned to GDPR and CCPA requirements.
+* Used cohort and commercial analysis to support go-to-market and margin decisions.
+* Contributed to quarterly savings by identifying product and shipping cost opportunities.
 
-***Zipline International Inc. \- San Francisco, California, USA \- Senior Data Analyst***  
-***June 2019 \- May 2021***
+***Zipline International Inc. - San Francisco, California, USA - Senior Data Analyst***  
+***June 2019 - May 2021***
 
-* Worked in the Data and Operations Engineering teams, managing software and data projects to build internal tools for daily operations in the US, Ghana, and Rwanda.  
-* These tools increased operational efficiency by 25% and site throughput by 33%.  
-* Supported cross-functional teams with ad-hoc hypothesis testing, serving results via BI tools (Sisense, Tableau) and microservice apps.  
-* Contributed to anomaly detection analysis that achieved a 15% reduction in per-unit aircraft manufacturing cost.
+* Delivered software and data projects used by operations teams in the US, Ghana, and Rwanda.
+* Helped drive measurable gains in operating efficiency and site throughput.
+* Supported teams with ad hoc analysis, hypothesis testing, dashboards, and lightweight internal applications.
+* Contributed to anomaly detection work that reduced aircraft manufacturing cost per unit.
 
-***NEXTOR II (The FAA Consortium in Aviation Operations Research) \- College Park, Maryland, USA \-*** **Data Scientist**  
-**Aug 2016 \- Jan 2019**
+***NEXTOR II (The FAA Consortium in Aviation Operations Research) - College Park, Maryland, USA - Data Scientist***  
+***Aug 2016 - Jan 2019***
 
-* Developed a simulation model of US airspace to provide post-operations evaluation for airlines, the FAA, and airports.  
-* Implemented a queuing theory simulation model to analyze and quantify operational capabilities for the Detroit Metro Airport expansion plan.
+* Developed simulation models of US airspace for post-operations evaluation.
+* Built queuing models to quantify operational capacity for the Detroit Metro Airport expansion plan.
 
-### **Technical Stack**
+### **Core Stack**
 
-* **Data & Ops:** Python (pandas, numpy, scipy, simpy), SQL, dbt, Looker, Spark, Snowflake, BigQuery  
-* **Full-Stack:** JavaScript, TypeScript, React, Next.js, Node.js, Supabase, PostgreSQL, Tailwind CSS, Vite  
-* **Tools:** Git, Docker, AWS, GCP, Vercel
+* **Data:** Python, SQL, dbt, Snowflake, BigQuery, PostgreSQL, warehousing, ELT, data modeling
+* **Applications:** React, TypeScript, Next.js, Supabase, full-stack internal tools
+* **Architecture:** system design, workflow design, reporting foundations, access control
+* **Current learning:** RAG patterns, AI inference tradeoffs, runtime cost and latency constraints
 
-### **Recent Key Projects**
+### **Selected Builds**
 
-**Kattru \- AI-Powered Personalized Learning Platform** | React, TypeScript, Supabase  
-Full-Stack Web Application
+**Kattru - AI Learning Platform** | React, TypeScript, Supabase, PostgreSQL
 
-* Developed a secure learning platform with AI-driven course generation using LangChain, OpenAI, and Google Gemini APIs, implementing RAG (Retrieval-Augmented Generation) with vector similarity search for personalized course recommendations  
-* Built comprehensive backend infrastructure with Snowflake including PostgreSQL database with Row Level Security policies, serverless Edge Functions for API proxying, and user authentication.  
-* Implemented BYOK (Bring Your Own Key) architecture allowing users to use personal LLM API keys with encrypted storage, Zod schema validation, and secure server-side proxy to prevent key exposure  
-* Implemented critical security vulnerabilities including XSS prevention, input validation, secure API key management, and production build hardening with Terser  
-* Architected using React 18, TypeScript, Tailwind CSS, shadcn/ui components, TanStack Query for state management, and Vite for optimized builds
+* Built a secure web application for AI-assisted course generation and delivery.
+* Implemented retrieval-backed generation with vector search and guarded API access.
+* Added BYOK support and server-side proxying to keep user keys out of the client.
+* Used the product as a hands-on path into AI inference concerns such as latency, cost, and model-provider tradeoffs.
 
-**PDF Miner - PDF Data Extraction Platform** | Python, Streamlit, OCR/AI Integration, GPU, CI/CD  
-Streamlit Web Application
+**Zippy Bee - Proprietary CRM** | React, TypeScript, Supabase, PostgreSQL
 
-* Architected and developed a production-ready PDF data extraction platform supporting 7 extraction backends with a unified service layer
-* Delivered a Streamlit web application enabling batch processing, custom field extraction, and multi-format export capabilities
-* Optimized performance through GPU/CPU auto-detection, achieving 10-20x speedup for local OCR models
-* Published as a Python package (v1.1.0) with CI/CD, comprehensive testing, and documentation
+* Built lead, client, project, and agent workflows into a single system.
+* Introduced role-based access and reporting views for better operating discipline.
+* Reduced dependency on manual status tracking and spreadsheet coordination.
 
-**StoryWeaver** | AI-powered interactive storytelling platform (Personal Project)
+**Inventree Sync - Inventory Operating System** | React, TypeScript, Supabase, PostgreSQL
 
-* Built a full-stack React/TypeScript application AI-powered interactive storytelling platform for parents to create personalized children's stories with AI-generated content, illustrations, and narration.  
-* Data governance and security with RLS policies, Zod validation, Redis-based rate limiting (20 req/hour)  
-* Integrated OpenAI GPT-4, DALL-E, and ElevenLabs APIs for story generation, illustrations, and text-to-speech   
-* Architected cost-efficient AI pipeline with request throttling and secure credential management via Supabase Secrets
+* Replaced spreadsheet-driven inventory operations with a purpose-built application.
+* Added stock planning logic tied to sales velocity and supplier lead time.
+* Created a cleaner operational data foundation for reporting and day-to-day execution.
 
-**Infi Estates** | Full-Stack Premium Real Estate Platform (Client Project)
+**PDF Miner - Document Extraction Platform** | Python, Streamlit, OCR, CI/CD
 
-* **Technologies:** Next.js 14, TypeScript, Supabase (PostgreSQL), PostGIS, Tailwind CSS  
-* Delivered a full-stack real estate marketplace for a client, featuring a multi-step property listing wizard with Google Maps API and PostGIS geospatial queries.  
-* Built a secure, role-based authentication system (Owner, Broker, Seeker) using Supabase Auth and Next.js middleware.
-
-**The Urban Pinnal** | Headless E-Commerce Platform (Client Project)
-
-* **Technologies:** React, TypeScript, Shopify Storefront API, Sanity CMS, Vite, Zustand  
-* Architected and built a headless e-commerce platform for a client, integrating Shopify's Storefront API with a custom React frontend.  
-* Implemented programmatic SEO by generating dynamic landing pages from CMS and product data to improve search visibility.
-
-**Ledger Legends (The Ramen Index)** | Full-Stack Expense Tracking PWA (Personal Project)
-
-* **Technologies:** React, TypeScript, Supabase, TanStack Query, PWA, Vercel  
-* A personal project to build a full-featured expense tracker (slated for future app launch) with real-time analytics, gamification, and full PWA/offline capabilities.  
-* Used as a hands-on project to master TanStack Query for server state, real-time subscriptions, and offline transaction queuing.
+* Built a unified service layer for multiple extraction backends.
+* Delivered batch processing, structured field extraction, and export workflows.
+* Improved local OCR performance through CPU/GPU-aware execution paths.
+* Published the project as a reusable Python package with testing and CI.
 
 ### **Education**
 
-University of Maryland, College Park \- MD, USA  
+University of Maryland, College Park - MD, USA  
 Master of Science, Operations Research and Systems Engineering
 
-Vellore Institue of Technology (VIT), Vellore, India  
+Vellore Institute of Technology (VIT), Vellore, India  
 Bachelor of Technology, Civil and Environmental Engineering

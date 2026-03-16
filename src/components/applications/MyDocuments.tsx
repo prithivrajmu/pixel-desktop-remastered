@@ -31,139 +31,129 @@ export const MyDocuments: React.FC = () => {
     {
       name: 'Headwind Labs - Technical Lead Engineer',
       icon: '🚀',
-      description: 'Building AI-powered learning platform (Kattru), proprietary CRM (Zippy Bee), and custom inventory management system (Inventree Sync) to solve real-world business problems.',
-      tech: ['React', 'TypeScript', 'Supabase', 'PostgreSQL', 'OpenAI', 'Gemini', 'LangChain', 'RAG', 'Serverless'],
+      description: 'Leading architecture and delivery across internal products, operational data systems, and AI-assisted applications.',
+      tech: ['React', 'TypeScript', 'Supabase', 'PostgreSQL', 'RAG', 'OpenAI', 'Gemini'],
       status: 'current',
       details: {
         duration: 'March 2023 - Present',
         achievements: [
-          'Built Kattru, AI-powered learning platform with RAG-based course generation, encrypted API key management, and serverless architecture supporting OpenAI/Gemini models',
-          'Engineered and deployed Zippy Bee, a proprietary full-stack CRM (React, TypeScript, Supabase) to manage entire business pipeline from lead to close',
-          'Designed system modules for lead/client management, project tracking, and agent analytics with role-based access and data security (RLS)',
-          'Architected and built Inventree Sync, custom inventory and payroll management system replacing manual Google Sheets, significantly reducing waste and manual errors',
-          'Engineered data-driven inventory control system, optimizing stock levels based on sales velocity and supplier lead times'
+          'Architected and built Kattru, a learning platform with retrieval-backed course generation and secure key handling.',
+          'Delivered Zippy Bee, a proprietary CRM used to manage the full lead-to-close pipeline with role-based access and reporting.',
+          'Built Inventree Sync, an inventory and payroll system that replaced spreadsheet-based operations.',
+          'Designed data flows that connected operations with reporting, forecasting, and day-to-day decision support.'
         ],
         responsibilities: [
-          'Full-stack software architecture and development',
-          'AI/ML integration and RAG implementation',
-          'Database design with Row-Level Security policies',
-          'Serverless Edge Functions development',
-          'Business problem-solving through custom software solutions'
+          'Application and data architecture',
+          'Full-stack delivery',
+          'Access control and workflow design',
+          'Business systems modernization'
         ]
       }
     },
     {
       name: 'Volansi - Lead Data Analytics and Engineering',
       icon: '🚁',
-      description: 'Hired and managed data team, implementing data-driven solutions for drone engineering, manufacturing, sales, and delivery operations.',
-      tech: ['Python', 'SciPy', 'SimPy', 'SQL', 'ML', 'Survival Analysis', 'Team Leadership', 'Agile'],
+      description: 'Built and led a data function supporting drone engineering, manufacturing, network planning, and commercial analysis.',
+      tech: ['Python', 'SQL', 'SciPy', 'SimPy', 'Machine Learning', 'Team Leadership'],
       status: 'completed',
       details: {
         duration: 'Sept 2021 - Jan 2023',
         achievements: [
-          'Hired and managed the data team, implementing data-driven solutions for drone engineering, manufacturing, sales, and delivery operations',
-          'Led and executed high-stakes program to develop hub-and-spoke drone delivery network, survival analysis using ML, securing buy-in from multiple cross-functional leaders',
-          'Managed project roadmaps and agile ceremonies (Kanban/Scrum) for data engineering and analytics teams',
-          'Conducted ad-hoc operations analysis using SciPy, SimPy, and SQL, including GHG emissions modeling for drone networks',
-          'Developed simulation and optimization tools for fleet allocation and healthcare supply chains to support Sales team in evaluating new markets'
+          'Hired and managed the data team and set delivery direction across analytics and data engineering work.',
+          'Led modeling programs for hub-and-spoke delivery design, survival analysis, and network feasibility.',
+          'Built simulation and optimization tools used by engineering, operations, and sales teams.',
+          'Ran agile planning and roadmaps across data engineering and analytics initiatives.'
         ],
         responsibilities: [
-          'Data team leadership and management',
-          'Cross-functional collaboration and stakeholder management',
-          'Operations research and network optimization',
-          'Agile project management and roadmapping',
-          'Ad-hoc analysis and modeling for business decisions'
+          'Team leadership and stakeholder management',
+          'Operations research and simulation',
+          'Decision support for network planning',
+          'Roadmap ownership'
         ]
       }
     },
     {
       name: 'Mashey - Sr Analytics Consultant/Engineer',
       icon: '💻',
-      description: 'Led development and migration of data stack (ETL to ELT) for e-commerce brand, moving from BigQuery to Snowflake and implementing dbt.',
-      tech: ['dbt', 'Snowflake', 'BigQuery', 'ETL/ELT', 'SQL', 'GDPR', 'CCPA', 'Data Warehousing'],
+      description: 'Led a warehouse modernization program for an e-commerce client, moving the stack from ETL to ELT and tightening governance.',
+      tech: ['dbt', 'Snowflake', 'BigQuery', 'SQL', 'ELT', 'Data Governance'],
       status: 'completed',
       details: {
         duration: 'June 2021 - Sept 2021',
         achievements: [
-          'Led development and migration of data stack (ETL to ELT) for e-commerce brand, moving from BigQuery to Snowflake and implementing dbt',
-          'Ensured data warehouse policies were compliant with GDPR and CCPA',
-          'Analyzed user cohorts and trends to inform Go-To-Market strategies',
-          'Contributed to $345,000 in quarterly savings by optimizing product and shipping costs'
+          'Led the migration from BigQuery to Snowflake and introduced dbt-based transformation workflows.',
+          'Defined warehouse controls aligned to GDPR and CCPA requirements.',
+          'Used cohort and commercial analysis to support go-to-market and margin decisions.',
+          'Contributed to quarterly savings by identifying product and shipping cost opportunities.'
         ],
         responsibilities: [
-          'Data warehouse architecture and migration planning',
-          'ETL to ELT pipeline transformation',
-          'Compliance and data governance',
-          'User analytics and cohort analysis',
-          'Cost optimization through data insights'
+          'Warehouse architecture and migration planning',
+          'Transformation design with dbt',
+          'Governance and compliance',
+          'Commercial analytics'
         ]
       }
     },
     {
       name: 'Zipline International - Senior Data Analyst',
       icon: '✈️',
-      description: 'Worked in Data and Operations Engineering teams, managing software and data projects to build internal tools for daily operations in US, Ghana, and Rwanda.',
-      tech: ['Python', 'SQL', 'Sisense', 'Tableau', 'BI Tools', 'Microservices', 'Hypothesis Testing'],
+      description: 'Built internal tools and analysis workflows for operations teams running high-volume logistics across multiple countries.',
+      tech: ['Python', 'SQL', 'Sisense', 'Tableau', 'Microservices', 'Experimentation'],
       status: 'completed',
       details: {
         duration: 'June 2019 - May 2021',
         achievements: [
-          'Worked in Data and Operations Engineering teams, managing software and data projects to build internal tools for daily operations in US, Ghana, and Rwanda',
-          'Increased operational efficiency by 25% and site throughput by 33%',
-          'Supported cross-functional teams with ad-hoc hypothesis testing, serving results via BI tools (Sisense, Tableau) and microservice apps',
-          'Contributed to anomaly detection analysis that achieved a 15% reduction in per-unit aircraft manufacturing cost'
+          'Delivered software and data projects used by operations teams in the US, Ghana, and Rwanda.',
+          'Helped drive measurable gains in operating efficiency and site throughput.',
+          'Supported teams with ad hoc analysis, dashboards, and lightweight internal applications.',
+          'Contributed to anomaly detection work that reduced aircraft manufacturing cost per unit.'
         ],
         responsibilities: [
-          'Software and data project management',
-          'Internal tool development for operations',
-          'Cross-functional team support',
-          'BI dashboard creation and maintenance',
-          'Statistical analysis and hypothesis testing'
+          'Operational analytics and tooling',
+          'Cross-functional project delivery',
+          'Dashboarding and reporting',
+          'Statistical analysis for operations'
         ]
       }
     },
     {
       name: 'NEXTOR II (FAA Consortium) - Data Scientist',
       icon: '🛰️',
-      description: 'Developed simulation model of US airspace to provide post-operations evaluation for airlines, the FAA, and airports.',
+      description: 'Built simulation models for aviation operations research with applications for the FAA, airports, and airlines.',
       tech: ['Python', 'Simulation', 'Queuing Theory', 'Operations Research', 'Aviation Analytics'],
       status: 'completed',
       details: {
         duration: 'Aug 2016 - Jan 2019',
         achievements: [
-          'Developed simulation model of US airspace to provide post-operations evaluation for airlines, the FAA, and airports',
-          'Implemented queuing theory simulation model to analyze and quantify operational capabilities for the Detroit Metro Airport expansion plan'
+          'Developed simulation models of US airspace for post-operations evaluation.',
+          'Built queuing models to quantify operational capacity for the Detroit Metro Airport expansion plan.'
         ],
         responsibilities: [
-          'Complex systems modeling and simulation development',
-          'Queuing theory implementation',
-          'Post-operations evaluation and analysis',
-          'Collaboration with FAA, airlines, and airports',
-          'Research and development in aviation operations'
+          'Simulation model development',
+          'Operations research and queuing analysis',
+          'Decision support for aviation stakeholders'
         ]
       }
     },
     {
       name: 'PDF Miner - PDF Data Extraction Platform',
       icon: '📄',
-      description: 'Production-ready PDF data extraction platform supporting 7 extraction backends with a unified service layer, featuring batch processing and multi-format export.',
-      tech: ['Python', 'Streamlit', 'OCR', 'AI Integration', 'GPU', 'CI/CD', 'Python Package'],
+      description: 'A document extraction tool with multiple backends, batch workflows, and packaging for reuse.',
+      tech: ['Python', 'Streamlit', 'OCR', 'CI/CD'],
       status: 'completed',
       url: 'https://github.com/prithivrajmu/extract-data-from-pdf/',
       details: {
         duration: '2024',
         achievements: [
-          'Architected and developed a production-ready PDF data extraction platform supporting 7 extraction backends with a unified service layer',
-          'Delivered a Streamlit web application enabling batch processing, custom field extraction, and multi-format export capabilities',
-          'Optimized performance through GPU/CPU auto-detection, achieving 10-20x speedup for local OCR models',
-          'Published as a Python package (v1.1.0) with CI/CD, comprehensive testing, and documentation'
+          'Built a unified service layer for multiple extraction backends.',
+          'Delivered batch processing, structured field extraction, and export workflows.',
+          'Improved local OCR performance through CPU/GPU-aware execution paths.',
+          'Published the project as a reusable Python package with testing and CI.'
         ],
         responsibilities: [
-          'PDF data extraction platform architecture',
-          'Multi-backend service layer design',
-          'Performance optimization with GPU/CPU detection',
-          'Python package development and publishing',
-          'CI/CD pipeline implementation'
+          'Python application architecture',
+          'Document-processing workflow design',
+          'Packaging, testing, and release setup'
         ]
       }
     }

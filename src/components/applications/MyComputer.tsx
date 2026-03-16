@@ -317,13 +317,13 @@ export const MyComputer: React.FC = () => {
             />
           </div>
           <div className="flex-1">
-            <h2 className="text-lg font-bold mb-2">My Defragged Identity</h2>
+            <h2 className="text-lg font-bold mb-2">System Profile</h2>
             <div className="space-y-1 text-xs">
               <p><strong>Name:</strong> Prithiv Raj M U</p>
-              <p><strong>Profession:</strong> Engineer & Entrepreneur (E²) | Learning LLMs, Vibe Coding</p>
+              <p><strong>Profession:</strong> Senior Data Engineer turned Data Architect</p>
               <p><strong>Experience:</strong> 9+ Years</p>
               <p><strong>Location:</strong> Chennai, India | San Francisco, USA</p>
-              <p><strong>Pronouns:</strong> He/Him</p>
+              <p><strong>Current Direction:</strong> Full-stack systems with practical AI features</p>
             </div>
             
             {/* Download Resume Button */}
@@ -352,33 +352,31 @@ export const MyComputer: React.FC = () => {
 
         
         <div className="border-2 border-gray-400 p-3 mb-4" style={{ borderStyle: 'inset' }}>
-          <h3 className="font-bold mb-2">Skills & Technologies</h3>
+          <h3 className="font-bold mb-2">Core Capabilities</h3>
           <div className="grid grid-cols-2 gap-2 text-xs ">
             <div>
-              <p><strong>Languages:</strong></p>
-              <p>• Python (NumPy, Pandas, SciPy, PyTorch)</p>
-              <p>• SQL, lookml</p>
+              <p><strong>Data:</strong></p>
+              <p>• Python, SQL, dbt</p>
+              <p>• Snowflake, BigQuery, PostgreSQL</p>
+              <p>• Warehousing, ELT, data modeling</p>
+            </div>
+            <div>
+              <p><strong>Applications:</strong></p>
               <p>• JavaScript/TypeScript</p>
-              <p>• C++/C, Java</p>
+              <p>• React, Next.js, Supabase</p>
+              <p>• Product-minded internal tools</p>
             </div>
             <div>
-              <p><strong>Databases:</strong></p>
-              <p>• Snowflake, BigQuery, Postgres, MySQL, MongoDB</p>
-              <p>• Data Warehousing, ETL/ELT Architecture</p>  
+              <p><strong>Architecture:</strong></p>
+              <p>• Analytics systems to operational software</p>
+              <p>• Access control, reporting, workflow design</p>
+              <p>• Cross-functional delivery</p>
             </div>
             <div>
-              <p><strong>Frameworks & Tools:</strong></p>
-              <p>• React, Flask, Next.js, Tailwind CSS, Bootstrap</p>
-              <p>• Looker, Tableau, Power BI, dbt, Databricks</p>
-              <p>• Docker, Kubernetes, AWS, GCP, Git</p>
-              <p>• Shopify API, Sanity CMS, GraphQL</p>
-            </div>
-            <div>
-              <p><strong>Expertise:</strong></p>
-              <p>• Team Building, Leadership, Product Management</p>           
-              <p>• Data Science, Machine Learning, LLMs, Operations Research</p>
-              <p>• Simulation Systems - Agentic, Monte Carlo, Event Based</p>
-              <p>• Full-Stack Web Development, SEO, E-commerce</p>
+              <p><strong>Current Learning:</strong></p>
+              <p>• RAG and LLM-backed application patterns</p>
+              <p>• AI inference tradeoffs in production</p>
+              <p>• Runtime cost and latency constraints</p>
             </div>
           </div>
         </div>
@@ -386,16 +384,13 @@ export const MyComputer: React.FC = () => {
         <div className="border-2 border-gray-400 p-3" style={{ borderStyle: 'inset' }}>
           <h3 className="font-bold mb-2">About</h3>
           <p className="text-xs leading-relaxed">
-            A output-driven person with over 9 years of experience spanning high-growth startups and successful entrepreneurial ventures.
-            Proven ability to build and lead high-performing teams, architect complex data solutions from the ground up, and drive business
-            modernization. Combines deep expertise in data science, analytics, and agent-based simulation with a founder's mindset for product
-            development, operational efficiency, and P&L responsibility.
+            I started in analytics, simulation, and operations research, then moved into data engineering and warehouse design, and now spend most of my time at the architecture layer where data systems and software products have to work together.
             <br />
             <br />
-            TLDR:
+            I have led data teams, built internal tools for operating businesses, and shipped full-stack products when the right answer was not another dashboard but a better system.
             <br />
-            I am a data scientist, engineer, and entrepreneur. Passion for building products and services that
-            help people live better lives. I am a quick learner and a problem solver.
+            <br />
+            Right now I am applying that background to practical AI products and learning inference patterns the same way I learned data architecture: by building.
           </p>
         </div>
       </div>

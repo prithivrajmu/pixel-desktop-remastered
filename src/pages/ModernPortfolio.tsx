@@ -1,692 +1,201 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React from 'react';
+import { Download, Github, Linkedin, Mail, ArrowRight } from 'lucide-react';
 import { downloadResume } from '@/utils/downloadUtils';
-import { portfolioProjects, portfolioProjectsList, getAllSkills, contactInfo } from '@/data/portfolioData';
-import { loadBlogPosts, type BlogPost } from '@/data/blogPosts';
-import { Menu, X, Download, Mail, Github, Linkedin, ExternalLink, ChevronDown, BookOpen } from 'lucide-react';
-// import { SEOStructuredData } from '@/components/SEOStructuredData';
+import {
+  contactInfo,
+  education,
+  getAllSkills,
+  portfolioProjects,
+  portfolioProjectsList,
+  summary,
+} from '@/data/portfolioData';
 
 const ModernPortfolio: React.FC = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [expandedProject, setExpandedProject] = useState<number | null>(null);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
-  const aboutRef = useRef<HTMLDivElement>(null);
-  const skillsRef = useRef<HTMLDivElement>(null);
-  const experienceRef = useRef<HTMLDivElement>(null);
-  const projectsRef = useRef<HTMLDivElement>(null);
-  const blogRef = useRef<HTMLDivElement>(null);
-  const contactRef = useRef<HTMLDivElement>(null);
-
-  const skills = getAllSkills();
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
-  const [blogLoading, setBlogLoading] = useState(true);
-
-  // Refs for sections
-  const heroRef = useRef<HTMLDivElement>(null);
-  const aboutSectionRef = useRef<HTMLDivElement>(null);
-  const skillsSectionRef = useRef<HTMLDivElement>(null);
-  const experienceSectionRef = useRef<HTMLDivElement>(null);
-  const projectsSectionRef = useRef<HTMLDivElement>(null);
-  const blogSectionRef = useRef<HTMLDivElement>(null);
-  const contactSectionRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const loadPosts = async () => {
-      try {
-        const posts = await loadBlogPosts();
-        setBlogPosts(posts);
-      } catch (error) {
-        console.error('Failed to load blog posts:', error);
-      } finally {
-        setBlogLoading(false);
-      }
-    };
-    loadPosts();
-  }, []);
-
-
-
-  const scrollToSection = (ref: React.RefObject<HTMLDivElement>) => {
-    if (ref.current) {
-      const headerHeight = 64; // Height of sticky header (h-16 = 64px)
-      const elementPosition = ref.current.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-    }
-    setIsMenuOpen(false);
-  };
-
-  // Prevent body scroll when mobile menu is open (only in modern mode)
-  useEffect(() => {
-    const isModernMode = document.body.getAttribute('data-mode') === 'modern';
-    if (isMenuOpen && isModernMode) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isMenuOpen]);
-
-  const toggleProject = (index: number) => {
-    setExpandedProject(expandedProject === index ? null : index);
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleFormSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setSubmitStatus('idle');
-
-    try {
-      const response = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          access_key: 'fc00abdc-4ee6-4cab-8061-a3f17c14e6e7',
-          ...formData,
-          subject: `Contact from ${formData.name}: ${formData.subject}`,
-        }),
-      });
-
-      if (response.ok) {
-        setSubmitStatus('success');
-        setFormData({ name: '', email: '', subject: '', message: '' });
-      } else {
-        setSubmitStatus('error');
-      }
-    } catch (error) {
-      setSubmitStatus('error');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  const coreSkills = getAllSkills();
+  const selectedProjects = portfolioProjectsList.slice(0, 5);
 
   return (
-    <div className="content min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 relative">
-      {/* Backdrop overlay when mobile menu is open */}
-      {isMenuOpen && (
-        <div 
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 md:hidden transition-opacity duration-300"
-          onClick={() => setIsMenuOpen(false)}
-          aria-hidden="true"
-        />
-      )}
-      
-      {/* Navigation Header */}
-    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm">
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center">
-            <a href="/" className="text-xl font-bold text-gray-900 hover:text-gray-700 transition-colors" aria-label="Prithiv Raj - Home">
-              Prithiv Raj
-            </a>
+    <main className="min-h-screen bg-stone-100 text-stone-900">
+      <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 lg:px-10">
+        <header className="mb-8 border-4 border-stone-900 bg-[#c0c0c0] p-1 shadow-[8px_8px_0_0_rgba(0,0,0,0.18)]">
+          <div className="flex items-center justify-between bg-[#000080] px-3 py-2 text-sm font-bold text-white">
+            <span>Prithiv Raj.exe</span>
+            <span>Resume Mode</span>
           </div>
-          
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8" aria-label="Main navigation">
-            <button onClick={() => scrollToSection(aboutRef)} className="text-gray-700 hover:text-gray-900 transition-colors" aria-label="Navigate to About section">
-              About
-            </button>
-            <button onClick={() => scrollToSection(skillsRef)} className="text-gray-700 hover:text-gray-900 transition-colors" aria-label="Navigate to Skills section">
-              Skills
-            </button>
-            <button onClick={() => scrollToSection(experienceRef)} className="text-gray-700 hover:text-gray-900 transition-colors" aria-label="Navigate to Experience section">
-              Experience
-            </button>
-            <button onClick={() => scrollToSection(projectsRef)} className="text-gray-700 hover:text-gray-900 transition-colors" aria-label="Navigate to Projects section">
-              Projects
-            </button>
-            <button onClick={() => scrollToSection(blogRef)} className="text-gray-700 hover:text-gray-900 transition-colors" aria-label="Navigate to Blog section">
-              Blog
-            </button>
-            <button onClick={() => scrollToSection(contactRef)} className="text-gray-700 hover:text-gray-900 transition-colors" aria-label="Navigate to Contact section">
-              Contact
-            </button>
-            <button
-              onClick={downloadResume}
-              className="flip-button group relative overflow-hidden flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors hover-lift text-xs sm:text-sm md:text-base"
-              aria-label="Download resume PDF"
-            >
-              <span
-                aria-hidden="true"
-                className="absolute inset-0 translate-y-full bg-white/25 transition-transform duration-300 ease-out group-hover:translate-y-0"
-              />
-              <Download
-                className="relative z-10 w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 flex-shrink-0 transition-transform duration-500 ease-linear group-hover:rotate-[360deg] group-hover:scale-110"
-                aria-hidden="true"
-              />
-              <span className="relative z-10">Resume</span>
-            </button>
-            <button
-              onClick={() => window.location.href = '/?mode=win95'}
-              className="flip-button group relative overflow-hidden flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 bg-[#008080] text-white rounded-lg hover:bg-[#006666] transition-colors hover-lift text-xs sm:text-sm md:text-base"
-              title="Experience Windows 95 Style Portfolio"
-              aria-label="Switch to Windows 95 style portfolio"
-            >
-              <span
-                aria-hidden="true"
-                className="absolute inset-0 translate-y-full bg-white/25 transition-transform duration-300 ease-out group-hover:translate-y-0"
-              />
-              <img 
-                src="/favicon.ico" 
-                alt="Windows 95" 
-                className="relative z-10 w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 flex-shrink-0 transition-transform duration-500 ease-linear group-hover:rotate-[360deg] group-hover:scale-110" 
-                aria-hidden="true"
-              />
-              <span className="relative z-10">Win95</span>
-            </button>
-          </nav>
+          <div className="grid gap-8 bg-stone-50 p-5 lg:grid-cols-[1.4fr_0.8fr]">
+            <section>
+              <p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-stone-500">
+                Senior Data Engineer to Data Architect
+              </p>
+              <h1 className="max-w-3xl text-4xl font-black uppercase leading-none sm:text-5xl">
+                Building operational systems where data models, business workflows, and software delivery meet.
+              </h1>
+              <p className="mt-5 max-w-3xl text-base leading-7 text-stone-700">
+                {summary}
+              </p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <button
+                  onClick={downloadResume}
+                  className="inline-flex items-center gap-2 border-2 border-stone-900 bg-[#c0c0c0] px-4 py-2 text-sm font-bold shadow-[2px_2px_0_0_rgba(0,0,0,0.8)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
+                >
+                  <Download className="h-4 w-4" />
+                  Download Resume
+                </button>
+                <a
+                  href="/?mode=win95"
+                  className="inline-flex items-center gap-2 border-2 border-stone-900 bg-white px-4 py-2 text-sm font-bold shadow-[2px_2px_0_0_rgba(0,0,0,0.8)]"
+                >
+                  Open Win95 Site
+                  <ArrowRight className="h-4 w-4" />
+                </a>
+              </div>
+            </section>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 text-gray-700 hover:text-gray-900"
-            aria-label="Toggle menu"
-          >
-            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
-        </div>
+            <aside className="border-2 border-stone-900 bg-white p-4">
+              <h2 className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-stone-500">
+                Contact
+              </h2>
+              <div className="space-y-3 text-sm">
+                <a className="flex items-center gap-3 underline" href={`mailto:${contactInfo.email}`}>
+                  <Mail className="h-4 w-4" />
+                  {contactInfo.email}
+                </a>
+                <a className="flex items-center gap-3 underline" href={contactInfo.linkedin} target="_blank" rel="noreferrer">
+                  <Linkedin className="h-4 w-4" />
+                  LinkedIn
+                </a>
+                <a className="flex items-center gap-3 underline" href={contactInfo.github} target="_blank" rel="noreferrer">
+                  <Github className="h-4 w-4" />
+                  GitHub
+                </a>
+                <a className="block underline" href={contactInfo.website} target="_blank" rel="noreferrer">
+                  {contactInfo.website.replace('https://', '')}
+                </a>
+                <p>{contactInfo.phone}</p>
+                <p>Based in Chennai, with experience working across India and the US.</p>
+              </div>
+            </aside>
+          </div>
+        </header>
 
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="md:hidden py-4 space-y-3 border-t border-gray-200 bg-white relative z-50">
-            <button onClick={() => scrollToSection(aboutRef)} className="block w-full text-left px-4 py-2.5 text-gray-700 hover:bg-gray-100 rounded transition-colors">
-              About
-            </button>
-            <button onClick={() => scrollToSection(skillsRef)} className="block w-full text-left px-4 py-2.5 text-gray-700 hover:bg-gray-100 rounded transition-colors">
-              Skills
-            </button>
-            <button onClick={() => scrollToSection(experienceRef)} className="block w-full text-left px-4 py-2.5 text-gray-700 hover:bg-gray-100 rounded transition-colors">
-              Experience
-            </button>
-            <button onClick={() => scrollToSection(projectsRef)} className="block w-full text-left px-4 py-2.5 text-gray-700 hover:bg-gray-100 rounded transition-colors">
-              Projects
-            </button>
-            <button onClick={() => scrollToSection(blogRef)} className="block w-full text-left px-4 py-2.5 text-gray-700 hover:bg-gray-100 rounded transition-colors">
-              Blog
-            </button>
-            <button onClick={() => scrollToSection(contactRef)} className="block w-full text-left px-4 py-2.5 text-gray-700 hover:bg-gray-100 rounded transition-colors">
-              Contact
-            </button>
-            <div className="px-4 pt-2 space-y-3">
-              <button
-                onClick={downloadResume}
-                className="flip-button group relative overflow-hidden flex items-center justify-center gap-2.5 w-full px-4 py-3.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 active:bg-blue-800 transition-colors text-base font-semibold min-h-[48px] shadow-sm"
-              >
-                <span
-                  aria-hidden="true"
-                  className="absolute inset-0 translate-y-full bg-white/25 transition-transform duration-300 ease-out group-hover:translate-y-0"
-                />
-                <Download className="relative z-10 w-5 h-5 flex-shrink-0 transition-transform duration-500 ease-linear group-hover:rotate-[360deg] group-hover:scale-110" />
-                <span className="relative z-10">Resume</span>
-              </button>
-              <button
-                onClick={() => window.location.href = '/?mode=win95'}
-                className="flip-button group relative overflow-hidden flex items-center justify-center gap-2.5 w-full px-4 py-3.5 bg-[#008080] text-white rounded-lg hover:bg-[#006666] active:bg-[#005555] transition-colors text-base font-semibold min-h-[48px] shadow-sm"
-                title="Experience Windows 95 Style Portfolio"
-              >
-                <span
-                  aria-hidden="true"
-                  className="absolute inset-0 translate-y-full bg-white/25 transition-transform duration-300 ease-out group-hover:translate-y-0"
-                />
-                <img 
-                  src="/favicon.ico" 
-                  alt="Windows 95" 
-                  className="relative z-10 w-5 h-5 flex-shrink-0 transition-transform duration-500 ease-linear group-hover:rotate-[360deg] group-hover:scale-110" 
-                  aria-hidden="true"
-                />
-                <span className="relative z-10">Win95</span>
-              </button>
+        <section className="mb-8 grid gap-4 md:grid-cols-3">
+          <div className="border-2 border-stone-900 bg-white p-4">
+            <h2 className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-stone-500">Current Focus</h2>
+            <p className="text-sm leading-6 text-stone-700">
+              Designing data models and internal products together, rather than treating analytics and software as separate tracks.
+            </p>
+          </div>
+          <div className="border-2 border-stone-900 bg-white p-4">
+            <h2 className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-stone-500">Working Style</h2>
+            <p className="text-sm leading-6 text-stone-700">
+              Hands-on with architecture and implementation, especially when a team needs someone who can move from warehouse design to product delivery.
+            </p>
+          </div>
+          <div className="border-2 border-stone-900 bg-white p-4">
+            <h2 className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-stone-500">Learning Now</h2>
+            <p className="text-sm leading-6 text-stone-700">
+              AI inference patterns, runtime tradeoffs, and how to keep LLM-backed features practical under real latency and cost constraints.
+            </p>
+          </div>
+        </section>
+
+        <section className="mb-8 grid gap-8 lg:grid-cols-[1.3fr_0.7fr]">
+          <div className="border-2 border-stone-900 bg-white p-5">
+            <div className="mb-5 flex items-center justify-between border-b border-stone-300 pb-3">
+              <h2 className="text-xl font-black uppercase">Experience</h2>
+              <span className="text-xs font-bold uppercase tracking-[0.2em] text-stone-500">9+ Years</span>
+            </div>
+            <div className="space-y-6">
+              {portfolioProjects.map((role) => (
+                <article key={role.name} className="border-l-4 border-[#000080] pl-4">
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                    <div>
+                      <h3 className="text-lg font-bold">{role.name}</h3>
+                      <p className="mt-1 text-sm leading-6 text-stone-700">{role.description}</p>
+                    </div>
+                    <span className="text-xs font-bold uppercase tracking-[0.18em] text-stone-500">
+                      {role.details?.duration}
+                    </span>
+                  </div>
+                  <ul className="mt-3 space-y-2 text-sm leading-6 text-stone-800">
+                    {role.details?.achievements.slice(0, 3).map((achievement) => (
+                      <li key={achievement}>- {achievement}</li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
             </div>
           </div>
-        )}
-      </nav>
-    </header>
 
-    {/* Hero Section */}
-    <section className="section relative z-40 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32" itemScope itemType="https://schema.org/Person">
-      <div ref={heroRef} className="text-center">
-        <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4" itemProp="name">
-          Prithiv Raj
-        </h1>
-        <h3 className="text-xl md:text-2xl text-gray-600 mb-8">
-          Technical Lead Engineer
-        </h3>
-        <p className="text-lg text-gray-500 max-w-2xl mx-auto mb-8">
-          Lead Engineer with 9+ years of experience in data, software, operations research, and managing technical teams. 
-          Applying my data-driven background to solve real-world business problems by personally architecting and building 
-          full-stack software solutions using modern web technologies.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <button
-            onClick={() => scrollToSection(contactRef)}
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium hover-lift"
-          >
-            Get In Touch
-          </button>
-          <button
-            onClick={downloadResume}
-            className="px-6 py-3 bg-white text-gray-900 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium flex items-center justify-center gap-2 hover-lift"
-          >
-            <Download className="w-5 h-5" />
-            Resume
-          </button>
-        </div>
-      </div>
-    </section>
-
-    {/* About Section */}
-    <section ref={aboutRef} className="section relative z-40 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white" itemScope itemType="https://schema.org/AboutPage">
-      <div ref={aboutSectionRef}>
-        <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">About Me</h2>
-        <div className="max-w-4xl mx-auto">
-        <p className="text-gray-700 leading-relaxed mb-4">
-          I'm a Technical Lead Engineer with 9+ years of experience in data, software, operations research, and managing technical teams. 
-          Currently at Headwind Labs, I bridge the gap between executive strategy and hands-on engineering, using modern web technologies 
-          (React, TypeScript, Supabase) to build custom tools that solve real-world business problems.
-        </p>
-        <p className="text-gray-700 leading-relaxed mb-4">
-          My experience spans from data science research at NEXTOR II (FAA Consortium) developing simulation models of US airspace, 
-          to leading data teams at companies like Volansi and Zipline, where I built operational tools that increased efficiency by 25-33% 
-          and reduced manufacturing costs by 15%.
-        </p>
-        <p className="text-gray-700 leading-relaxed">
-          Currently, I'm building Kattru (AI-powered learning platform), Zippy Bee (proprietary CRM), and Inventree Sync (inventory management system). 
-          My approach combines deep technical knowledge with strategic thinking, enabling me to deliver solutions that not only solve 
-          technical challenges but also drive measurable business impact.
-        </p>
-      </div>
-      </div>
-    </section>
-
-    {/* Skills Section */}
-    <section ref={skillsRef} className="section relative z-40 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <div ref={skillsSectionRef}>
-        <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Skills</h2>
-        <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
-          {skills.map((skill, index) => (
-            <span
-              key={index}
-              className="px-4 py-2 bg-blue-50 text-blue-700 rounded-full text-sm font-medium border border-blue-200"
-            >
-              {skill}
-            </span>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    {/* Experience Section */}
-    <section ref={experienceRef} className="section relative z-40 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <div ref={experienceSectionRef}>
-        <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Work Experience</h2>
-        <div className="space-y-8" itemScope itemType="https://schema.org/ItemList">
-          {portfolioProjects.map((project, index) => {
-            return (
-            <article
-              key={index}
-              className="experience-card bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow hover-lift"
-              itemScope
-              itemType="https://schema.org/Occupation"
-            >
-            <div className="p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-start gap-4">
-                  <span className="text-4xl" aria-label={`${project.name} icon`}>{project.icon}</span>
-                  <div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-1" itemProp="name">{project.name}</h3>
-                    {project.details && (
-                      <p className="text-sm text-gray-500">{project.details.duration}</p>
-                    )}
-                  </div>
-                </div>
-                <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                  project.status === 'current' 
-                    ? 'bg-green-100 text-green-700' 
-                    : 'bg-blue-100 text-blue-700'
-                }`}>
-                  {project.status === 'current' ? 'Current' : 'Completed'}
-                </span>
-              </div>
-              <p className="text-gray-700 mb-4" itemProp="description">{project.description}</p>
-              <div className="flex flex-wrap gap-2 mb-4">
-                {project.tech.map((tech, techIndex) => (
+          <div className="space-y-8">
+            <section className="border-2 border-stone-900 bg-white p-5">
+              <h2 className="mb-4 text-xl font-black uppercase">Core Stack</h2>
+              <div className="flex flex-wrap gap-2">
+                {coreSkills.map((skill) => (
                   <span
-                    key={techIndex}
-                    className="px-3 py-1 bg-gray-100 text-gray-700 rounded-md text-xs font-medium"
+                    key={skill}
+                    className="border border-stone-900 bg-[#c0c0c0] px-2 py-1 text-xs font-bold uppercase tracking-[0.08em]"
                   >
-                    {tech}
+                    {skill}
                   </span>
                 ))}
               </div>
-              {project.details && (
-                <button
-                  onClick={() => toggleProject(index)}
-                  className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium text-sm"
-                >
-                  {expandedProject === index ? 'Hide' : 'Show'} Details
-                  <ChevronDown className={`w-4 h-4 transition-transform ${expandedProject === index ? 'rotate-180' : ''}`} />
-                </button>
-              )}
-              {expandedProject === index && project.details && (
-                <div className="mt-4 pt-4 border-t border-gray-200 space-y-4">
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">Key Achievements:</h4>
-                    <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
-                      {project.details.achievements.map((achievement, achIndex) => (
-                        <li key={achIndex}>{achievement}</li>
-                      ))}
-                    </ul>
+            </section>
+
+            <section className="border-2 border-stone-900 bg-white p-5">
+              <h2 className="mb-4 text-xl font-black uppercase">Education</h2>
+              <div className="space-y-4 text-sm leading-6">
+                {education.map((item) => (
+                  <div key={item.institution}>
+                    <p className="font-bold">{item.institution}</p>
+                    <p>{item.degree}, {item.field}</p>
+                    <p className="text-stone-600">{item.location}</p>
                   </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">Responsibilities:</h4>
-                    <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
-                      {project.details.responsibilities.map((responsibility, respIndex) => (
-                        <li key={respIndex}>{responsibility}</li>
-                      ))}
-                    </ul>
-                  </div>
+                ))}
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section className="border-2 border-stone-900 bg-white p-5">
+          <div className="mb-5 flex items-center justify-between border-b border-stone-300 pb-3">
+            <h2 className="text-xl font-black uppercase">Selected Builds</h2>
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-stone-500">Full Stack + Data</span>
+          </div>
+          <div className="grid gap-4 lg:grid-cols-2">
+            {selectedProjects.map((project) => (
+              <article key={project.name} className="border-2 border-stone-900 bg-stone-50 p-4">
+                <div className="mb-2 flex items-start justify-between gap-3">
+                  <h3 className="text-lg font-bold">{project.name}</h3>
+                  <span className="text-xs font-bold uppercase tracking-[0.18em] text-stone-500">
+                    {project.details?.duration}
+                  </span>
                 </div>
-              )}
-            </div>
-          </article>
-            );
-          })}
-      </div>
-      </div>
-    </section>
-
-    {/* Projects Section */}
-    <section ref={projectsRef} className="section relative z-40 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white">
-      <div ref={projectsSectionRef}>
-        <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Featured Projects</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" itemScope itemType="https://schema.org/ItemList">
-          {portfolioProjectsList.map((project, index) => {
-            return (
-            <article
-              key={index}
-              className="project-card bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-shadow border border-gray-200 flex flex-col h-full hover-lift"
-              itemScope
-              itemType="https://schema.org/SoftwareApplication"
-            >
-            <div className="text-4xl mb-4 flex-shrink-0" aria-label={`${project.name} icon`}>{project.icon}</div>
-            <h3 className="text-lg font-bold text-gray-900 mb-2 flex-shrink-0" itemProp="name">{project.name}</h3>
-            <p className="text-sm text-gray-600 mb-4 flex-grow line-clamp-3 min-h-[3.75rem]" itemProp="description">{project.description}</p>
-            <div className="mt-auto pt-2">
-              {project.url ? (
-                <a
-                  href={project.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium text-sm"
-                  aria-label={`Visit ${project.name} project website`}
-                  itemProp="url"
-                >
-                  Visit Project <ExternalLink className="w-4 h-4" aria-hidden="true" />
-                </a>
-              ) : (
-                <span className="inline-flex items-center gap-2 text-gray-400 font-medium text-sm">
-                  Coming Soon
-                </span>
-              )}
-            </div>
-          </article>
-            );
-          })}
-      </div>
-      </div>
-    </section>
-
-    {/* Blog Section */}
-    <section ref={blogRef} className="section relative z-40 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <div ref={blogSectionRef}>
-        <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Blog</h2>
-        {blogLoading ? (
-          <div className="text-center py-12">
-            <div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-            <p className="mt-4 text-gray-600">Loading blog posts...</p>
-          </div>
-        ) : blogPosts.length === 0 ? (
-          <div className="text-center py-12">
-            <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-600">No blog posts available at the moment.</p>
-          </div>
-        ) : (
-          <div className="space-y-6">
-            {blogPosts.map((post, index) => {
-              const blogUrl = `/blog/${post.slug}`;
-              
-              return (
-                <article
-                  key={post.id}
-                  className="blog-post bg-white rounded-xl p-6 hover:shadow-lg transition-shadow border border-gray-200 hover-lift"
-                  itemScope
-                  itemType="https://schema.org/BlogPosting"
-                >
-                <header>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2" itemProp="headline">
-                  <a
-                    href={blogUrl}
-                    className="hover:text-blue-600 transition-colors"
-                    itemProp="url"
-                    aria-label={`Read blog post: ${post.title}`}
-                  >
-                    {post.title}
+                <p className="mb-3 text-sm leading-6 text-stone-700">{project.description}</p>
+                <ul className="mb-4 space-y-2 text-sm leading-6 text-stone-800">
+                  {project.details?.achievements.slice(0, 2).map((achievement) => (
+                    <li key={achievement}>- {achievement}</li>
+                  ))}
+                </ul>
+                <div className="mb-4 flex flex-wrap gap-2">
+                  {project.tech.map((tech) => (
+                    <span key={tech} className="border border-stone-900 px-2 py-1 text-[11px] font-bold uppercase">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+                {project.url && (
+                  <a href={project.url} target="_blank" rel="noreferrer" className="text-sm font-bold underline">
+                    View Project
                   </a>
-                  </h3>
-                  <time
-                    className="text-sm text-gray-500"
-                    dateTime={post.date}
-                    itemProp="datePublished"
-                  >
-                    {new Date(post.date).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}
-                  </time>
-                </header>
-                <p className="text-gray-700 mt-3 mb-4 line-clamp-2" itemProp="description">
-                  {post.preview}
-                </p>
-                <a
-                  href={blogUrl}
-                  className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium text-sm"
-                  aria-label={`Read more about ${post.title}`}
-                >
-                  Read More <ExternalLink className="w-4 h-4" aria-hidden="true" />
-                </a>
-                <meta itemProp="author" content="Prithiv Raj" />
+                )}
               </article>
-            );
-          })}
-        </div>
-      )}
+            ))}
+          </div>
+        </section>
       </div>
-    </section>
-
-    {/* Contact Section */}
-    <section ref={contactRef} className="section relative z-40 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <div ref={contactSectionRef}>
-        <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Get In Touch</h2>
-        <div className="bg-white rounded-xl shadow-lg p-8 max-w-2xl mx-auto">
-        <p className="text-center text-gray-700 mb-8">
-          I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.
-        </p>
-        
-        {/* Contact Form */}
-        <form onSubmit={handleFormSubmit} className="mb-8 space-y-4">
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-              Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Your name"
-              aria-label="Your name"
-            />
-          </div>
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="your.email@example.com"
-              aria-label="Your email address"
-            />
-          </div>
-          <div>
-            <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
-              Subject
-            </label>
-            <input
-              type="text"
-              id="subject"
-              name="subject"
-              value={formData.subject}
-              onChange={handleInputChange}
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="What's this about?"
-              aria-label="Message subject"
-            />
-          </div>
-          <div>
-            <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-              Message
-            </label>
-            <textarea
-              id="message"
-              name="message"
-              value={formData.message}
-              onChange={handleInputChange}
-              required
-              rows={5}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-              placeholder="Tell me about your project or idea..."
-              aria-label="Your message"
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isSubmitting ? 'Sending...' : 'Send Message'}
-          </button>
-          {submitStatus === 'success' && (
-            <div className="p-4 bg-green-50 border border-green-200 rounded-lg text-green-800 text-sm">
-              Thank you! Your message has been sent successfully. I'll get back to you soon.
-            </div>
-          )}
-          {submitStatus === 'error' && (
-            <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-800 text-sm">
-              Sorry, there was an error sending your message. Please try again or email me directly.
-            </div>
-          )}
-        </form>
-
-        <div className="border-t border-gray-200 pt-8">
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
-            <a
-              href={`mailto:${contactInfo.email}`}
-              className="flip-button flip-button--light group relative overflow-hidden flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium hover-lift"
-            >
-              <span
-                aria-hidden="true"
-                className="absolute inset-0 translate-y-full bg-white/25 transition-transform duration-300 ease-out group-hover:translate-y-0"
-              />
-              <Mail className="relative z-10 w-5 h-5 transition-transform duration-500 ease-linear group-hover:rotate-[360deg] group-hover:scale-110" />
-              <span className="relative z-10">Email Me</span>
-            </a>
-            <a
-              href={contactInfo.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flip-button group relative overflow-hidden flex items-center justify-center gap-2 px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors font-medium hover-lift"
-            >
-              <span
-                aria-hidden="true"
-                className="absolute inset-0 translate-y-full bg-white/25 transition-transform duration-300 ease-out group-hover:translate-y-0"
-              />
-              <Github className="relative z-10 w-5 h-5 transition-transform duration-500 ease-linear group-hover:rotate-[360deg] group-hover:scale-110" />
-              <span className="relative z-10">GitHub</span>
-            </a>
-            <a
-              href={contactInfo.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flip-button group relative overflow-hidden flex items-center justify-center gap-2 px-6 py-3 bg-blue-700 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium hover-lift"
-            >
-              <span
-                aria-hidden="true"
-                className="absolute inset-0 translate-y-full bg-white/25 transition-transform duration-300 ease-out group-hover:translate-y-0"
-              />
-              <Linkedin className="relative z-10 w-5 h-5 transition-transform duration-500 ease-linear group-hover:rotate-[360deg] group-hover:scale-110" />
-              <span className="relative z-10">LinkedIn</span>
-            </a>
-          </div>
-          <div className="text-center">
-            <button
-              onClick={downloadResume}
-              className="flip-button flip-button--light group relative overflow-hidden flex items-center justify-center gap-2 mx-auto px-6 py-3 bg-white text-gray-900 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium hover-lift"
-            >
-              <span
-                aria-hidden="true"
-                className="absolute inset-0 translate-y-full bg-black/10 transition-transform duration-300 ease-out group-hover:translate-y-0"
-              />
-              <Download className="relative z-10 w-5 h-5 transition-transform duration-500 ease-linear group-hover:rotate-[360deg] group-hover:scale-110" />
-              <span className="relative z-10">Resume</span>
-            </button>
-          </div>
-        </div>
-      </div>
-      </div>
-    </section>
-
-    {/* Footer */}
-    <footer className="relative z-40 bg-gray-900 text-white py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <p className="text-gray-400">© {new Date().getFullYear()} Prithiv Raj. All rights reserved.</p>
-      </div>
-    </footer>
-    </div>
+    </main>
   );
 };
 
 export default ModernPortfolio;
-

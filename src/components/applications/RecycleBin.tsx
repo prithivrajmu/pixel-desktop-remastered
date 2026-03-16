@@ -25,22 +25,22 @@ export const RecycleBin: React.FC = () => {
       icon: '💻',
       reason: 'Contract role completed',
       dateArchived: 'June 2021 - Sept 2021',
-      description: 'Developed e-commerce data stack. Migrated data pipelines from ETL to ELT (dbt) and from BigQuery to Snowflake, saving $345k annually.',
+      description: 'Warehouse modernization work for an e-commerce client, moving pipelines from ETL to ELT and the platform from BigQuery to Snowflake.',
       details: {
         duration: 'June 2021 - September 2021',
         achievements: [
-          'Saved $345k annually through strategic migration from BigQuery to Snowflake',
-          'Successfully migrated complex ETL pipelines to modern ELT architecture using dbt',
-          'Improved data processing speed by 40% through optimized data warehouse design',
-          'Delivered comprehensive e-commerce analytics platform within 3 months'
+          'Led the BigQuery to Snowflake migration and introduced dbt-based transformation workflows.',
+          'Defined cleaner warehouse structure and transformation ownership.',
+          'Supported commercial analysis tied to product and shipping economics.',
+          'Delivered the program in a short consulting engagement.'
         ],
         responsibilities: [
-          'Data warehouse architecture and migration planning',
-          'ETL to ELT pipeline transformation and optimization',
-          'Cost analysis and vendor evaluation for cloud data platforms',
-          'Performance tuning and query optimization for e-commerce analytics'
+          'Warehouse architecture and migration planning',
+          'ETL to ELT transition design',
+          'Platform evaluation and cost analysis',
+          'Analytics support for e-commerce decision making'
         ],
-        skills: ['dbt', 'Snowflake', 'BigQuery', 'ETL/ELT', 'Data Warehousing', 'E-commerce Analytics', 'Cost Optimization']
+        skills: ['dbt', 'Snowflake', 'BigQuery', 'ELT', 'Data Warehousing']
       }
     },
     {
@@ -48,30 +48,30 @@ export const RecycleBin: React.FC = () => {
       icon: '🛰️',
       reason: 'Project concluded',
       dateArchived: 'Aug 2016 - Jan 2019',
-      description: 'Developed complex simulation models of US airspace and airport systems for a FAA and NASA consortium.',
+      description: 'Simulation and operations research work focused on US airspace and airport capacity analysis.',
       details: {
         duration: 'August 2016 - January 2019',
         achievements: [
-          'Built comprehensive simulation models of US National Airspace System',
-          'Developed predictive models for airport capacity and delay management',
-          'Contributed to FAA policy recommendations through data-driven analysis',
-          'Published research findings in aviation industry conferences and journals'
+          'Built simulation models of the US National Airspace System.',
+          'Developed queuing and capacity analysis for airport operations.',
+          'Supported FAA and airport stakeholders with post-operations evaluation.',
+          'Turned research methods into practical decision-support tools.'
         ],
         responsibilities: [
-          'Complex systems modeling and simulation development',
-          'Statistical analysis of aviation operations and performance metrics',
-          'Collaboration with FAA and NASA research teams',
-          'Research publication and presentation of findings to stakeholders'
+          'Simulation model development',
+          'Operations research and queuing analysis',
+          'Stakeholder collaboration with aviation research teams',
+          'Technical communication of findings'
         ],
-        skills: ['Systems Simulation', 'Statistical Modeling', 'Aviation Analytics', 'Research & Development', 'Python', 'R', 'Operations Research']
+        skills: ['Simulation', 'Operations Research', 'Python', 'Queuing Theory', 'Aviation Analytics']
       }
     },
   ];
 
   const funFacts = [
-    "Every career is built on the foundation of past experiences.",
-    "Some of the best learning comes from projects with a defined end.",
-    "Legacy roles aren't just history, they are chapters in a career story.",
+    "Finished roles still shape current judgment.",
+    "Archived work is often where architectural instincts were formed.",
+    "Good systems thinking usually comes from solving the same class of problem more than once.",
   ];
 
   const handleProjectClick = (project: RetiredProject) => {
@@ -153,7 +153,7 @@ export const RecycleBin: React.FC = () => {
           </div>
 
           <div className="mt-6 border-2 border-gray-400 p-4" style={{ borderStyle: 'inset' }}>
-            <h3 className="font-bold mb-3 text-lg">Technologies & Skills</h3>
+            <h3 className="font-bold mb-3 text-lg">Core Tools</h3>
             <div className="flex flex-wrap gap-2">
               {selectedProject.details?.skills.map((skill, index) => (
                 <span 
@@ -170,8 +170,7 @@ export const RecycleBin: React.FC = () => {
           <div className="mt-6 border-2 border-red-300 bg-red-50 p-4" style={{ borderStyle: 'inset' }}>
             <h3 className="font-bold mb-2 text-sm text-red-700">📁 Archived Project</h3>
             <p className="text-xs text-red-600">
-              This role has been successfully completed and moved to the Recycle Bin. 
-              The experience and skills gained continue to contribute to current projects and capabilities.
+              This chapter is complete, but the judgment and patterns from it still show up in current architecture and delivery work.
             </p>
           </div>
         </div>

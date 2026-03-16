@@ -16,115 +16,112 @@ export const portfolioProjects: PortfolioProject[] = [
   {
     name: 'Headwind Labs - Technical Lead Engineer',
     icon: '🚀',
-    description: 'Building AI-powered learning platform (Kattru), proprietary CRM (Zippy Bee), and custom inventory management system (Inventree Sync) to solve real-world business problems.',
-    tech: ['React', 'TypeScript', 'Supabase', 'PostgreSQL', 'OpenAI', 'Gemini', 'LangChain', 'RAG', 'Serverless'],
+    description:
+      'Leading architecture and delivery across internal products, data-backed operating systems, and AI-assisted applications.',
+    tech: ['React', 'TypeScript', 'Supabase', 'PostgreSQL', 'RAG', 'OpenAI', 'Gemini'],
     status: 'current',
     details: {
       duration: 'March 2023 - Present',
       achievements: [
-        'Built Kattru, AI-powered learning platform with RAG-based course generation, encrypted API key management, and serverless architecture supporting OpenAI/Gemini models',
-        'Engineered and deployed Zippy Bee, a proprietary full-stack CRM (React, TypeScript, Supabase) to manage entire business pipeline from lead to close',
-        'Designed system modules for lead/client management, project tracking, and agent analytics with role-based access and data security (RLS)',
-        'Architected and built Inventree Sync, custom inventory and payroll management system replacing manual Google Sheets, significantly reducing waste and manual errors',
-        'Engineered data-driven inventory control system, optimizing stock levels based on sales velocity and supplier lead times'
+        'Architected and built Kattru, a learning platform with retrieval-backed course generation, secure key handling, and serverless workflows.',
+        'Delivered Zippy Bee, a proprietary CRM used to manage the full lead-to-close pipeline with role-based access and reporting.',
+        'Built Inventree Sync, an inventory and payroll system that replaced spreadsheet-based operations for food and FMCG workflows.',
+        'Designed operational data flows that connected day-to-day execution with reporting, forecasting, and decision support.'
       ],
       responsibilities: [
-        'Full-stack software architecture and development',
-        'AI/ML integration and RAG implementation',
-        'Database design with Row-Level Security policies',
-        'Serverless Edge Functions development',
-        'Business problem-solving through custom software solutions'
+        'Own application and data architecture',
+        'Translate business problems into internal software',
+        'Lead full-stack delivery from schema to UI',
+        'Improve data quality, access control, and operational visibility'
       ]
     }
   },
   {
     name: 'Volansi - Lead Data Analytics and Engineering',
     icon: '🚁',
-    description: 'Hired and managed data team, implementing data-driven solutions for drone engineering, manufacturing, sales, and delivery operations.',
-    tech: ['Python', 'SciPy', 'SimPy', 'SQL', 'ML', 'Survival Analysis', 'Team Leadership', 'Agile'],
+    description:
+      'Built and led a data function supporting drone engineering, manufacturing, network planning, and commercial analysis.',
+    tech: ['Python', 'SQL', 'SciPy', 'SimPy', 'Machine Learning', 'Team Leadership'],
     status: 'completed',
     details: {
       duration: 'Sept 2021 - Jan 2023',
       achievements: [
-        'Hired and managed the data team, implementing data-driven solutions for drone engineering, manufacturing, sales, and delivery operations',
-        'Led and executed high-stakes program to develop hub-and-spoke drone delivery network, survival analysis using ML, securing buy-in from multiple cross-functional leaders',
-        'Managed project roadmaps and agile ceremonies (Kanban/Scrum) for data engineering and analytics teams',
-        'Conducted ad-hoc operations analysis using SciPy, SimPy, and SQL, including GHG emissions modeling for drone networks',
-        'Developed simulation and optimization tools for fleet allocation and healthcare supply chains to support Sales team in evaluating new markets'
+        'Hired and managed the data team and set delivery direction across analytics and data engineering work.',
+        'Led modeling programs for hub-and-spoke delivery design, survival analysis, and network feasibility.',
+        'Built simulation and optimization tools used by engineering, operations, and sales teams to evaluate new markets.',
+        'Ran agile planning and roadmaps across data engineering and analytics initiatives.'
       ],
       responsibilities: [
-        'Data team leadership and management',
-        'Cross-functional collaboration and stakeholder management',
-        'Operations research and network optimization',
-        'Agile project management and roadmapping',
-        'Ad-hoc analysis and modeling for business decisions'
+        'Team leadership and stakeholder management',
+        'Operations research and simulation',
+        'Decision support for network planning',
+        'Roadmap ownership across analytics and engineering'
       ]
     }
   },
   {
-    name: 'Mashey - Sr Analytics Consultant/Engineer',
+    name: 'Mashey - Senior Analytics Consultant / Engineer',
     icon: '💻',
-    description: 'Led development and migration of data stack (ETL to ELT) for e-commerce brand, moving from BigQuery to Snowflake and implementing dbt.',
-    tech: ['dbt', 'Snowflake', 'BigQuery', 'ETL/ELT', 'SQL', 'GDPR', 'CCPA', 'Data Warehousing'],
+    description:
+      'Led a warehouse modernization program for an e-commerce client, moving the stack from ETL to ELT and strengthening governance.',
+    tech: ['dbt', 'Snowflake', 'BigQuery', 'SQL', 'ELT', 'Data Governance'],
     status: 'completed',
     details: {
       duration: 'June 2021 - Sept 2021',
       achievements: [
-        'Led development and migration of data stack (ETL to ELT) for e-commerce brand, moving from BigQuery to Snowflake and implementing dbt',
-        'Ensured data warehouse policies were compliant with GDPR and CCPA',
-        'Analyzed user cohorts and trends to inform Go-To-Market strategies',
-        'Contributed to $345,000 in quarterly savings by optimizing product and shipping costs'
+        'Led the migration from BigQuery to Snowflake and introduced dbt-based transformation workflows.',
+        'Defined warehouse controls aligned to GDPR and CCPA requirements.',
+        'Used cohort and commercial analysis to support go-to-market and margin decisions.',
+        'Contributed to quarterly savings by identifying product and shipping cost opportunities.'
       ],
       responsibilities: [
-        'Data warehouse architecture and migration planning',
-        'ETL to ELT pipeline transformation',
-        'Compliance and data governance',
-        'User analytics and cohort analysis',
-        'Cost optimization through data insights'
+        'Warehouse architecture and migration planning',
+        'Transformation design with dbt',
+        'Governance and compliance alignment',
+        'Commercial analytics for decision making'
       ]
     }
   },
   {
     name: 'Zipline International - Senior Data Analyst',
     icon: '✈️',
-    description: 'Worked in Data and Operations Engineering teams, managing software and data projects to build internal tools for daily operations in US, Ghana, and Rwanda.',
-    tech: ['Python', 'SQL', 'Sisense', 'Tableau', 'BI Tools', 'Microservices', 'Hypothesis Testing'],
+    description:
+      'Built internal tools and analysis workflows for operations teams running high-volume logistics across multiple countries.',
+    tech: ['Python', 'SQL', 'Sisense', 'Tableau', 'Microservices', 'Experimentation'],
     status: 'completed',
     details: {
       duration: 'June 2019 - May 2021',
       achievements: [
-        'Worked in Data and Operations Engineering teams, managing software and data projects to build internal tools for daily operations in US, Ghana, and Rwanda',
-        'Increased operational efficiency by 25% and site throughput by 33%',
-        'Supported cross-functional teams with ad-hoc hypothesis testing, serving results via BI tools (Sisense, Tableau) and microservice apps',
-        'Contributed to anomaly detection analysis that achieved a 15% reduction in per-unit aircraft manufacturing cost'
+        'Delivered software and data projects used by operations teams in the US, Ghana, and Rwanda.',
+        'Helped drive measurable gains in operating efficiency and site throughput.',
+        'Supported teams with ad hoc analysis, hypothesis testing, dashboards, and lightweight internal applications.',
+        'Contributed to anomaly detection work that reduced aircraft manufacturing cost per unit.'
       ],
       responsibilities: [
-        'Software and data project management',
-        'Internal tool development for operations',
-        'Cross-functional team support',
-        'BI dashboard creation and maintenance',
-        'Statistical analysis and hypothesis testing'
+        'Operational analytics and tooling',
+        'Cross-functional project delivery',
+        'Dashboarding and business reporting',
+        'Statistical analysis for operational decisions'
       ]
     }
   },
   {
     name: 'NEXTOR II (FAA Consortium) - Data Scientist',
     icon: '🛰️',
-    description: 'Developed simulation model of US airspace to provide post-operations evaluation for airlines, the FAA, and airports.',
-    tech: ['Python', 'Simulation', 'Queuing Theory', 'Operations Research', 'Aviation Analytics'],
+    description:
+      'Built simulation models for aviation operations research with applications for the FAA, airports, and airlines.',
+    tech: ['Python', 'Simulation', 'Queuing Theory', 'Operations Research'],
     status: 'completed',
     details: {
       duration: 'Aug 2016 - Jan 2019',
       achievements: [
-        'Developed simulation model of US airspace to provide post-operations evaluation for airlines, the FAA, and airports',
-        'Implemented queuing theory simulation model to analyze and quantify operational capabilities for the Detroit Metro Airport expansion plan'
+        'Developed simulation models of US airspace for post-operations evaluation.',
+        'Built queuing models to quantify operational capacity for the Detroit Metro Airport expansion plan.'
       ],
       responsibilities: [
-        'Complex systems modeling and simulation development',
-        'Queuing theory implementation',
-        'Post-operations evaluation and analysis',
-        'Collaboration with FAA, airlines, and airports',
-        'Research and development in aviation operations'
+        'Simulation model development',
+        'Operations research and queuing analysis',
+        'Decision support for aviation stakeholders'
       ]
     }
   }
@@ -132,210 +129,135 @@ export const portfolioProjects: PortfolioProject[] = [
 
 export const portfolioProjectsList: PortfolioProject[] = [
   {
-    name: 'Kattru - AI-Powered Personalized Learning Platform',
+    name: 'Kattru - AI Learning Platform',
     icon: '🎓',
-    description: 'Full-stack web application with AI-driven course generation using LangChain, OpenAI, and Google Gemini APIs, implementing RAG with vector similarity search.',
-    tech: ['React', 'TypeScript', 'Supabase', 'PostgreSQL', 'LangChain', 'OpenAI', 'Gemini', 'RAG', 'Vector Search', 'Zod', 'Terser'],
+    description:
+      'A full-stack learning product built around retrieval-backed content generation and practical AI workflows.',
+    tech: ['React', 'TypeScript', 'Supabase', 'PostgreSQL', 'RAG', 'OpenAI', 'Gemini'],
     status: 'current',
     details: {
       duration: '2024 - Present',
       achievements: [
-        'Developed secure learning platform with AI-driven course generation using LangChain, OpenAI, and Google Gemini APIs',
-        'Implemented RAG (Retrieval-Augmented Generation) with vector similarity search for personalized course recommendations',
-        'Built comprehensive backend infrastructure with Snowflake including PostgreSQL database with Row Level Security policies',
-        'Implemented serverless Edge Functions for API proxying and user authentication',
-        'Implemented BYOK (Bring Your Own Key) architecture allowing users to use personal LLM API keys with encrypted storage',
-        'Implemented critical security vulnerabilities including XSS prevention, input validation, secure API key management',
-        'Architected using React 18, TypeScript, Tailwind CSS, shadcn/ui components, TanStack Query for state management, and Vite for optimized builds'
+        'Built a secure web application for AI-assisted course generation and delivery.',
+        'Implemented retrieval-backed generation with vector search and guarded API access.',
+        'Added BYOK support and server-side proxying to keep user keys out of the client.',
+        'Used the product as a hands-on path into AI inference concerns such as latency, cost, and model-provider tradeoffs.'
       ],
       responsibilities: [
-        'Full-stack development and architecture',
-        'AI/ML integration and RAG implementation',
-        'Security and encryption implementation',
-        'Database design with RLS policies',
-        'Performance optimization and build hardening'
+        'Product and system architecture',
+        'Full-stack implementation',
+        'Applied AI integration',
+        'Security and runtime design'
       ]
     }
   },
   {
-    name: 'StoryWeaver - AI-Powered Interactive Storytelling',
-    icon: '📚',
-    description: 'Full-stack React/TypeScript application AI-powered interactive storytelling platform for parents to create personalized children\'s stories with AI-generated content, illustrations, and narration.',
-    tech: ['React', 'TypeScript', 'Supabase', 'PostgreSQL', 'OpenAI GPT-4', 'DALL-E', 'ElevenLabs', 'Redis', 'RLS', 'Zod'],
-    status: 'completed',
-    details: {
-      duration: '2024',
-      achievements: [
-        'Built full-stack React/TypeScript application AI-powered interactive storytelling platform',
-        'Implemented data governance and security with RLS policies, Zod validation',
-        'Integrated Redis-based rate limiting (20 req/hour)',
-        'Integrated OpenAI GPT-4, DALL-E, and ElevenLabs APIs for story generation, illustrations, and text-to-speech',
-        'Architected cost-efficient AI pipeline with request throttling and secure credential management via Supabase Secrets'
-      ],
-      responsibilities: [
-        'Full-stack development',
-        'AI API integration',
-        'Security and rate limiting implementation',
-        'Cost optimization',
-        'User experience design'
-      ]
-    }
-  },
-  {
-    name: 'Infi Estates - Premium Real Estate Platform',
-    icon: '🏘️',
-    description: 'Full-stack real estate marketplace featuring multi-step property listing wizard with Google Maps API and PostGIS geospatial queries.',
-    tech: ['Next.js 14', 'TypeScript', 'Supabase', 'PostgreSQL', 'PostGIS', 'Google Maps API', 'Tailwind CSS'],
-    status: 'completed',
-    url: 'https://infiestates.com',
-    details: {
-      duration: '2024',
-      achievements: [
-        'Delivered full-stack real estate marketplace for a client',
-        'Featured multi-step property listing wizard with Google Maps API and PostGIS geospatial queries',
-        'Built secure, role-based authentication system (Owner, Broker, Seeker) using Supabase Auth and Next.js middleware'
-      ],
-      responsibilities: [
-        'Full-stack development',
-        'Geospatial query implementation',
-        'Role-based authentication system',
-        'Client project delivery'
-      ]
-    }
-  },
-  {
-    name: 'The Urban Pinnal - Headless E-Commerce Platform',
-    icon: '🛍️',
-    description: 'Headless e-commerce platform integrating Shopify\'s Storefront API with custom React frontend, featuring programmatic SEO.',
-    tech: ['React', 'TypeScript', 'Shopify Storefront API', 'Sanity CMS', 'Vite', 'Zustand', 'GraphQL'],
-    status: 'completed',
-    url: 'https://theurbanpinnal.com',
-    details: {
-      duration: '2024',
-      achievements: [
-        'Architected and built headless e-commerce platform for a client',
-        'Integrated Shopify\'s Storefront API with custom React frontend',
-        'Implemented programmatic SEO by generating dynamic landing pages from CMS and product data to improve search visibility'
-      ],
-      responsibilities: [
-        'Headless e-commerce architecture',
-        'Shopify API integration',
-        'CMS integration',
-        'SEO optimization'
-      ]
-    }
-  },
-  {
-    name: 'Ledger Legends (The Ramen Index) - Expense Tracking PWA',
-    icon: '💰',
-    description: 'Full-featured expense tracker with real-time analytics, gamification, and full PWA/offline capabilities.',
-    tech: ['React', 'TypeScript', 'Supabase', 'TanStack Query', 'PWA', 'Vercel'],
-    status: 'current',
-    url: 'https://ramen.prithivraj.xyz',
-    details: {
-      duration: '2024 - Present',
-      achievements: [
-        'Built full-featured expense tracker (slated for future app launch)',
-        'Implemented real-time analytics and gamification',
-        'Full PWA/offline capabilities',
-        'Used as hands-on project to master TanStack Query for server state, real-time subscriptions, and offline transaction queuing'
-      ],
-      responsibilities: [
-        'Full-stack PWA development',
-        'Real-time data synchronization',
-        'Offline functionality',
-        'State management with TanStack Query'
-      ]
-    }
-  },
-  {
-    name: 'Zippy Bee - Proprietary CRM System',
+    name: 'Zippy Bee - Proprietary CRM',
     icon: '🐝',
-    description: 'Proprietary full-stack CRM system to manage entire business pipeline from lead to close, featuring lead/client management, project tracking, and agent analytics.',
-    tech: ['React', 'TypeScript', 'Supabase', 'PostgreSQL', 'CRM', 'RLS', 'Role-Based Access'],
+    description:
+      'An internal CRM that replaced fragmented tracking with a structured operating system for sales and delivery.',
+    tech: ['React', 'TypeScript', 'Supabase', 'PostgreSQL', 'RLS'],
     status: 'current',
-    url: 'https://zippybee.in',
     details: {
       duration: '2024 - Present',
       achievements: [
-        'Engineered and deployed proprietary full-stack CRM (React, TypeScript, Supabase) to manage entire business pipeline from lead to close',
-        'Designed system modules for lead/client management, project tracking, and agent analytics with role-based access and data security (RLS)',
-        'Built comprehensive business pipeline management system replacing manual tracking methods'
+        'Built lead, client, project, and agent workflows into a single system.',
+        'Introduced role-based access and reporting views for better operating discipline.',
+        'Reduced dependency on manual status tracking and spreadsheet coordination.'
       ],
       responsibilities: [
-        'Full-stack CRM development',
-        'Business pipeline architecture',
-        'Role-based access control implementation',
-        'Data security with Row-Level Security policies',
-        'Analytics and reporting features'
+        'Business workflow design',
+        'Schema and access-model design',
+        'Full-stack product delivery'
       ]
     }
   },
   {
-    name: 'Inventree Sync - Inventory Management System',
+    name: 'Inventree Sync - Inventory Operating System',
     icon: '📦',
-    description: 'Custom inventory and payroll management system replacing manual Google Sheets, significantly reducing waste and manual errors in food and FMCG industry.',
-    tech: ['React', 'TypeScript', 'Supabase', 'PostgreSQL', 'Inventory Management'],
+    description:
+      'An inventory and payroll platform built to bring discipline to purchasing, stock movement, and store operations.',
+    tech: ['React', 'TypeScript', 'Supabase', 'PostgreSQL'],
     status: 'current',
     url: 'https://inventreesync.com',
     details: {
       duration: '2024 - Present',
       achievements: [
-        'Architected and built custom inventory and payroll management system to replace manual Google Sheets',
-        'Now the operational backbone, significantly reducing waste and manual errors in the food and FMCG industry',
-        'Engineered data-driven inventory control system, optimizing stock levels based on sales velocity and supplier lead times'
+        'Replaced spreadsheet-driven inventory operations with a purpose-built application.',
+        'Added stock planning logic tied to sales velocity and supplier lead time.',
+        'Created a cleaner operational data foundation for reporting and day-to-day execution.'
       ],
       responsibilities: [
-        'Full-stack development',
-        'Inventory management system design',
-        'Data-driven optimization',
-        'Business operations improvement'
+        'Operational systems design',
+        'Data modeling and workflow design',
+        'Full-stack implementation'
       ]
     }
   },
   {
-    name: 'PDF Miner - PDF Data Extraction Platform',
+    name: 'PDF Miner - Document Extraction Platform',
     icon: '📄',
-    description: 'Production-ready PDF data extraction platform supporting 7 extraction backends with a unified service layer, featuring batch processing and multi-format export.',
-    tech: ['Python', 'Streamlit', 'OCR', 'AI Integration', 'GPU', 'CI/CD', 'Python Package'],
+    description:
+      'A document extraction tool with multiple backends, batch workflows, and packaging for reuse.',
+    tech: ['Python', 'Streamlit', 'OCR', 'CI/CD'],
     status: 'completed',
     url: 'https://github.com/prithivrajmu/extract-data-from-pdf/',
     details: {
       duration: '2024',
       achievements: [
-        'Architected and developed a production-ready PDF data extraction platform supporting 7 extraction backends with a unified service layer',
-        'Delivered a Streamlit web application enabling batch processing, custom field extraction, and multi-format export capabilities',
-        'Optimized performance through GPU/CPU auto-detection, achieving 10-20x speedup for local OCR models',
-        'Published as a Python package (v1.1.0) with CI/CD, comprehensive testing, and documentation'
+        'Built a unified service layer for multiple extraction backends.',
+        'Delivered batch processing, structured field extraction, and export workflows.',
+        'Improved local OCR performance through CPU/GPU-aware execution paths.',
+        'Published the project as a reusable Python package with testing and CI.'
       ],
       responsibilities: [
-        'PDF data extraction platform architecture',
-        'Multi-backend service layer design',
-        'Performance optimization with GPU/CPU detection',
-        'Python package development and publishing',
-        'CI/CD pipeline implementation'
+        'Python application architecture',
+        'Document-processing workflow design',
+        'Packaging, testing, and release setup'
+      ]
+    }
+  },
+  {
+    name: 'The Urban Pinnal - Headless Commerce Build',
+    icon: '🛍️',
+    description:
+      'A client-facing headless commerce implementation with a custom storefront and content-driven landing pages.',
+    tech: ['React', 'TypeScript', 'Shopify Storefront API', 'Sanity CMS'],
+    status: 'completed',
+    url: 'https://theurbanpinnal.com',
+    details: {
+      duration: '2024',
+      achievements: [
+        'Built a custom storefront on top of Shopify Storefront API.',
+        'Integrated CMS-driven merchandising and landing pages.',
+        'Used structured content and dynamic page generation to improve search visibility.'
+      ],
+      responsibilities: [
+        'Client delivery',
+        'Frontend and integration architecture',
+        'Commerce workflow implementation'
       ]
     }
   }
 ];
 
-export const getAllSkills = (): string[] => {
-  const skillSet = new Set<string>();
-  portfolioProjects.forEach(project => {
-    project.tech.forEach(skill => skillSet.add(skill));
-  });
-  portfolioProjectsList.forEach(project => {
-    project.tech.forEach(skill => skillSet.add(skill));
-  });
-  // Add additional skills from resume
-  const additionalSkills = [
-    'JavaScript', 'Node.js', 'Next.js', 'PostgreSQL', 'AWS', 'GCP', 'Vercel',
-    'Git', 'Docker', 'pandas', 'numpy', 'Spark', 'Looker', 'Operations Research',
-    'Data Warehousing', 'E-commerce Analytics', 'Cost Optimization'
-  ];
-  additionalSkills.forEach(skill => skillSet.add(skill));
-  return Array.from(skillSet).sort();
-};
+export const getAllSkills = (): string[] => [
+  'Python',
+  'SQL',
+  'dbt',
+  'Snowflake',
+  'BigQuery',
+  'PostgreSQL',
+  'React',
+  'TypeScript',
+  'Supabase',
+  'Data Modeling',
+  'Data Warehousing',
+  'System Architecture',
+  'Operations Research',
+  'Simulation',
+  'Applied AI'
+];
 
 export const contactInfo = {
   email: 'prithivrajmu@gmail.com',
@@ -360,5 +282,5 @@ export const education = [
   }
 ];
 
-export const summary = 'Lead Engineer with 9+ years of experience in data, software, operations research, and managing technical teams. Currently a Technical Lead Engineer, applying my data-driven background to solve real-world business problems by personally architecting and building full-stack software solutions. I bridge the gap between executive strategy and hands-on engineering, using modern web technologies (React, TypeScript, Supabase) to build the custom tools I need to run and optimize my businesses.';
-
+export const summary =
+  'Senior data engineer turned data architect with 9+ years across analytics, operations research, and software delivery. I have built warehouses, simulation models, decision-support systems, and internal applications, and I now lead full-stack product work where data design and application architecture have to work together. More recently, I have been applying that background to practical AI products and learning the realities of inference, latency, and runtime tradeoffs in production systems.';
