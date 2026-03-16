@@ -185,7 +185,7 @@ export const MyDocuments: React.FC = () => {
       onClick: () => setSelectedProject({ 
         name: 'Portfolio', 
         icon: '💻', 
-        description: 'Coming Soon', 
+        description: 'Open-source work and shipped builds live on GitHub.', 
         tech: [], 
         status: 'current' as const 
       })
@@ -214,7 +214,7 @@ export const MyDocuments: React.FC = () => {
     }
   };
 
-  // Portfolio Coming Soon Page (Windows 95 Error Style)
+  // Portfolio Redirect Page (Windows 95 Error Style)
   if (selectedProject?.name === 'Portfolio') {
     return (
       <div className="h-full w-full bg-[#0000aa] text-white flex flex-col" style={{ fontFamily: '"MS Sans Serif", "Microsoft Sans Serif", sans-serif' }}>
@@ -228,8 +228,8 @@ export const MyDocuments: React.FC = () => {
           <div className="mb-6">
             <p className="text-lg mb-4">A page fault has occurred. To continue:</p>
             <p className="mb-2">Press ENTER to return to My Documents, or</p>
-            <p className="mb-6">Press CTRL+ALT+DEL to visit my GitHub portfolio. If you do this,</p>
-            <p className="mb-6">you will see my actual projects and code samples.</p>
+            <p className="mb-6">Press CTRL+ALT+DEL to open GitHub. If you do this,</p>
+            <p className="mb-6">you will see code, shipped projects, and working repos.</p>
             <p className="mb-6">Error: 0E : 016F : BFF9B3D4</p>
             <p className="mb-4">Press any key to continue _</p>
           </div>
@@ -247,7 +247,7 @@ export const MyDocuments: React.FC = () => {
                className="bg-[#c0c0c0] text-black px-4 py-2 border-2 border-gray-300 hover:bg-gray-200"
                style={{ borderStyle: 'outset' }}
              >
-              💻 Visit GitHub Portfolio
+              💻 Open GitHub
             </button>
           </div>
         </div>

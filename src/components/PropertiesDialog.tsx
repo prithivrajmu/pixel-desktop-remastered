@@ -66,7 +66,7 @@ export const PropertiesDialog: React.FC<PropertiesDialogProps> = ({
     };
 
     return descriptions[id] || { 
-      description: "A mysterious digital artifact from the Windows 95 era.", 
+      description: "A working part of the desktop environment.", 
       quote: "\"In the digital age, the most valuable skill is the ability to learn.\" - Anonymous"
     };
   };

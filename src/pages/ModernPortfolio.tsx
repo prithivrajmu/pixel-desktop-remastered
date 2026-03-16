@@ -28,7 +28,7 @@ const ModernPortfolio: React.FC = () => {
                 Senior Data Engineer to Data Architect
               </p>
               <h1 className="max-w-3xl text-4xl font-black uppercase leading-none sm:text-5xl">
-                Building operational systems where data models, business workflows, and software delivery meet.
+                Designing data platforms and full-stack systems for teams that need architecture, not just analysis.
               </h1>
               <p className="mt-5 max-w-3xl text-base leading-7 text-stone-700">
                 {summary}
@@ -72,7 +72,8 @@ const ModernPortfolio: React.FC = () => {
                   {contactInfo.website.replace('https://', '')}
                 </a>
                 <p>{contactInfo.phone}</p>
-                <p>Based in Chennai, with experience working across India and the US.</p>
+                <p>Open to conversations around data architecture, internal platforms, and AI-enabled product work.</p>
+                <p>Based in Chennai, with operating experience across India and the US.</p>
               </div>
             </aside>
           </div>
@@ -82,19 +83,19 @@ const ModernPortfolio: React.FC = () => {
           <div className="border-2 border-stone-900 bg-white p-4">
             <h2 className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-stone-500">Current Focus</h2>
             <p className="text-sm leading-6 text-stone-700">
-              Designing data models and internal products together, rather than treating analytics and software as separate tracks.
+              Building systems where the warehouse, the application layer, and the operating workflow are designed as one stack.
             </p>
           </div>
           <div className="border-2 border-stone-900 bg-white p-4">
             <h2 className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-stone-500">Working Style</h2>
             <p className="text-sm leading-6 text-stone-700">
-              Hands-on with architecture and implementation, especially when a team needs someone who can move from warehouse design to product delivery.
+              Hands-on from schema to UI, especially when a team needs someone who can move from warehouse design to shipped product.
             </p>
           </div>
           <div className="border-2 border-stone-900 bg-white p-4">
             <h2 className="mb-2 text-sm font-bold uppercase tracking-[0.2em] text-stone-500">Learning Now</h2>
             <p className="text-sm leading-6 text-stone-700">
-              AI inference patterns, runtime tradeoffs, and how to keep LLM-backed features practical under real latency and cost constraints.
+              AI inference, provider tradeoffs, and how to make LLM-backed features hold up under latency, reliability, and cost pressure.
             </p>
           </div>
         </section>

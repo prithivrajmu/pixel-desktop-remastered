@@ -283,4 +283,4 @@ export const education = [
 ];
 
 export const summary =
-  'Senior data engineer turned data architect with 9+ years across analytics, operations research, and software delivery. I have built warehouses, simulation models, decision-support systems, and internal applications, and I now lead full-stack product work where data design and application architecture have to work together. More recently, I have been applying that background to practical AI products and learning the realities of inference, latency, and runtime tradeoffs in production systems.';
+  'Senior data engineer turned data architect with 9+ years across analytics, operations research, and software delivery. I have built warehouses, simulation models, decision-support systems, and internal platforms, and I now lead full-stack product work where data design and application architecture have to reinforce each other. More recently, I have been applying that background to practical AI products and learning the realities of inference, latency, reliability, and runtime tradeoffs in production systems.';
