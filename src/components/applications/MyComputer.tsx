@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { downloadResume } from '../../utils/downloadUtils';
 import { useScreenSize } from '../../hooks/use-mobile';
 
 export const MyComputer: React.FC = () => {
@@ -79,10 +78,6 @@ export const MyComputer: React.FC = () => {
 
   const handleItemDoubleClick = (itemId: string) => {
     // console.log(`Opening ${itemId}`);
-  };
-
-  const handleDownloadResume = () => {
-    downloadResume();
   };
 
   return (
@@ -324,27 +319,6 @@ export const MyComputer: React.FC = () => {
               <p><strong>Experience:</strong> 9+ Years</p>
               <p><strong>Location:</strong> Chennai, India | San Francisco, USA</p>
               <p><strong>Current Direction:</strong> Full-stack systems with practical AI features</p>
-            </div>
-            
-            {/* Download Resume Button */}
-            <div className="mt-3">
-              <button 
-                onClick={handleDownloadResume}
-                className="bg-[#c0c0c0] border-2 border-gray-400 px-4 py-2 text-xs hover:bg-gray-200 active:border-style-inset transition-colors"
-                style={{ borderStyle: 'outset' }}
-                onMouseDown={(e) => {
-                  e.currentTarget.style.borderStyle = 'inset';
-                }}
-                onMouseUp={(e) => {
-                  e.currentTarget.style.borderStyle = 'outset';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderStyle = 'outset';
-                }}
-              >
-                <img src="/icons/Mail text.ico" alt="Resume" className="w-4 h-4 inline mr-1" />
-                Download Resume
-              </button>
             </div>
           </div>
         </div>

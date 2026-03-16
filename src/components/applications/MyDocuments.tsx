@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { downloadResume } from '../../utils/downloadUtils';
 import { useScreenSize } from '../../hooks/use-mobile';
 
 interface Project {
@@ -160,12 +159,6 @@ export const MyDocuments: React.FC = () => {
   ];
 
   const documentFiles: DocumentFile[] = [
-    {
-      name: 'Resume',
-      icon: '/icons/Mail text.ico',
-      type: 'pdf',
-      onClick: downloadResume
-    },
     {
       name: 'Inventree Sync',
       icon: '/icons/inventreesync.svg',
@@ -613,23 +606,6 @@ export const MyDocuments: React.FC = () => {
         <div className="mt-6 border-2 border-gray-400 p-3" style={{ borderStyle: 'inset' }}>
           <h3 className="font-bold mb-2">Quick Access</h3>
           <div className="flex flex-wrap gap-2 text-xs">
-            <button 
-              onClick={downloadResume}
-              className="bg-gray-300 border border-gray-400 px-3 py-1 hover:bg-gray-200" 
-              style={{ borderStyle: 'outset' }}
-              onMouseDown={(e) => {
-                e.currentTarget.style.borderStyle = 'inset';
-              }}
-              onMouseUp={(e) => {
-                e.currentTarget.style.borderStyle = 'outset';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderStyle = 'outset';
-              }}
-                         >
-               <img src="/icons/Mail text.ico" alt="Resume" className="w-4 h-4 inline mr-1" />
-               Download Resume
-             </button>
             <button 
               onClick={() => window.open('https://inventreesync.com', '_blank', 'noopener,noreferrer')}
               className="bg-gray-300 border border-gray-400 px-3 py-1 hover:bg-gray-200" 
