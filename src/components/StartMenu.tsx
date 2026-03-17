@@ -213,7 +213,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
   // Map menu items to .ico files in public/icons
   const menuItems: MenuItem[] = [
     {
-      label: 'Open Resume Mode',
+      label: 'Open Site',
       icon: '/icons/Desktop.ico',
       action: () => {
         window.location.href = '/?mode=modern';
@@ -235,7 +235,7 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
         { label: 'MS-DOS Prompt', icon: '/icons/MS-DOS logo.ico' },
         { label: 'Windows Explorer', icon: '/icons/Computer with programs.ico' },
         { type: 'separator' },
-        { label: 'Portfolio Source Code', icon: '/icons/Generic.ico', action: () => handleExternalLink('https://github.com/prithivrajmu/pixel-desktop-remastered') },
+        { label: 'Source Code', icon: '/icons/Generic.ico', action: () => handleExternalLink('https://github.com/prithivrajmu/pixel-desktop-remastered') },
       ]
     },
     {

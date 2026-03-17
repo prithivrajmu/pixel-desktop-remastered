@@ -195,7 +195,7 @@ export const getDesktopIcons = (screenSize: { isMobile: boolean; isTablet: boole
       id: 'modern-site',
       name: 'Modern Site',
       position: positions[7],
-      tooltip: 'View Modern Portfolio Site',
+      tooltip: 'View Modern Site',
       icon: '/icons/Desktop.ico',
       windowConfig: {
         title: 'Modern Site',
@@ -339,7 +339,7 @@ export const desktopIcons = [
     id: 'modern-site',
     name: 'Modern Site',
     position: { x: 20, y: 580 },
-    tooltip: 'View Modern Portfolio Site',
+    tooltip: 'View Modern Site',
     icon: '/icons/Desktop.ico',
     windowConfig: {
       title: 'Modern Site',

@@ -50,7 +50,7 @@ export const Win95ModeDialog: React.FC<Win95ModeDialogProps> = ({
             <DialogTitle>Experience Windows 95 Mode?</DialogTitle>
           </div>
           <DialogDescription className="text-base">
-            Would you like to visit the nostalgic Windows 95 style portfolio experience?
+            Would you like to visit the nostalgic Windows 95 style experience?
             <br />
             <br />
             You can always switch between modes using the toggle button.
@@ -67,7 +67,7 @@ export const Win95ModeDialog: React.FC<Win95ModeDialogProps> = ({
             onClick={handleNo}
             className="w-full sm:w-auto px-6 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors font-medium"
           >
-            Stay on Modern Site
+            Stay Here
           </button>
           <button
             onClick={handleLater}
@@ -129,4 +129,3 @@ export const useWin95ModePreference = () => {
     isInitialized,
   };
 };
-

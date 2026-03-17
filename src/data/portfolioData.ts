@@ -129,6 +129,52 @@ export const portfolioProjects: PortfolioProject[] = [
 
 export const portfolioProjectsList: PortfolioProject[] = [
   {
+    name: 'OpenPipe - Streaming Data Platform',
+    icon: '🧪',
+    description:
+      'A local-first streaming platform that simulates device data, pushes it through Kafka and Flink, and stores time-series output in TimescaleDB.',
+    tech: ['Python', 'Kafka', 'PyFlink', 'TimescaleDB', 'FastAPI', 'Docker'],
+    status: 'current',
+    url: 'https://github.com/prithivrajmu/openpipe',
+    details: {
+      duration: '2026',
+      achievements: [
+        'Built a virtual device simulator for wearable health data, restaurant orders, and GPS telemetry.',
+        'Added a Kafka-backed ingestion layer, PyFlink stream processing jobs, and TimescaleDB persistence for time-series analysis.',
+        'Delivered local dashboards for simulation monitoring, SQL querying, health checks, and Flink job visibility.',
+        'Structured the project as a realistic playground for event streams, bad data injection, and operational observability.'
+      ],
+      responsibilities: [
+        'Streaming system design',
+        'Simulation and ingestion workflows',
+        'Flink-based stream processing',
+        'Local platform orchestration with Docker'
+      ]
+    }
+  },
+  {
+    name: 'Inventree Sync - Inventory Operating System',
+    icon: '📦',
+    description:
+      'An inventory and payroll platform built to bring discipline to purchasing, stock movement, and store operations.',
+    tech: ['React', 'TypeScript', 'Supabase', 'PostgreSQL'],
+    status: 'current',
+    url: 'https://inventreesync.com',
+    details: {
+      duration: '2024 - Present',
+      achievements: [
+        'Replaced spreadsheet-driven inventory operations with a purpose-built application.',
+        'Added stock planning logic tied to sales velocity and supplier lead time.',
+        'Created a cleaner operational data foundation for reporting and day-to-day execution.'
+      ],
+      responsibilities: [
+        'Operational systems design',
+        'Data modeling and workflow design',
+        'Full-stack implementation'
+      ]
+    }
+  },
+  {
     name: 'Kattru - AI Learning Platform',
     icon: '🎓',
     description:
@@ -173,28 +219,6 @@ export const portfolioProjectsList: PortfolioProject[] = [
     }
   },
   {
-    name: 'Inventree Sync - Inventory Operating System',
-    icon: '📦',
-    description:
-      'An inventory and payroll platform built to bring discipline to purchasing, stock movement, and store operations.',
-    tech: ['React', 'TypeScript', 'Supabase', 'PostgreSQL'],
-    status: 'current',
-    url: 'https://inventreesync.com',
-    details: {
-      duration: '2024 - Present',
-      achievements: [
-        'Replaced spreadsheet-driven inventory operations with a purpose-built application.',
-        'Added stock planning logic tied to sales velocity and supplier lead time.',
-        'Created a cleaner operational data foundation for reporting and day-to-day execution.'
-      ],
-      responsibilities: [
-        'Operational systems design',
-        'Data modeling and workflow design',
-        'Full-stack implementation'
-      ]
-    }
-  },
-  {
     name: 'PDF Miner - Document Extraction Platform',
     icon: '📄',
     description:
@@ -214,6 +238,28 @@ export const portfolioProjectsList: PortfolioProject[] = [
         'Python application architecture',
         'Document-processing workflow design',
         'Packaging, testing, and release setup'
+      ]
+    }
+  },
+  {
+    name: 'Chennai Urban Expansion Simulator',
+    icon: '🏙️',
+    description:
+      'A full-stack simulation tool for visualizing and forecasting urban growth with a hybrid CA + ABM model.',
+    tech: ['React', 'Vite', 'Tailwind CSS', 'Leaflet', 'Flask', 'NumPy'],
+    status: 'completed',
+    url: 'https://github.com/prithivrajmu/chennai_expansion_sim',
+    details: {
+      duration: '2025',
+      achievements: [
+        'Built a map-based interface for exploring projected urban, land price, and population overlays.',
+        'Connected a React frontend to a Flask backend serving simulation output and time-based controls.',
+        'Used the project to package simulation logic into a more explorable product surface.'
+      ],
+      responsibilities: [
+        'Simulation product design',
+        'Frontend and backend integration',
+        'Spatial data visualization'
       ]
     }
   },

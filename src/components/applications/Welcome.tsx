@@ -49,7 +49,7 @@ export const Welcome: React.FC<WelcomeProps> = ({ onClose }) => {
             <div className="flex-1 min-w-0">
               <h3 className="font-bold text-sm mb-2">Welcome!</h3>
               <p className="text-xs leading-relaxed mb-4">
-                This is a Windows 95-inspired portfolio website build by Prithiv Raj M U. Explore the desktop to discover projects, experiences, and innovations in data science and software development.
+                This is a Windows 95-inspired website built by Prithiv Raj M U. Explore the desktop to discover projects, experience, and work across data and software.
               </p>            
               <h4 className="font-bold text-sm mb-2">Did you know...</h4>
               <div className="min-h-[60px] flex items-start">

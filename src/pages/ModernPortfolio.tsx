@@ -35,6 +35,7 @@ const ModernPortfolio: React.FC = () => {
 
   const coreSkills = getAllSkills();
   const selectedProjects = portfolioProjectsList.slice(0, 5);
+  const [heroBuild, ...otherBuilds] = selectedProjects;
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -94,9 +95,8 @@ const ModernPortfolio: React.FC = () => {
     <main className="min-h-screen bg-stone-100 text-stone-900">
       <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8 lg:px-10">
         <header className="mb-8 border-4 border-stone-900 bg-[#c0c0c0] p-1 shadow-[8px_8px_0_0_rgba(0,0,0,0.18)]">
-          <div className="flex items-center justify-between bg-[#000080] px-3 py-2 text-sm font-bold text-white">
+          <div className="flex items-center bg-[#000080] px-3 py-2 text-sm font-bold text-white">
             <span>Prithiv Raj.exe</span>
-            <span>Resume Mode</span>
           </div>
           <div className="grid gap-8 bg-stone-50 p-5 lg:grid-cols-[1.4fr_0.8fr]">
             <section>
@@ -268,36 +268,70 @@ const ModernPortfolio: React.FC = () => {
             )}
 
             {activeSection === 'builds' && (
-              <div className="grid gap-4 lg:grid-cols-2">
-                {selectedProjects.map((project) => (
-                  <article key={project.name} className="border-2 border-stone-900 bg-stone-50 p-4">
-                    <div className="mb-2 flex items-start justify-between gap-3">
-                      <h3 className="text-lg font-bold">{project.name}</h3>
-                      <span className="text-xs font-bold uppercase tracking-[0.18em] text-stone-500">
-                        {project.details?.duration}
+              <div className="space-y-6">
+                {heroBuild && (
+                  <article className="border-2 border-stone-900 bg-[#000080] p-5 text-white">
+                    <div className="mb-2 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                      <div>
+                        <h3 className="text-2xl font-black uppercase">{heroBuild.name}</h3>
+                      </div>
+                      <span className="text-xs font-bold uppercase tracking-[0.18em] text-stone-200">
+                        {heroBuild.details?.duration}
                       </span>
                     </div>
-                    <p className="mb-3 text-sm leading-6 text-stone-700">{project.description}</p>
-                    <ul className="mb-4 space-y-2 text-sm leading-6 text-stone-800">
-                      {project.details?.achievements.slice(0, 2).map((achievement) => (
+                    <p className="mb-4 max-w-3xl text-sm leading-7 text-stone-100">{heroBuild.description}</p>
+                    <ul className="mb-4 space-y-2 text-sm leading-7 text-stone-100">
+                      {heroBuild.details?.achievements.slice(0, 4).map((achievement) => (
                         <li key={achievement}>- {achievement}</li>
                       ))}
                     </ul>
                     <div className="mb-4 flex flex-wrap gap-2">
-                      {project.tech.map((tech) => (
-                        <span key={tech} className="border border-stone-900 px-2 py-1 text-[11px] font-bold uppercase">
+                      {heroBuild.tech.map((tech) => (
+                        <span key={tech} className="border border-white px-2 py-1 text-[11px] font-bold uppercase text-white">
                           {tech}
                         </span>
                       ))}
                     </div>
-                    {project.url && (
-                      <a href={project.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-sm font-bold underline">
+                    {heroBuild.url && (
+                      <a href={heroBuild.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-sm font-bold underline">
                         View Project
                         <ExternalLink className="h-4 w-4" />
                       </a>
                     )}
                   </article>
-                ))}
+                )}
+
+                <div className="grid gap-4 lg:grid-cols-2">
+                  {otherBuilds.map((project) => (
+                    <article key={project.name} className="border-2 border-stone-900 bg-stone-50 p-4">
+                      <div className="mb-2 flex items-start justify-between gap-3">
+                        <h3 className="text-lg font-bold">{project.name}</h3>
+                        <span className="text-xs font-bold uppercase tracking-[0.18em] text-stone-500">
+                          {project.details?.duration}
+                        </span>
+                      </div>
+                      <p className="mb-3 text-sm leading-6 text-stone-700">{project.description}</p>
+                      <ul className="mb-4 space-y-2 text-sm leading-6 text-stone-800">
+                        {project.details?.achievements.slice(0, 2).map((achievement) => (
+                          <li key={achievement}>- {achievement}</li>
+                        ))}
+                      </ul>
+                      <div className="mb-4 flex flex-wrap gap-2">
+                        {project.tech.map((tech) => (
+                          <span key={tech} className="border border-stone-900 px-2 py-1 text-[11px] font-bold uppercase">
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                      {project.url && (
+                        <a href={project.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-sm font-bold underline">
+                          View Project
+                          <ExternalLink className="h-4 w-4" />
+                        </a>
+                      )}
+                    </article>
+                  ))}
+                </div>
               </div>
             )}
 

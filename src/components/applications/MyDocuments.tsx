@@ -172,11 +172,11 @@ export const MyDocuments: React.FC = () => {
       onClick: () => window.open('https://theurbanpinnal.com', '_blank', 'noopener,noreferrer')
     },
     {
-      name: 'Portfolio',
+      name: 'GitHub',
       icon: '/icons/Constructor.ico',
       type: 'website',
       onClick: () => setSelectedProject({ 
-        name: 'Portfolio', 
+        name: 'GitHub', 
         icon: '💻', 
         description: 'Open-source work and shipped builds live on GitHub.', 
         tech: [], 
@@ -186,7 +186,7 @@ export const MyDocuments: React.FC = () => {
   ];
 
   const handleProjectClick = (project: Project) => {
-    if (project.name === 'Portfolio') {
+    if (project.name === 'GitHub') {
       // Show coming soon page
       setSelectedProject(project);
     } else {
@@ -207,13 +207,13 @@ export const MyDocuments: React.FC = () => {
     }
   };
 
-  // Portfolio Redirect Page (Windows 95 Error Style)
-  if (selectedProject?.name === 'Portfolio') {
+  // GitHub Redirect Page (Windows 95 Error Style)
+  if (selectedProject?.name === 'GitHub') {
     return (
       <div className="h-full w-full bg-[#0000aa] text-white flex flex-col" style={{ fontFamily: '"MS Sans Serif", "Microsoft Sans Serif", sans-serif' }}>
         {/* Title Bar */}
         <div className="bg-[#008080] text-center py-1 text-sm font-bold">
-          Portfolio
+          GitHub
         </div>
         
         {/* Error Content */}
@@ -249,7 +249,7 @@ export const MyDocuments: React.FC = () => {
   }
 
   // Project Details View
-  if (selectedProject && selectedProject.name !== 'Portfolio') {
+  if (selectedProject && selectedProject.name !== 'GitHub') {
     return (
       <div className="h-full flex flex-col bg-[#c0c0c0]" style={{ fontFamily: '"MS Sans Serif", "Microsoft Sans Serif", sans-serif' }}>
         {/* Menu Bar */}

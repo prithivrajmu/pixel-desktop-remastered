@@ -296,7 +296,7 @@ export const InternetExplorer: React.FC<InternetExplorerProps> = ({ initialPage 
           <div className={`flex-1 flex items-center bg-white border border-[#808080] px-2 py-0.5 ${
             screenSize.isMobile ? 'text-xs' : 'text-xs'
           }`} style={{ borderStyle: 'inset' }}>
-            <span className="text-blue-600">http://prithivraj.portfolio/blog{currentPage !== 'home' ? `/${currentPage}` : ''}</span>
+            <span className="text-blue-600">https://prithivraj.xyz/blog{currentPage !== 'home' ? `/${currentPage}` : ''}</span>
           </div>
           <button 
             className={`px-2 py-0.5 bg-[#c0c0c0] border border-[#808080] text-xs hover:bg-[#e0e0e0] flex-shrink-0 ${
