@@ -1,5 +1,7 @@
 # Pixel Desktop Remastered
 
+![Pixel Desktop Remastered preview](./docs/github-preview.png)
+
 Pixel Desktop Remastered is a personal site built as a Windows 95 desktop shell with a parallel reading mode for people who want the content without the nostalgia layer.
 
 The project is intentionally opinionated. It keeps the operating-system metaphor, but it also treats routing, search metadata, blog structure, and case-study pages like first-class parts of the product.
