@@ -153,6 +153,50 @@ export const portfolioProjectsList: PortfolioProject[] = [
     }
   },
   {
+    name: 'Pixel Desktop Remastered - Retro Personal Site',
+    icon: '🖥️',
+    description:
+      'A Windows 95-inspired personal site with a dual-mode interface for interactive exploration and clean reading.',
+    tech: ['React', 'TypeScript', 'Vite', 'Tailwind CSS', 'SEO'],
+    status: 'current',
+    url: 'https://github.com/prithivrajmu/pixel-desktop-remastered',
+    details: {
+      duration: '2025 - 2026',
+      achievements: [
+        'Built a retro desktop shell that still supports modern reading flows for experience, writing, and contact.',
+        'Added route-aware metadata, structured data, feed generation, and cleaner search surfaces.',
+        'Used the site itself as a product exercise in interaction design, information architecture, and frontend craft.'
+      ],
+      responsibilities: [
+        'Frontend architecture',
+        'Interaction design',
+        'Content modeling and SEO'
+      ]
+    }
+  },
+  {
+    name: 'PDF Invoicer - Offline GST Invoice System',
+    icon: '🧾',
+    description:
+      'An offline-first invoice generator built for privacy, GST workflows, and dependable local operation.',
+    tech: ['React', 'TypeScript', 'IndexedDB', 'Firebase', 'PWA', 'jsPDF'],
+    status: 'current',
+    url: 'https://app.ishvaryahospitality.com',
+    details: {
+      duration: '2025',
+      achievements: [
+        'Designed a local-first invoice workflow that works without constant connectivity.',
+        'Handled GST-specific tax flows while keeping the product usable for small teams.',
+        'Added optional cloud backup without forcing server-side ownership of business data.'
+      ],
+      responsibilities: [
+        'Product architecture',
+        'Offline workflow design',
+        'Frontend implementation'
+      ]
+    }
+  },
+  {
     name: 'Inventree Sync - Inventory Operating System',
     icon: '📦',
     description:

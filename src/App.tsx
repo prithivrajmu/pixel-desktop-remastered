@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import ProjectDetailPage from "./pages/ProjectDetailPage";
 
 const queryClient = new QueryClient();
 
@@ -15,6 +16,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
+          <Route path="/projects/:slug" element={<ProjectDetailPage />} />
           <Route path="/*" element={<Index />} />
           {/* Fallback 404 */}
           <Route path="/404" element={<NotFound />} />

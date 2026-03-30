@@ -2,16 +2,24 @@ import React, { useEffect, useMemo } from 'react';
 import { portfolioProjects, portfolioProjectsList, contactInfo, education, summary } from '@/data/portfolioData';
 
 interface SEOStructuredDataProps {
-  type?: 'home' | 'blog' | 'blogPost';
+  type?: 'home' | 'blog' | 'blogPost' | 'project';
   blogPost?: {
     title: string;
     description: string;
     date: string;
     slug: string;
   };
+  project?: {
+    title: string;
+    description: string;
+    slug: string;
+    image: string;
+    tech: string[];
+    url: string;
+  };
 }
 
-export const SEOStructuredData: React.FC<SEOStructuredDataProps> = ({ type = 'home', blogPost }) => {
+export const SEOStructuredData: React.FC<SEOStructuredDataProps> = ({ type = 'home', blogPost, project }) => {
   const baseUrl = 'https://prithivraj.xyz';
   
   // Create schemas - using useMemo with stable dependencies
@@ -142,6 +150,22 @@ export const SEOStructuredData: React.FC<SEOStructuredDataProps> = ({ type = 'ho
     "url": `${baseUrl}/blog/${blogPost.slug}`
   } : null, [blogPost?.slug, blogPost?.title, blogPost?.description, blogPost?.date]);
 
+  const projectSchema = useMemo(() => project ? {
+    "@context": "https://schema.org",
+    "@type": "SoftwareSourceCode",
+    "name": project.title,
+    "description": project.description,
+    "url": `${baseUrl}/projects/${project.slug}`,
+    "codeRepository": project.url.startsWith('https://github.com') ? project.url : undefined,
+    "image": `${baseUrl}${project.image}`,
+    "programmingLanguage": project.tech,
+    "author": {
+      "@type": "Person",
+      "name": "Prithiv Raj",
+      "url": baseUrl
+    }
+  } : null, [project]);
+
   // Website Schema
   const websiteSchema = useMemo(() => ({
     "@context": "https://schema.org",
@@ -178,6 +202,8 @@ export const SEOStructuredData: React.FC<SEOStructuredDataProps> = ({ type = 'ho
       schemas.push(personSchema, blogPostSchema, websiteSchema);
     } else if (type === 'blog') {
       schemas.push(personSchema, websiteSchema);
+    } else if (type === 'project' && projectSchema) {
+      schemas.push(personSchema, projectSchema, websiteSchema);
     }
 
     // Remove any existing structured data scripts

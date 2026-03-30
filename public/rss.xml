@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+  <title>Prithiv Raj Writing</title>
+  <link>https://prithivraj.xyz</link>
+  <description>Writing on data systems, internal software, architecture, and applied engineering.</description>
+  <language>en-us</language>
+  <lastBuildDate>2025-09-04</lastBuildDate>
+  <item>
+    <title>Building The Urban Pinnal: A Modern E-commerce Platform for Traditional Indian Craftsmanship</title>
+    <link>https://prithivraj.xyz/blog/building-the-urban-pinnal-a-modern-e-commerce-platform-for-traditional-indian-craftsmanship</link>
+    <guid>https://prithivraj.xyz/blog/building-the-urban-pinnal-a-modern-e-commerce-platform-for-traditional-indian-craftsmanship</guid>
+    <pubDate>2025-09-04</pubDate>
+    <description>How I built a headless e-commerce platform connecting traditional Tamil Nadu artisans with global markets using React, Shopify, and Sanity CMS.</description>
+  </item>
+  <item>
+    <title>Inventree Sync: A Deep Dive into a Modern AI-Powered Inventory Management System</title>
+    <link>https://prithivraj.xyz/blog/inventree-sync-a-deep-dive-into-a-modern-ai-powered-inventory-management-system</link>
+    <guid>https://prithivraj.xyz/blog/inventree-sync-a-deep-dive-into-a-modern-ai-powered-inventory-management-system</guid>
+    <pubDate>2025-07-02</pubDate>
+    <description>Inventree Sync, a comprehensive inventory management system designed to be modern, intuitive, and powerful. This post will walk you through the application's core features, technical architecture, and some of its most innovative functionalities..</description>
+  </item>
+  <item>
+    <title>Processing Loss - Loss of a life, Kaream Rana</title>
+    <link>https://prithivraj.xyz/blog/processing-loss-loss-of-a-life-kaream-rana</link>
+    <guid>https://prithivraj.xyz/blog/processing-loss-loss-of-a-life-kaream-rana</guid>
+    <pubDate>2025-06-26</pubDate>
+    <description>A look at Kaream's life and who was he...</description>
+  </item>
+  <item>
+    <title>Beyond the Algorithm: Why Operational Context is the Missing Link in Data Science</title>
+    <link>https://prithivraj.xyz/blog/beyond-the-algorithm-why-operational-context-is-the-missing-link-in-data-science</link>
+    <guid>https://prithivraj.xyz/blog/beyond-the-algorithm-why-operational-context-is-the-missing-link-in-data-science</guid>
+    <pubDate>2025-06-25</pubDate>
+    <description>An elegant model that cannot be implemented, understood, or trusted by the team on the ground is little more than an academic exercise....</description>
+  </item>
+</channel>
+</rss>

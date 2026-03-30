@@ -366,15 +366,11 @@ export const InternetExplorer: React.FC<InternetExplorerProps> = ({ initialPage 
                 ) : (
                   <div className="text-center py-12">
                     <div className="text-6xl mb-4">📝</div>
-                    <h3 className="text-lg font-bold mb-2">No Articles Yet</h3>
+                    <h3 className="text-lg font-bold mb-2">No Articles Available</h3>
                     <p className="text-sm text-gray-600 mb-4">
-                      I haven't written anything yet, but stay tuned!<br/>
-                      Great things are coming soon.
+                      The writing index is empty right now.<br/>
+                      Check back later for longer notes and essays.
                     </p>
-                    <div className="text-xs text-gray-500 italic">
-                      "The best time to plant a tree was 20 years ago.<br/>
-                      The second best time is now." - Chinese Proverb
-                    </div>
                   </div>
                 )}
 

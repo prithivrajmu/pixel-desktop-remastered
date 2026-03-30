@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Github, Linkedin, Mail, ArrowRight, ExternalLink } from 'lucide-react';
 import { marked } from 'marked';
+import { Link } from 'react-router-dom';
 import {
   contactInfo,
   education,
@@ -10,6 +11,8 @@ import {
   summary,
 } from '@/data/portfolioData';
 import { loadBlogPosts, type BlogPost } from '@/data/blogPosts';
+import { projectCaseStudies } from '@/data/caseStudies';
+import { ProjectPreviewFrame } from '@/components/ProjectPreviewFrame';
 
 type SectionKey = 'overview' | 'experience' | 'builds' | 'blog' | 'contact';
 
@@ -36,8 +39,15 @@ const ModernPortfolio: React.FC = () => {
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
   const coreSkills = getAllSkills();
-  const selectedProjects = portfolioProjectsList.slice(0, 5);
-  const [heroBuild, ...otherBuilds] = selectedProjects;
+  const [leadStudy, ...supportingStudies] = projectCaseStudies;
+  const operatingSystems = portfolioProjectsList.filter(
+    (project) =>
+      ![
+        'OpenPipe - Streaming Data Platform',
+        'Pixel Desktop Remastered - Retro Personal Site',
+        'PDF Invoicer - Offline GST Invoice System',
+      ].includes(project.name)
+  ).slice(0, 4);
   const selectedBlogPost =
     blogPosts.find((post) => post.slug === selectedBlogSlug) ?? blogPosts[0] ?? null;
 
@@ -177,7 +187,7 @@ const ModernPortfolio: React.FC = () => {
             <div className="mb-5 flex items-center justify-between border-b border-stone-300 pb-3">
               <h2 className="text-xl font-black uppercase">{sectionLabels[activeSection]}</h2>
               <span className="text-xs font-bold uppercase tracking-[0.2em] text-stone-500">
-                Select To Explore
+                Choose A Section
               </span>
             </div>
 
@@ -274,69 +284,98 @@ const ModernPortfolio: React.FC = () => {
 
             {activeSection === 'builds' && (
               <div className="space-y-6">
-                {heroBuild && (
-                  <article className="border-2 border-stone-900 bg-[#000080] p-5 text-white">
-                    <div className="mb-2 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                      <div>
-                        <h3 className="text-2xl font-black uppercase">{heroBuild.name}</h3>
-                      </div>
-                      <span className="text-xs font-bold uppercase tracking-[0.18em] text-stone-200">
-                        {heroBuild.details?.duration}
-                      </span>
-                    </div>
-                    <p className="mb-4 max-w-3xl text-sm leading-7 text-stone-100">{heroBuild.description}</p>
-                    <ul className="mb-4 space-y-2 text-sm leading-7 text-stone-100">
-                      {heroBuild.details?.achievements.slice(0, 4).map((achievement) => (
-                        <li key={achievement}>- {achievement}</li>
+                {leadStudy && (
+                  <article className="space-y-4">
+                    <ProjectPreviewFrame project={leadStudy} />
+                    <div className="flex flex-wrap gap-3">
+                      <Link
+                        to={`/projects/${leadStudy.slug}`}
+                        className="inline-flex items-center gap-2 border-2 border-stone-900 bg-[#000080] px-4 py-2 text-sm font-bold text-white shadow-[2px_2px_0_0_rgba(0,0,0,0.8)]"
+                      >
+                        Read Build Notes
+                        <ArrowRight className="h-4 w-4" />
+                      </Link>
+                      {leadStudy.links.map((link) => (
+                        <a
+                          key={link.href}
+                          href={link.href}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-2 border-2 border-stone-900 bg-white px-4 py-2 text-sm font-bold shadow-[2px_2px_0_0_rgba(0,0,0,0.8)]"
+                        >
+                          {link.label}
+                          <ExternalLink className="h-4 w-4" />
+                        </a>
                       ))}
-                    </ul>
-                    <div className="mb-4 flex flex-wrap gap-2">
-                      {heroBuild.tech.map((tech) => (
-                        <span key={tech} className="border border-white px-2 py-1 text-[11px] font-bold uppercase text-white">
-                          {tech}
-                        </span>
-                      ))}
                     </div>
-                    {heroBuild.url && (
-                      <a href={heroBuild.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-sm font-bold underline">
-                        View Project
-                        <ExternalLink className="h-4 w-4" />
-                      </a>
-                    )}
                   </article>
                 )}
 
                 <div className="grid gap-4 lg:grid-cols-2">
-                  {otherBuilds.map((project) => (
-                    <article key={project.name} className="border-2 border-stone-900 bg-stone-50 p-4">
-                      <div className="mb-2 flex items-start justify-between gap-3">
-                        <h3 className="text-lg font-bold">{project.name}</h3>
-                        <span className="text-xs font-bold uppercase tracking-[0.18em] text-stone-500">
-                          {project.details?.duration}
-                        </span>
+                  {supportingStudies.map((project) => (
+                    <article key={project.slug} className="space-y-4 border-2 border-stone-900 bg-stone-50 p-4">
+                      <ProjectPreviewFrame project={project} compact />
+                      <div className="flex flex-wrap gap-3">
+                        <Link to={`/projects/${project.slug}`} className="inline-flex items-center gap-2 text-sm font-bold underline">
+                          Read Build Notes
+                          <ArrowRight className="h-4 w-4" />
+                        </Link>
+                        {project.links[0] && (
+                          <a
+                            href={project.links[0].href}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-2 text-sm font-bold underline"
+                          >
+                            {project.links[0].label}
+                            <ExternalLink className="h-4 w-4" />
+                          </a>
+                        )}
                       </div>
-                      <p className="mb-3 text-sm leading-6 text-stone-700">{project.description}</p>
-                      <ul className="mb-4 space-y-2 text-sm leading-6 text-stone-800">
-                        {project.details?.achievements.slice(0, 2).map((achievement) => (
-                          <li key={achievement}>- {achievement}</li>
-                        ))}
-                      </ul>
-                      <div className="mb-4 flex flex-wrap gap-2">
-                        {project.tech.map((tech) => (
-                          <span key={tech} className="border border-stone-900 px-2 py-1 text-[11px] font-bold uppercase">
-                            {tech}
-                          </span>
-                        ))}
-                      </div>
-                      {project.url && (
-                        <a href={project.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-sm font-bold underline">
-                          View Project
-                          <ExternalLink className="h-4 w-4" />
-                        </a>
-                      )}
                     </article>
                   ))}
                 </div>
+
+                <section className="space-y-4">
+                  <div className="border-t border-stone-300 pt-4">
+                    <h3 className="text-lg font-black uppercase">Operating Systems Delivered</h3>
+                    <p className="mt-2 text-sm leading-6 text-stone-700">
+                      A few more systems that matter because they were used to run real work, not just to demo an interface.
+                    </p>
+                  </div>
+
+                  <div className="grid gap-4 lg:grid-cols-2">
+                    {operatingSystems.map((project) => (
+                      <article key={project.name} className="border-2 border-stone-900 bg-stone-50 p-4">
+                        <div className="mb-2 flex items-start justify-between gap-3">
+                          <h3 className="text-lg font-bold">{project.name}</h3>
+                          <span className="text-xs font-bold uppercase tracking-[0.18em] text-stone-500">
+                            {project.details?.duration}
+                          </span>
+                        </div>
+                        <p className="mb-3 text-sm leading-6 text-stone-700">{project.description}</p>
+                        <ul className="mb-4 space-y-2 text-sm leading-6 text-stone-800">
+                          {project.details?.achievements.slice(0, 2).map((achievement) => (
+                            <li key={achievement}>- {achievement}</li>
+                          ))}
+                        </ul>
+                        <div className="mb-4 flex flex-wrap gap-2">
+                          {project.tech.map((tech) => (
+                            <span key={tech} className="border border-stone-900 px-2 py-1 text-[11px] font-bold uppercase">
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
+                        {project.url && (
+                          <a href={project.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-sm font-bold underline">
+                            View Project
+                            <ExternalLink className="h-4 w-4" />
+                          </a>
+                        )}
+                      </article>
+                    ))}
+                  </div>
+                </section>
               </div>
             )}
 
