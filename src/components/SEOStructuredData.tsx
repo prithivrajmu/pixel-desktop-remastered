@@ -21,7 +21,7 @@ export const SEOStructuredData: React.FC<SEOStructuredDataProps> = ({ type = 'ho
     "name": "Prithiv Raj",
     "url": baseUrl,
     "image": `${baseUrl}/og-image.jpg`,
-    "jobTitle": "Technical Lead Engineer",
+    "jobTitle": "Data Architect",
     "worksFor": {
       "@type": "Organization",
       "name": "Headwind Labs"
@@ -65,7 +65,7 @@ export const SEOStructuredData: React.FC<SEOStructuredDataProps> = ({ type = 'ho
       "description": summary,
       "url": baseUrl,
       "image": `${baseUrl}/og-image.jpg`,
-      "jobTitle": "Technical Lead Engineer",
+      "jobTitle": "Data Architect",
       "worksFor": {
         "@type": "Organization",
         "name": "Headwind Labs"
@@ -83,8 +83,8 @@ export const SEOStructuredData: React.FC<SEOStructuredDataProps> = ({ type = 'ho
   const portfolioSchema = useMemo(() => ({
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "name": "Prithiv Raj Portfolio Projects",
-    "description": "Featured software projects and work experience",
+    "name": "Prithiv Raj Projects",
+    "description": "Selected software systems, internal tools, and data platform work",
     "itemListElement": portfolioProjectsList.map((project, index) => ({
       "@type": "ListItem",
       "position": index + 1,
@@ -146,7 +146,7 @@ export const SEOStructuredData: React.FC<SEOStructuredDataProps> = ({ type = 'ho
   const websiteSchema = useMemo(() => ({
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "Prithiv Raj Portfolio",
+    "name": "Prithiv Raj",
     "url": baseUrl,
     "description": summary,
     "author": {
@@ -212,4 +212,3 @@ export const SEOStructuredData: React.FC<SEOStructuredDataProps> = ({ type = 'ho
 
   return null;
 };
-

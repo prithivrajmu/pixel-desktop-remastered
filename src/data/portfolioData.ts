@@ -204,6 +204,7 @@ export const portfolioProjectsList: PortfolioProject[] = [
       'An internal CRM that replaced fragmented tracking with a structured operating system for sales and delivery.',
     tech: ['React', 'TypeScript', 'Supabase', 'PostgreSQL', 'RLS'],
     status: 'current',
+    url: 'https://zippybee.in',
     details: {
       duration: '2024 - Present',
       achievements: [

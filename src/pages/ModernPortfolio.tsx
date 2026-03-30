@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Github, Linkedin, Mail, ArrowRight, ExternalLink } from 'lucide-react';
+import { marked } from 'marked';
 import {
   contactInfo,
   education,
@@ -24,6 +25,7 @@ const ModernPortfolio: React.FC = () => {
   const [activeSection, setActiveSection] = useState<SectionKey>('overview');
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [blogLoading, setBlogLoading] = useState(true);
+  const [selectedBlogSlug, setSelectedBlogSlug] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -36,12 +38,15 @@ const ModernPortfolio: React.FC = () => {
   const coreSkills = getAllSkills();
   const selectedProjects = portfolioProjectsList.slice(0, 5);
   const [heroBuild, ...otherBuilds] = selectedProjects;
+  const selectedBlogPost =
+    blogPosts.find((post) => post.slug === selectedBlogSlug) ?? blogPosts[0] ?? null;
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const posts = await loadBlogPosts();
         setBlogPosts(posts);
+        setSelectedBlogSlug((current) => current ?? posts[0]?.slug ?? null);
       } catch (error) {
         console.error('Failed to load blog posts:', error);
       } finally {
@@ -336,30 +341,81 @@ const ModernPortfolio: React.FC = () => {
             )}
 
             {activeSection === 'blog' && (
-              <div className="space-y-4">
+              <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
+                <aside className="space-y-4">
+                  <div className="border-2 border-stone-900 bg-stone-50 p-4">
+                    <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-stone-500">Writing</p>
+                    <p className="text-sm leading-6 text-stone-700">
+                      Notes on systems, engineering, and work that benefits from a longer form than a project card.
+                    </p>
+                  </div>
                 {blogLoading && <p className="text-sm text-stone-600">Loading posts...</p>}
                 {!blogLoading && blogPosts.length === 0 && (
                   <p className="text-sm text-stone-600">No posts available right now.</p>
                 )}
                 {!blogLoading &&
                   blogPosts.map((post) => (
-                    <article key={post.id} className="border-2 border-stone-900 bg-stone-50 p-4">
+                    <button
+                      key={post.id}
+                      onClick={() => setSelectedBlogSlug(post.slug)}
+                      className={`block w-full border-2 p-4 text-left transition-colors ${
+                        selectedBlogPost?.slug === post.slug
+                          ? 'border-stone-900 bg-white'
+                          : 'border-stone-300 bg-stone-50 hover:border-stone-900'
+                      }`}
+                    >
                       <div className="mb-2 flex items-start justify-between gap-3">
-                        <h3 className="text-lg font-bold">{post.title}</h3>
-                        <span className="text-xs font-bold uppercase tracking-[0.18em] text-stone-500">
+                        <h3 className="text-base font-bold leading-6">{post.title}</h3>
+                        <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-stone-500">
                           {post.date}
                         </span>
                       </div>
-                      <p className="mb-4 text-sm leading-6 text-stone-700">{post.preview}</p>
-                      <a
-                        href={`/blog/${post.slug}`}
-                        className="inline-flex items-center gap-2 text-sm font-bold underline"
-                      >
-                        Read Post
+                      <p className="mb-3 text-sm leading-6 text-stone-700">{post.preview}</p>
+                      <span className="inline-flex items-center gap-2 text-sm font-bold underline">
+                        Read Here
                         <ArrowRight className="h-4 w-4" />
-                      </a>
-                    </article>
+                      </span>
+                    </button>
                   ))}
+                </aside>
+
+                <div className="border border-stone-200 bg-white">
+                  {selectedBlogPost ? (
+                    <article className="mx-auto max-w-3xl px-6 py-8 sm:px-10 sm:py-10">
+                      <p className="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-stone-500">
+                        {new Date(selectedBlogPost.date).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        })}
+                      </p>
+                      <h3 className="max-w-2xl text-3xl font-black leading-tight sm:text-4xl">
+                        {selectedBlogPost.title}
+                      </h3>
+                      <p className="mt-5 max-w-2xl text-lg leading-8 text-stone-600">
+                        {selectedBlogPost.preview}
+                      </p>
+                      <div className="my-8 border-t border-stone-200" />
+                      <div
+                        className="prose prose-stone max-w-none prose-headings:font-black prose-p:text-[17px] prose-p:leading-8 prose-li:text-[17px] prose-li:leading-8"
+                        dangerouslySetInnerHTML={{ __html: marked.parse(selectedBlogPost.content) as string }}
+                      />
+                      <div className="mt-10">
+                        <a
+                          href={`/blog/${selectedBlogPost.slug}`}
+                          className="inline-flex items-center gap-2 text-sm font-bold underline"
+                        >
+                          Open In Win95 View
+                          <ExternalLink className="h-4 w-4" />
+                        </a>
+                      </div>
+                    </article>
+                  ) : (
+                    <div className="px-6 py-8 text-sm text-stone-600">
+                      Select an article to read it here.
+                    </div>
+                  )}
+                </div>
               </div>
             )}
 

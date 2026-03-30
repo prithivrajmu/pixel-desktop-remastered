@@ -8,15 +8,15 @@
   <!-- Homepage -->
   <url>
     <loc>https://prithivraj.xyz/</loc>
-    <lastmod>2024-12-19</lastmod>
+    <lastmod>2026-03-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   
-  <!-- Modern Portfolio Mode -->
+  <!-- Blog Home -->
   <url>
-    <loc>https://prithivraj.xyz/?mode=modern</loc>
-    <lastmod>2024-12-19</lastmod>
+    <loc>https://prithivraj.xyz/blog</loc>
+    <lastmod>2025-09-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -24,31 +24,30 @@
   <!-- Blog Posts -->
   <url>
     <loc>https://prithivraj.xyz/blog/building-the-urban-pinnal-a-modern-e-commerce-platform-for-traditional-indian-craftsmanship</loc>
-    <lastmod>2024-12-19</lastmod>
+    <lastmod>2025-06-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
     <loc>https://prithivraj.xyz/blog/beyond-the-algorithm-why-operational-context-is-the-missing-link-in-data-science</loc>
-    <lastmod>2024-12-19</lastmod>
+    <lastmod>2025-06-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
     <loc>https://prithivraj.xyz/blog/processing-loss-loss-of-a-life-kaream-rana</loc>
-    <lastmod>2024-12-19</lastmod>
+    <lastmod>2025-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <url>
     <loc>https://prithivraj.xyz/blog/inventree-sync-a-deep-dive-into-a-modern-ai-powered-inventory-management-system</loc>
-    <lastmod>2024-12-19</lastmod>
+    <lastmod>2025-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   
 </urlset>
-
