@@ -1,8 +1,8 @@
-import React, { useMemo, useCallback, useEffect, useState } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import { Desktop } from "@/components/Desktop";
-import { InternetExplorer } from "@/components/LazyComponents";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import ModernPortfolio from "./ModernPortfolio";
+import BlogShell from "./BlogShell";
 import { Win95ModeDialog, useWin95ModePreference } from "@/components/Win95ModeDialog";
 import { DynamicMetaTags } from "@/components/DynamicMetaTags";
 import { SEOStructuredData } from "@/components/SEOStructuredData";
@@ -11,7 +11,6 @@ import { findPostByIdOrSlug, type BlogPost } from "@/data/blogPosts";
 const Index: React.FC = () => {
   // Initialize router hooks first - these must be called unconditionally
   const location = useLocation();
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   
   // Then initialize our custom hook
@@ -34,32 +33,8 @@ const Index: React.FC = () => {
     return { isBlog: false, postId: null } as const;
   }, [location.pathname]);
 
-  // Build auto-open windows array
-  const autoWindows = useMemo(() => {
-    if (!blogInfo.isBlog) return [];
-
-    return [
-      {
-        title: "Internet Explorer",
-        icon: "/icons/SMALL.ico",
-        component: () => (
-          <InternetExplorer initialPage={blogInfo.postId ?? "home"} />
-        ),
-        isMinimized: false,
-        position: { x: 0, y: 0 },
-      } as const,
-    ];
-  }, [blogInfo]);
-
-  // When all windows are closed, if we are on a blog path, navigate back to root
-  const handleAllClosed = useCallback(() => {
-    if (blogInfo.isBlog) {
-      navigate("/", { replace: true });
-    }
-  }, [blogInfo.isBlog, navigate]);
-
   // Show Win95 mode for blog routes or if explicitly set to win95
-  const shouldShowWin95 = currentMode === 'win95' || blogInfo.isBlog;
+  const shouldShowWin95 = currentMode === 'win95' && !blogInfo.isBlog;
 
   // Add data attribute to body/html to distinguish between modes for CSS
   useEffect(() => {
@@ -155,11 +130,10 @@ const Index: React.FC = () => {
         onOpenChange={setShowDialog}
         onSelectMode={handleModeSelect}
       />
-      {shouldShowWin95 ? (
-        <Desktop
-          autoOpenWindows={autoWindows}
-          onAllWindowsClosed={handleAllClosed}
-        />
+      {blogInfo.isBlog ? (
+        <BlogShell />
+      ) : shouldShowWin95 ? (
+        <Desktop autoOpenWindows={[]} />
       ) : (
         <ModernPortfolio />
       )}
