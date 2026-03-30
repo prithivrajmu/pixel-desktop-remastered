@@ -2,7 +2,6 @@ import React from 'react';
 import { 
   MyComputer, 
   MyDocuments, 
-  InternetExplorer, 
   RecycleBin, 
   Welcome, 
   Contact 
@@ -126,7 +125,16 @@ export const getDesktopIcons = (screenSize: { isMobile: boolean; isTablet: boole
       windowConfig: {
         title: 'Internet Explorer',
         icon: '/icons/SMALL.ico',
-        component: InternetExplorer,
+        component: () => {
+          React.useEffect(() => {
+            window.location.href = '/blog';
+          }, []);
+          return (
+            <div className="w-full h-full flex items-center justify-center bg-white" style={{ fontFamily: 'Times New Roman, serif' }}>
+              Opening blog...
+            </div>
+          );
+        },
         isMinimized: false,
         position: { x: 0, y: 0 } // Will be centered and auto-sized
       }
@@ -270,7 +278,16 @@ export const desktopIcons = [
     windowConfig: {
       title: 'Internet Explorer',
       icon: '/icons/SMALL.ico',
-      component: InternetExplorer,
+      component: () => {
+        React.useEffect(() => {
+          window.location.href = '/blog';
+        }, []);
+        return (
+          <div className="w-full h-full flex items-center justify-center bg-white" style={{ fontFamily: 'Times New Roman, serif' }}>
+            Opening blog...
+          </div>
+        );
+      },
       isMinimized: false,
       position: { x: 0, y: 0 } // Will be centered and auto-sized
     }

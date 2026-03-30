@@ -160,6 +160,20 @@ export const MyDocuments: React.FC = () => {
 
   const documentFiles: DocumentFile[] = [
     {
+      name: 'Resume',
+      icon: '/icons/WordPad document (small).ICO',
+      type: 'pdf',
+      onClick: () => window.open('/resume.pdf', '_blank', 'noopener,noreferrer')
+    },
+    {
+      name: 'Blog',
+      icon: '/icons/SMALL.ico',
+      type: 'web',
+      onClick: () => {
+        window.location.href = '/blog';
+      }
+    },
+    {
       name: 'Inventree Sync',
       icon: '/icons/inventreesync.svg',
       type: 'app',
@@ -175,24 +189,12 @@ export const MyDocuments: React.FC = () => {
       name: 'GitHub',
       icon: '/icons/Constructor.ico',
       type: 'website',
-      onClick: () => setSelectedProject({ 
-        name: 'GitHub', 
-        icon: '💻', 
-        description: 'Open-source work and shipped builds live on GitHub.', 
-        tech: [], 
-        status: 'current' as const 
-      })
+      onClick: () => window.open('https://github.com/prithivrajmu', '_blank', 'noopener,noreferrer')
     }
   ];
 
   const handleProjectClick = (project: Project) => {
-    if (project.name === 'GitHub') {
-      // Show coming soon page
-      setSelectedProject(project);
-    } else {
-      // Show project details
-      setSelectedProject(project);
-    }
+    setSelectedProject(project);
   };
 
   const handleBackClick = () => {
@@ -207,49 +209,8 @@ export const MyDocuments: React.FC = () => {
     }
   };
 
-  // GitHub Redirect Page (Windows 95 Error Style)
-  if (selectedProject?.name === 'GitHub') {
-    return (
-      <div className="h-full w-full bg-[#0000aa] text-white flex flex-col" style={{ fontFamily: '"MS Sans Serif", "Microsoft Sans Serif", sans-serif' }}>
-        {/* Title Bar */}
-        <div className="bg-[#008080] text-center py-1 text-sm font-bold">
-          GitHub
-        </div>
-        
-        {/* Error Content */}
-        <div className="flex-1 flex flex-col justify-center items-start px-8 py-6">
-          <div className="mb-6">
-            <p className="text-lg mb-4">A page fault has occurred. To continue:</p>
-            <p className="mb-2">Press ENTER to return to My Documents, or</p>
-            <p className="mb-6">Press CTRL+ALT+DEL to open GitHub. If you do this,</p>
-            <p className="mb-6">you will see code, shipped projects, and working repos.</p>
-            <p className="mb-6">Error: 0E : 016F : BFF9B3D4</p>
-            <p className="mb-4">Press any key to continue _</p>
-          </div>
-          
-          <div className="flex space-x-4">
-            <button 
-              onClick={handleBackClick}
-              className="bg-[#c0c0c0] text-black px-4 py-2 border-2 border-gray-300 hover:bg-gray-200"
-              style={{ borderStyle: 'outset' }}
-            >
-              ← Back to My Documents
-            </button>
-                         <button 
-               onClick={() => window.open('https://github.com/prithivrajmu', '_blank', 'noopener,noreferrer')}
-               className="bg-[#c0c0c0] text-black px-4 py-2 border-2 border-gray-300 hover:bg-gray-200"
-               style={{ borderStyle: 'outset' }}
-             >
-              💻 Open GitHub
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   // Project Details View
-  if (selectedProject && selectedProject.name !== 'GitHub') {
+  if (selectedProject) {
     return (
       <div className="h-full flex flex-col bg-[#c0c0c0]" style={{ fontFamily: '"MS Sans Serif", "Microsoft Sans Serif", sans-serif' }}>
         {/* Menu Bar */}
@@ -535,7 +496,7 @@ export const MyDocuments: React.FC = () => {
         <div className="mb-6">
           <h2 className="text-lg font-bold mb-2">Document Files</h2>
           <div className="text-xs text-gray-600 mb-3">
-            Double-click a document to open/download
+            Double-click a document to open the real file or destination
           </div>
           
           <div className="grid grid-cols-4 gap-4 mb-4">

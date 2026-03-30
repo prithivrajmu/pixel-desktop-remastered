@@ -219,6 +219,13 @@ export const StartMenu: React.FC<StartMenuProps> = ({ onShutdown }) => {
         window.location.href = '/?mode=modern';
       }
     },
+    {
+      label: 'Blog',
+      icon: '/icons/SMALL.ico',
+      action: () => {
+        window.location.href = '/blog';
+      }
+    },
     { type: 'separator' },
     {
       label: 'Programs',
