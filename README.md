@@ -77,7 +77,15 @@ npm run dev
 npm run build
 ```
 
-The production build automatically regenerates:
+The production build uses the generated assets already committed in `public/`.
+
+If you want to regenerate them locally first:
+
+```bash
+npm run build:full
+```
+
+That full build regenerates:
 
 - `public/rss.xml`
 - `public/sitemap.xml`

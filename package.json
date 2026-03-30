@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "vite",
     "generate:site": "python3 scripts/generate_site_assets.py",
-    "prebuild": "npm run generate:site",
     "build": "vite build",
+    "build:full": "npm run generate:site && vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview"
