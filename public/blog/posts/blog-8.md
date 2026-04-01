@@ -1,7 +1,7 @@
 ---
 id: blog-8
 title: "MiroFish: The Multi-Agent Simulation Project That Changed How I Think About Digital Worlds"
-date: 2025-12-12
+date: 2026-03-20
 preview: "Someone built a project where you feed it a news article, a policy document, or a piece of fiction — and it spins up thousands of autonomous AI agents who argue, remember, evolve, and collectively produce a prediction about what happens next. I couldn't stop thinking about it."
 keywords: "MiroFish, multi-agent simulation, AI agents, social simulation, GraphRAG, digital twin, LLM simulation, agent-based modeling, Prithiv Raj"
 ---

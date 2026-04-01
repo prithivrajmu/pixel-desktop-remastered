@@ -1,7 +1,7 @@
 ---
 id: blog-6
 title: "OpenPipe: What I Learned Building a Local Kafka Streaming Playground"
-date: 2025-11-05
+date: 2026-03-08
 preview: "Most streaming tutorials stop at 'producer sends a message, consumer reads it.' OpenPipe was my way of going further — building a realistic, end-to-end event streaming platform that runs entirely on your laptop."
 keywords: "Kafka, PyFlink, TimescaleDB, event streaming, stream processing, OpenPipe, data engineering, Python, Docker, real-time data, Prithiv Raj"
 ---

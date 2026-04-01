@@ -1,7 +1,7 @@
 ---
 id: blog-7
 title: "GST Invoicer: Building Offline-First for India's Small Business Reality"
-date: 2025-11-28
+date: 2026-03-14
 preview: "When I started building the GST Invoicer, I had one rule: it should work completely without the internet. Not degrade gracefully. Not show a loading spinner. Work — completely."
 keywords: "GST invoice, offline-first, PWA, IndexedDB, jsPDF, React, TypeScript, small business India, GST billing software, Prithiv Raj"
 ---

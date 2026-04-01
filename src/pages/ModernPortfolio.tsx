@@ -307,24 +307,46 @@ const ModernPortfolio: React.FC = () => {
 
                 <div className="grid gap-4 lg:grid-cols-2">
                   {supportingStudies.map((project) => (
-                    <article key={project.slug} className="space-y-4 border-2 border-stone-900 bg-stone-50 p-4">
-                      <ProjectPreviewFrame project={project} compact />
-                      <div className="flex flex-wrap gap-3">
-                        <Link to={`/projects/${project.slug}`} className="inline-flex items-center gap-2 text-sm font-bold underline">
-                          Read Build Notes
-                          <ArrowRight className="h-4 w-4" />
-                        </Link>
-                        {project.links[0] && (
-                          <a
-                            href={project.links[0].href}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="inline-flex items-center gap-2 text-sm font-bold underline"
-                          >
-                            {project.links[0].label}
-                            <ExternalLink className="h-4 w-4" />
-                          </a>
-                        )}
+                    <article key={project.slug} className="flex flex-col border-2 border-stone-900 bg-stone-50">
+                      <div className="flex items-center justify-between bg-[#000080] px-3 py-2 text-[11px] font-bold uppercase tracking-[0.18em] text-white">
+                        <span>{project.title}</span>
+                        <span className="opacity-80">{project.eyebrow}</span>
+                      </div>
+                      <div className="flex flex-1 flex-col p-4">
+                        <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-stone-500">{project.duration}</p>
+                        <p className="mt-3 flex-1 text-sm leading-6 text-stone-700">{project.summary}</p>
+                        <div className="mt-4 space-y-2">
+                          {project.metrics.slice(0, 2).map((metric) => (
+                            <div key={metric.label} className="border border-stone-300 bg-white px-3 py-2">
+                              <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-stone-500">{metric.label}</p>
+                              <p className="mt-0.5 text-sm leading-5 text-stone-800">{metric.value}</p>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="mt-4 flex flex-wrap gap-1.5">
+                          {project.stack.slice(0, 5).map((tech) => (
+                            <span key={tech} className="border border-stone-900 bg-[#c0c0c0] px-2 py-0.5 text-[11px] font-bold uppercase tracking-[0.06em]">
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
+                        <div className="mt-4 flex flex-wrap gap-3">
+                          <Link to={`/projects/${project.slug}`} className="inline-flex items-center gap-2 text-sm font-bold underline">
+                            Read Build Notes
+                            <ArrowRight className="h-4 w-4" />
+                          </Link>
+                          {project.links[0] && (
+                            <a
+                              href={project.links[0].href}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-flex items-center gap-2 text-sm font-bold underline"
+                            >
+                              {project.links[0].label}
+                              <ExternalLink className="h-4 w-4" />
+                            </a>
+                          )}
+                        </div>
                       </div>
                     </article>
                   ))}

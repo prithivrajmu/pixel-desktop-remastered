@@ -131,10 +131,10 @@ const BlogShell: React.FC = () => {
                     </span>
                   </div>
 
-                  <div className="my-10 border-t border-stone-200" />
+                  <div className="my-12 border-t border-stone-200" />
 
                   <div
-                    className="prose prose-stone prose-lg max-w-none prose-headings:font-black prose-headings:tracking-[-0.03em] prose-p:text-[1.18rem] prose-p:leading-9 prose-li:text-[1.1rem] prose-li:leading-8 prose-a:text-stone-900 prose-a:underline-offset-4 prose-strong:text-stone-900"
+                    className="prose prose-stone prose-lg max-w-none prose-headings:font-black prose-headings:tracking-[-0.03em] prose-h1:mt-0 prose-h2:mt-14 prose-h2:mb-5 prose-h3:mt-10 prose-h3:mb-4 prose-p:text-[1.1rem] prose-p:leading-[1.85] prose-p:mb-7 prose-li:text-[1.05rem] prose-li:leading-8 prose-ul:my-6 prose-ol:my-6 prose-hr:my-14 prose-hr:border-stone-200 prose-a:text-stone-900 prose-a:underline-offset-4 prose-strong:text-stone-900 prose-blockquote:border-l-4 prose-blockquote:border-stone-900 prose-blockquote:pl-5 prose-blockquote:italic prose-code:text-sm"
                     dangerouslySetInnerHTML={{ __html: marked.parse(currentPost.content) as string }}
                   />
                 </div>

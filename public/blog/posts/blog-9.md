@@ -1,7 +1,7 @@
 ---
 id: blog-9
 title: "SIMILE: Making Urban Simulation Something You Can Actually Explore"
-date: 2026-01-20
+date: 2026-03-27
 preview: "Urban simulation models are usually built for researchers. SIMILE was my attempt to build one that planners, journalists, and curious residents could use — without needing a PhD in cellular automata."
 keywords: "urban simulation, Chennai expansion, cellular automata, agent-based modeling, spatial simulation, SIMILE, React, Leaflet, Flask, Python, Prithiv Raj"
 ---

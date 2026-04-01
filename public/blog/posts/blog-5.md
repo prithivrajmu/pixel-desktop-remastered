@@ -1,7 +1,7 @@
 ---
 id: blog-5
 title: "The Stack I Keep Coming Back To"
-date: 2025-10-15
+date: 2026-03-03
 preview: "Nine years of data work teaches you something: the best stack isn't the most impressive one — it's the one that gets out of your way when the problem is hard."
 keywords: "tech stack, TypeScript, React, Supabase, PostgreSQL, Python, data engineering, full-stack development, software architecture, Prithiv Raj"
 ---
