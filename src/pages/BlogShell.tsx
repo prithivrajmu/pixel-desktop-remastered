@@ -16,11 +16,6 @@ const estimateReadTime = (content: string) => {
   return `${Math.max(3, Math.ceil(words / 220))} min read`;
 };
 
-// serif stack for reading body text
-const serifStyle: React.CSSProperties = {
-  fontFamily: "Georgia, 'Times New Roman', Times, serif",
-};
-
 const BlogShell: React.FC = () => {
   const location = useLocation();
   const postId = useMemo(() => {
@@ -92,7 +87,7 @@ const BlogShell: React.FC = () => {
     return (
       <main className="min-h-screen bg-white text-stone-900">
 
-        {/* Top bar */}
+        {/* Top bar — system font intentionally, it's UI not content */}
         <div className="sticky top-0 z-10 border-b border-stone-100 bg-white/95 backdrop-blur-sm">
           <div className="mx-auto flex max-w-[780px] items-center justify-between px-6 py-4">
             <Link
@@ -103,30 +98,22 @@ const BlogShell: React.FC = () => {
               All articles
             </Link>
             <span className="text-sm font-semibold text-stone-400">Prithiv Raj</span>
-            <span className="text-sm text-stone-400">
-              {estimateReadTime(currentPost.content)}
-            </span>
+            <span className="text-sm text-stone-400">{estimateReadTime(currentPost.content)}</span>
           </div>
         </div>
 
-        {/* Article */}
-        <article className="mx-auto max-w-[680px] px-6 pb-32 pt-16">
+        {/* Article — blog-reading forces Georgia serif on every child */}
+        <article className="blog-reading mx-auto max-w-[680px] px-6 pb-32 pt-16">
 
           {/* Header */}
           <header className="mb-12">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-400">
               {formatDate(currentPost.date)}
             </p>
-            <h1
-              className="mt-5 text-4xl font-bold leading-[1.15] tracking-tight text-stone-900 sm:text-5xl"
-              style={serifStyle}
-            >
+            <h1 className="mt-5 text-4xl font-bold leading-[1.15] tracking-tight text-stone-900 sm:text-5xl">
               {currentPost.title}
             </h1>
-            <p
-              className="mt-6 text-xl leading-[1.7] text-stone-500"
-              style={serifStyle}
-            >
+            <p className="mt-6 text-xl leading-[1.7] text-stone-500">
               {currentPost.preview}
             </p>
             <div className="mt-8 flex items-center gap-3 text-sm text-stone-400">
@@ -148,22 +135,21 @@ const BlogShell: React.FC = () => {
               prose prose-stone max-w-none
               prose-p:text-[1.175rem] prose-p:leading-[1.9] prose-p:text-stone-700 prose-p:mb-8
               prose-h1:font-bold prose-h1:mt-0
-              prose-h2:text-2xl prose-h2:font-bold prose-h2:text-stone-900 prose-h2:mt-16 prose-h2:mb-5 prose-h2:leading-snug
-              prose-h3:text-xl prose-h3:font-bold prose-h3:text-stone-900 prose-h3:mt-12 prose-h3:mb-4
+              prose-h2:text-[1.5rem] prose-h2:font-bold prose-h2:text-stone-900 prose-h2:mt-16 prose-h2:mb-5 prose-h2:leading-snug
+              prose-h3:text-[1.25rem] prose-h3:font-bold prose-h3:text-stone-900 prose-h3:mt-12 prose-h3:mb-4
               prose-li:text-[1.1rem] prose-li:leading-[1.85] prose-li:text-stone-700
               prose-ul:my-8 prose-ol:my-8 prose-ul:space-y-2 prose-ol:space-y-2
               prose-hr:my-16 prose-hr:border-stone-200
               prose-blockquote:border-l-[3px] prose-blockquote:border-stone-300 prose-blockquote:pl-6 prose-blockquote:not-italic prose-blockquote:text-stone-500
               prose-strong:text-stone-900 prose-strong:font-semibold
               prose-a:text-stone-900 prose-a:underline prose-a:underline-offset-[3px] prose-a:decoration-stone-400 hover:prose-a:decoration-stone-900
-              prose-code:text-[0.9em] prose-code:bg-stone-100 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-stone-800
+              prose-code:text-[0.875em] prose-code:bg-stone-100 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-stone-800
               prose-pre:bg-stone-950 prose-pre:text-stone-100 prose-pre:rounded-lg
             "
-            style={serifStyle}
             dangerouslySetInnerHTML={{ __html: marked.parse(currentPost.content) as string }}
           />
 
-          {/* Prev / Next navigation */}
+          {/* Prev / Next */}
           {(prevPost || nextPost) && (
             <nav className="mt-20 border-t border-stone-200 pt-10">
               <div className="grid gap-6 sm:grid-cols-2">
@@ -172,7 +158,7 @@ const BlogShell: React.FC = () => {
                     <span className="text-xs font-semibold uppercase tracking-widest text-stone-400 transition group-hover:text-stone-600">
                       ← Previous
                     </span>
-                    <span className="text-base font-semibold leading-snug text-stone-800 transition group-hover:text-stone-900" style={serifStyle}>
+                    <span className="text-base font-semibold leading-snug text-stone-800 transition group-hover:text-stone-900">
                       {prevPost.title}
                     </span>
                   </Link>
@@ -182,7 +168,7 @@ const BlogShell: React.FC = () => {
                     <span className="text-xs font-semibold uppercase tracking-widest text-stone-400 transition group-hover:text-stone-600">
                       Next →
                     </span>
-                    <span className="text-base font-semibold leading-snug text-stone-800 transition group-hover:text-stone-900" style={serifStyle}>
+                    <span className="text-base font-semibold leading-snug text-stone-800 transition group-hover:text-stone-900">
                       {nextPost.title}
                     </span>
                   </Link>
@@ -192,10 +178,7 @@ const BlogShell: React.FC = () => {
           )}
 
           <div className="mt-12 text-center">
-            <Link
-              to="/"
-              className="text-sm text-stone-400 underline underline-offset-4 hover:text-stone-700"
-            >
+            <Link to="/" className="text-sm text-stone-400 underline underline-offset-4 hover:text-stone-700">
               Back to portfolio
             </Link>
           </div>
@@ -204,9 +187,9 @@ const BlogShell: React.FC = () => {
     );
   }
 
-  // ── Blog home (article list) ─────────────────────────────────────────────
+  // ── Blog home ────────────────────────────────────────────────────────────
   return (
-    <main className="min-h-screen bg-white text-stone-900">
+    <main className="blog-reading min-h-screen bg-white text-stone-900">
 
       {/* Masthead */}
       <div className="border-b border-stone-100">
@@ -218,15 +201,12 @@ const BlogShell: React.FC = () => {
             <ArrowLeft className="h-3.5 w-3.5" />
             Back to portfolio
           </Link>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-400">Writing</p>
-          <h1
-            className="mt-4 text-4xl font-bold leading-[1.15] tracking-tight text-stone-900 sm:text-5xl"
-            style={serifStyle}
-          >
+          <p className="mt-6 text-xs font-semibold uppercase tracking-[0.2em] text-stone-400">Writing</p>
+          <h1 className="mt-4 text-4xl font-bold leading-[1.15] tracking-tight text-stone-900 sm:text-5xl">
             Long-form notes on systems, decisions, and the work behind the work.
           </h1>
-          <p className="mt-5 text-lg leading-relaxed text-stone-500" style={serifStyle}>
-            The portfolio stays concise. The writing lives here.
+          <p className="mt-5 text-lg leading-relaxed text-stone-500">
+            If you want to understand how something was built, or why a decision went the way it did — this is where that lives.
           </p>
         </div>
       </div>
@@ -243,13 +223,10 @@ const BlogShell: React.FC = () => {
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-stone-400">
                 {formatDate(post.date)}
               </p>
-              <h2
-                className="mt-3 text-2xl font-bold leading-snug tracking-tight text-stone-900 transition group-hover:text-stone-600 sm:text-3xl"
-                style={serifStyle}
-              >
+              <h2 className="mt-3 text-2xl font-bold leading-snug tracking-tight text-stone-900 transition group-hover:text-stone-600 sm:text-3xl">
                 {post.title}
               </h2>
-              <p className="mt-3 text-base leading-[1.75] text-stone-500" style={serifStyle}>
+              <p className="mt-3 text-base leading-[1.75] text-stone-500">
                 {post.preview}
               </p>
               <div className="mt-5 flex items-center gap-3 text-sm text-stone-400">

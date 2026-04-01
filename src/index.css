@@ -433,4 +433,17 @@
     position: relative;
     z-index: 40;
   }
+
+  /* Blog reading mode — overrides the global MS Sans Serif on every child */
+  .blog-reading,
+  .blog-reading * {
+    font-family: Georgia, 'Times New Roman', Times, serif !important;
+  }
+
+  /* Keep code blocks monospace inside reading mode */
+  .blog-reading code,
+  .blog-reading pre,
+  .blog-reading kbd {
+    font-family: 'IBM Plex Mono', 'Courier New', Courier, monospace !important;
+  }
 }
