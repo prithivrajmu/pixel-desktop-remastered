@@ -375,25 +375,6 @@ const ModernPortfolio: React.FC = () => {
 
             {activeSection === 'blog' && (
               <div className="space-y-6">
-                <section className="border-2 border-stone-900 bg-stone-50 p-5">
-                  <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-stone-500">Writing</p>
-                  <h3 className="max-w-3xl text-2xl font-black leading-tight sm:text-3xl">
-                    Articles open as dedicated pages now. No embedded preview pane inside the portfolio.
-                  </h3>
-                  <p className="mt-4 max-w-2xl text-sm leading-6 text-stone-700">
-                    This section is only an index. Pick a post and read it on its own page with the full article layout.
-                  </p>
-                  <div className="mt-5">
-                    <Link
-                      to="/blog"
-                      className="inline-flex items-center gap-2 border-2 border-stone-900 bg-[#000080] px-4 py-2 text-sm font-bold text-white shadow-[2px_2px_0_0_rgba(0,0,0,0.8)]"
-                    >
-                      Open Writing Page
-                      <ArrowRight className="h-4 w-4" />
-                    </Link>
-                  </div>
-                </section>
-
                 {blogLoading && <p className="text-sm text-stone-600">Loading posts...</p>}
                 {!blogLoading && blogPosts.length === 0 && (
                   <p className="text-sm text-stone-600">No posts available right now.</p>

@@ -87,7 +87,7 @@ const Index: React.FC = () => {
               type="article"
               publishedTime={currentBlogPost.date}
               modifiedTime={currentBlogPost.date}
-              keywords={`Prithiv Raj, ${currentBlogPost.title}, data engineering, data architecture, AI systems`}
+              keywords={currentBlogPost.keywords || `Prithiv Raj, ${currentBlogPost.title}, data engineering, data architecture, AI systems`}
             />
             <SEOStructuredData
               type="blogPost"

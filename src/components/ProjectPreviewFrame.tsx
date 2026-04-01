@@ -14,11 +14,11 @@ export const ProjectPreviewFrame: React.FC<ProjectPreviewFrameProps> = ({ projec
         <span>{project.eyebrow}</span>
       </div>
       <div className="grid gap-4 bg-stone-50 p-4 md:grid-cols-[1.1fr_0.9fr]">
-        <div className="overflow-hidden border-2 border-stone-900 bg-white">
+        <div className={`overflow-hidden border-2 border-stone-900 bg-white ${compact ? 'h-48' : 'h-64 md:h-80'}`}>
           <img
             src={project.image}
             alt={project.title}
-            className={`h-full w-full object-cover ${compact ? 'max-h-48' : 'max-h-[320px]'}`}
+            className="h-full w-full object-cover"
           />
         </div>
         <div className="space-y-4">

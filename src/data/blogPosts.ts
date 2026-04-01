@@ -5,6 +5,7 @@ export interface BlogPost {
   preview: string;
   content: string;
   slug: string; // SEO-friendly URL slug
+  keywords?: string; // comma-separated keywords for meta SEO
 }
 
 // Generate SEO-friendly slug from title
@@ -18,9 +19,14 @@ export const generateSlug = (title: string): string => {
 // List of available blog post IDs - add new post IDs here
 const availablePostIds = [
   'blog-1',
-  'blog-2', 
+  'blog-2',
   'blog-3',
-  'blog-4'
+  'blog-4',
+  'blog-5',
+  'blog-6',
+  'blog-7',
+  'blog-8',
+  'blog-9',
 ];
 
 // Function to parse markdown front matter
@@ -71,7 +77,8 @@ const loadBlogPost = async (id: string): Promise<BlogPost | null> => {
         date: frontMatter.date || '1995-01-01',
         preview: frontMatter.preview || content.substring(0, 150) + '...',
         content: content,
-        slug: generateSlug(title)
+        slug: generateSlug(title),
+        keywords: frontMatter.keywords || undefined,
       };
     }
   } catch (error) {

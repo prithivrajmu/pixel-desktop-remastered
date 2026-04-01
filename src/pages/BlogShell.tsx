@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Clock3 } from "lucide-react";
 import { marked } from "marked";
 import { findPostByIdOrSlug, loadBlogPosts, type BlogPost } from "@/data/blogPosts";
@@ -17,7 +17,11 @@ const estimateReadTime = (content: string) => {
 };
 
 const BlogShell: React.FC = () => {
-  const { postId } = useParams<{ postId?: string }>();
+  const location = useLocation();
+  const postId = useMemo(() => {
+    const match = location.pathname.match(/^\/blog\/(.+)$/);
+    return match?.[1] || undefined;
+  }, [location.pathname]);
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [currentPost, setCurrentPost] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
