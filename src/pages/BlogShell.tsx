@@ -16,186 +16,255 @@ const estimateReadTime = (content: string) => {
   return `${Math.max(3, Math.ceil(words / 220))} min read`;
 };
 
+// serif stack for reading body text
+const serifStyle: React.CSSProperties = {
+  fontFamily: "Georgia, 'Times New Roman', Times, serif",
+};
+
 const BlogShell: React.FC = () => {
   const location = useLocation();
   const postId = useMemo(() => {
     const match = location.pathname.match(/^\/blog\/(.+)$/);
     return match?.[1] || undefined;
   }, [location.pathname]);
+
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [currentPost, setCurrentPost] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
-
     const load = async () => {
       setLoading(true);
-
       try {
         const allPosts = await loadBlogPosts();
         if (cancelled) return;
-
         setPosts(allPosts);
-
         if (postId) {
           const post = await findPostByIdOrSlug(postId);
-          if (!cancelled) {
-            setCurrentPost(post);
-          }
+          if (!cancelled) setCurrentPost(post);
         } else {
           setCurrentPost(null);
         }
       } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
+        if (!cancelled) setLoading(false);
       }
     };
-
     load();
-
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [postId]);
 
-  const featuredPost = useMemo(() => posts[0] ?? null, [posts]);
+  const currentIndex = useMemo(
+    () => posts.findIndex((p) => p.slug === currentPost?.slug),
+    [posts, currentPost]
+  );
+  const prevPost = currentIndex > 0 ? posts[currentIndex - 1] : null;
+  const nextPost = currentIndex >= 0 && currentIndex < posts.length - 1 ? posts[currentIndex + 1] : null;
 
-  return (
-    <main className="min-h-screen bg-[#f6f1e8] text-stone-900">
-      <div className="mx-auto max-w-6xl px-5 py-6 sm:px-8 sm:py-8">
-        <div className="mb-6">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 rounded-full border border-stone-300 bg-white/80 px-4 py-2 text-sm font-semibold text-stone-700 transition hover:border-stone-900 hover:text-stone-900"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to portfolio
-          </Link>
+  // ── Loading ──────────────────────────────────────────────────────────────
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-white">
+        <div className="mx-auto max-w-[680px] px-6 py-32 text-center">
+          <p className="text-sm uppercase tracking-widest text-stone-400">Loading</p>
+        </div>
+      </main>
+    );
+  }
+
+  // ── Article reading view ─────────────────────────────────────────────────
+  if (postId) {
+    if (!currentPost) {
+      return (
+        <main className="min-h-screen bg-white">
+          <div className="mx-auto max-w-[680px] px-6 py-32 text-center">
+            <p className="text-sm uppercase tracking-widest text-stone-400">Not found</p>
+            <h1 className="mt-4 text-2xl font-bold text-stone-900">That article doesn't exist.</h1>
+            <Link to="/blog" className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-stone-500 underline underline-offset-4 hover:text-stone-900">
+              Back to all writing
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+        </main>
+      );
+    }
+
+    return (
+      <main className="min-h-screen bg-white text-stone-900">
+
+        {/* Top bar */}
+        <div className="sticky top-0 z-10 border-b border-stone-100 bg-white/95 backdrop-blur-sm">
+          <div className="mx-auto flex max-w-[780px] items-center justify-between px-6 py-4">
+            <Link
+              to="/blog"
+              className="inline-flex items-center gap-2 text-sm text-stone-500 transition hover:text-stone-900"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              All articles
+            </Link>
+            <span className="text-sm font-semibold text-stone-400">Prithiv Raj</span>
+            <span className="text-sm text-stone-400">
+              {estimateReadTime(currentPost.content)}
+            </span>
+          </div>
         </div>
 
-        {loading ? (
-          <div className="rounded-[28px] border border-stone-300 bg-white/85 px-8 py-20 text-center shadow-[0_16px_60px_rgba(0,0,0,0.06)]">
-            <p className="text-sm font-bold uppercase tracking-[0.22em] text-stone-500">Loading</p>
-            <h1 className="mt-4 text-3xl font-black">Preparing the article desk</h1>
-          </div>
-        ) : postId ? (
-          currentPost ? (
-            <div className="grid gap-10 lg:grid-cols-[260px_minmax(0,1fr)]">
-              <aside className="lg:sticky lg:top-8 lg:self-start">
-                <div className="rounded-[24px] border border-stone-300 bg-white/80 p-5 shadow-[0_16px_50px_rgba(0,0,0,0.05)]">
-                  <p className="text-xs font-bold uppercase tracking-[0.22em] text-stone-500">Articles</p>
-                  <div className="mt-5 space-y-4">
-                    {posts.map((post) => {
-                      const isActive = post.slug === currentPost.slug;
-                      return (
-                        <Link
-                          key={post.id}
-                          to={`/blog/${post.slug}`}
-                          className={`block border-l-2 pl-4 transition ${
-                            isActive
-                              ? "border-stone-900 text-stone-900"
-                              : "border-transparent text-stone-500 hover:border-stone-400 hover:text-stone-900"
-                          }`}
-                        >
-                          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-stone-400">
-                            {formatDate(post.date)}
-                          </p>
-                          <p className="mt-1 text-lg font-bold leading-6">{post.title}</p>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </div>
-              </aside>
+        {/* Article */}
+        <article className="mx-auto max-w-[680px] px-6 pb-32 pt-16">
 
-              <article className="rounded-[32px] border border-stone-300 bg-white px-6 py-8 shadow-[0_20px_70px_rgba(0,0,0,0.07)] sm:px-10 sm:py-12 lg:px-14">
-                <div className="mx-auto max-w-3xl">
-                  <p className="text-xs font-bold uppercase tracking-[0.24em] text-stone-500">
-                    Essay
-                  </p>
-                  <h1 className="mt-4 max-w-3xl text-4xl font-black leading-[0.95] tracking-[-0.04em] sm:text-6xl">
-                    {currentPost.title}
-                  </h1>
-                  <p className="mt-6 max-w-2xl text-lg leading-8 text-stone-600 sm:text-xl">
-                    {currentPost.preview}
-                  </p>
+          {/* Header */}
+          <header className="mb-12">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-400">
+              {formatDate(currentPost.date)}
+            </p>
+            <h1
+              className="mt-5 text-4xl font-bold leading-[1.15] tracking-tight text-stone-900 sm:text-5xl"
+              style={serifStyle}
+            >
+              {currentPost.title}
+            </h1>
+            <p
+              className="mt-6 text-xl leading-[1.7] text-stone-500"
+              style={serifStyle}
+            >
+              {currentPost.preview}
+            </p>
+            <div className="mt-8 flex items-center gap-3 text-sm text-stone-400">
+              <span>Prithiv Raj</span>
+              <span>·</span>
+              <span className="inline-flex items-center gap-1.5">
+                <Clock3 className="h-3.5 w-3.5" />
+                {estimateReadTime(currentPost.content)}
+              </span>
+            </div>
+          </header>
 
-                  <div className="mt-8 flex flex-wrap items-center gap-3 text-xs font-bold uppercase tracking-[0.18em] text-stone-500">
-                    <span>{formatDate(currentPost.date)}</span>
-                    <span className="h-1 w-1 rounded-full bg-stone-400" />
-                    <span className="inline-flex items-center gap-2">
-                      <Clock3 className="h-3.5 w-3.5" />
-                      {estimateReadTime(currentPost.content)}
+          <hr className="border-stone-200" />
+
+          {/* Body */}
+          <div
+            className="
+              mt-12
+              prose prose-stone max-w-none
+              prose-p:text-[1.175rem] prose-p:leading-[1.9] prose-p:text-stone-700 prose-p:mb-8
+              prose-h1:font-bold prose-h1:mt-0
+              prose-h2:text-2xl prose-h2:font-bold prose-h2:text-stone-900 prose-h2:mt-16 prose-h2:mb-5 prose-h2:leading-snug
+              prose-h3:text-xl prose-h3:font-bold prose-h3:text-stone-900 prose-h3:mt-12 prose-h3:mb-4
+              prose-li:text-[1.1rem] prose-li:leading-[1.85] prose-li:text-stone-700
+              prose-ul:my-8 prose-ol:my-8 prose-ul:space-y-2 prose-ol:space-y-2
+              prose-hr:my-16 prose-hr:border-stone-200
+              prose-blockquote:border-l-[3px] prose-blockquote:border-stone-300 prose-blockquote:pl-6 prose-blockquote:not-italic prose-blockquote:text-stone-500
+              prose-strong:text-stone-900 prose-strong:font-semibold
+              prose-a:text-stone-900 prose-a:underline prose-a:underline-offset-[3px] prose-a:decoration-stone-400 hover:prose-a:decoration-stone-900
+              prose-code:text-[0.9em] prose-code:bg-stone-100 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-stone-800
+              prose-pre:bg-stone-950 prose-pre:text-stone-100 prose-pre:rounded-lg
+            "
+            style={serifStyle}
+            dangerouslySetInnerHTML={{ __html: marked.parse(currentPost.content) as string }}
+          />
+
+          {/* Prev / Next navigation */}
+          {(prevPost || nextPost) && (
+            <nav className="mt-20 border-t border-stone-200 pt-10">
+              <div className="grid gap-6 sm:grid-cols-2">
+                {prevPost ? (
+                  <Link to={`/blog/${prevPost.slug}`} className="group flex flex-col gap-1">
+                    <span className="text-xs font-semibold uppercase tracking-widest text-stone-400 transition group-hover:text-stone-600">
+                      ← Previous
                     </span>
-                  </div>
+                    <span className="text-base font-semibold leading-snug text-stone-800 transition group-hover:text-stone-900" style={serifStyle}>
+                      {prevPost.title}
+                    </span>
+                  </Link>
+                ) : <div />}
+                {nextPost && (
+                  <Link to={`/blog/${nextPost.slug}`} className="group flex flex-col items-end gap-1 text-right">
+                    <span className="text-xs font-semibold uppercase tracking-widest text-stone-400 transition group-hover:text-stone-600">
+                      Next →
+                    </span>
+                    <span className="text-base font-semibold leading-snug text-stone-800 transition group-hover:text-stone-900" style={serifStyle}>
+                      {nextPost.title}
+                    </span>
+                  </Link>
+                )}
+              </div>
+            </nav>
+          )}
 
-                  <div className="my-12 border-t border-stone-200" />
-
-                  <div
-                    className="prose prose-stone prose-lg max-w-none prose-headings:font-black prose-headings:tracking-[-0.03em] prose-h1:mt-0 prose-h2:mt-14 prose-h2:mb-5 prose-h3:mt-10 prose-h3:mb-4 prose-p:text-[1.1rem] prose-p:leading-[1.85] prose-p:mb-7 prose-li:text-[1.05rem] prose-li:leading-8 prose-ul:my-6 prose-ol:my-6 prose-hr:my-14 prose-hr:border-stone-200 prose-a:text-stone-900 prose-a:underline-offset-4 prose-strong:text-stone-900 prose-blockquote:border-l-4 prose-blockquote:border-stone-900 prose-blockquote:pl-5 prose-blockquote:italic prose-code:text-sm"
-                    dangerouslySetInnerHTML={{ __html: marked.parse(currentPost.content) as string }}
-                  />
-                </div>
-              </article>
-            </div>
-          ) : (
-            <div className="rounded-[28px] border border-stone-300 bg-white/85 px-8 py-20 text-center shadow-[0_16px_60px_rgba(0,0,0,0.06)]">
-              <p className="text-sm font-bold uppercase tracking-[0.22em] text-stone-500">Not Found</p>
-              <h1 className="mt-4 text-3xl font-black">That article does not exist.</h1>
-              <Link to="/blog" className="mt-6 inline-flex items-center gap-2 text-sm font-bold underline underline-offset-4">
-                View all writing
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-          )
-        ) : (
-          <div className="space-y-8">
-            <section className="rounded-[32px] border border-stone-300 bg-white/85 px-6 py-8 shadow-[0_20px_70px_rgba(0,0,0,0.07)] sm:px-10 sm:py-12">
-              <p className="text-xs font-bold uppercase tracking-[0.24em] text-stone-500">Writing</p>
-              <h1 className="mt-4 max-w-4xl text-4xl font-black leading-[0.95] tracking-[-0.04em] sm:text-6xl">
-                Long-form notes on systems, product decisions, and work that deserves more than a project tile.
-              </h1>
-              <p className="mt-6 max-w-2xl text-lg leading-8 text-stone-600">
-                The portfolio stays concise. The writing lives here as full pages with room to read properly.
-              </p>
-              {featuredPost && (
-                <Link
-                  to={`/blog/${featuredPost.slug}`}
-                  className="mt-8 inline-flex items-center gap-2 border-2 border-stone-900 bg-[#000080] px-4 py-2 text-sm font-bold text-white shadow-[3px_3px_0_0_rgba(0,0,0,0.8)]"
-                >
-                  Start with the latest article
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-              )}
-            </section>
-
-            <section className="grid gap-4 lg:grid-cols-2">
-              {posts.map((post) => (
-                <Link
-                  key={post.id}
-                  to={`/blog/${post.slug}`}
-                  className="group rounded-[24px] border border-stone-300 bg-white p-6 shadow-[0_14px_40px_rgba(0,0,0,0.05)] transition hover:-translate-y-1 hover:border-stone-900 hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)]"
-                >
-                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-stone-500">
-                    {formatDate(post.date)}
-                  </p>
-                  <h2 className="mt-3 text-2xl font-black leading-tight tracking-[-0.03em]">
-                    {post.title}
-                  </h2>
-                  <p className="mt-4 text-base leading-7 text-stone-600">
-                    {post.preview}
-                  </p>
-                  <span className="mt-6 inline-flex items-center gap-2 text-sm font-bold underline underline-offset-4">
-                    Read article
-                    <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
-                  </span>
-                </Link>
-              ))}
-            </section>
+          <div className="mt-12 text-center">
+            <Link
+              to="/"
+              className="text-sm text-stone-400 underline underline-offset-4 hover:text-stone-700"
+            >
+              Back to portfolio
+            </Link>
           </div>
-        )}
+        </article>
+      </main>
+    );
+  }
+
+  // ── Blog home (article list) ─────────────────────────────────────────────
+  return (
+    <main className="min-h-screen bg-white text-stone-900">
+
+      {/* Masthead */}
+      <div className="border-b border-stone-100">
+        <div className="mx-auto max-w-[780px] px-6 py-12 sm:py-16">
+          <Link
+            to="/"
+            className="mb-8 inline-flex items-center gap-2 text-sm text-stone-400 transition hover:text-stone-700"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            Back to portfolio
+          </Link>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-400">Writing</p>
+          <h1
+            className="mt-4 text-4xl font-bold leading-[1.15] tracking-tight text-stone-900 sm:text-5xl"
+            style={serifStyle}
+          >
+            Long-form notes on systems, decisions, and the work behind the work.
+          </h1>
+          <p className="mt-5 text-lg leading-relaxed text-stone-500" style={serifStyle}>
+            The portfolio stays concise. The writing lives here.
+          </p>
+        </div>
+      </div>
+
+      {/* Article list */}
+      <div className="mx-auto max-w-[780px] px-6 py-10">
+        <div className="divide-y divide-stone-100">
+          {posts.map((post) => (
+            <Link
+              key={post.id}
+              to={`/blog/${post.slug}`}
+              className="group block py-9 transition"
+            >
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-stone-400">
+                {formatDate(post.date)}
+              </p>
+              <h2
+                className="mt-3 text-2xl font-bold leading-snug tracking-tight text-stone-900 transition group-hover:text-stone-600 sm:text-3xl"
+                style={serifStyle}
+              >
+                {post.title}
+              </h2>
+              <p className="mt-3 text-base leading-[1.75] text-stone-500" style={serifStyle}>
+                {post.preview}
+              </p>
+              <div className="mt-5 flex items-center gap-3 text-sm text-stone-400">
+                <span className="inline-flex items-center gap-1.5">
+                  <Clock3 className="h-3.5 w-3.5" />
+                  {estimateReadTime(post.content)}
+                </span>
+                <span>·</span>
+                <span className="font-semibold text-stone-500 transition group-hover:text-stone-900">
+                  Read article →
+                </span>
+              </div>
+            </Link>
+          ))}
+        </div>
       </div>
     </main>
   );
